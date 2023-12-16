@@ -1,0 +1,150 @@
+.button {
+  background-color: rgba(19, 121, 218, 0.685);
+  border: transparent;
+  padding: 10px 20px;
+  border-radius: 5px;
+
+  color: white;
+  margin-inline: 20px;
+}
+.red {
+  background-color: rgb(245, 132, 132);
+}
+.green {
+  background-color: rgb(129, 197, 129);
+}
+
+.body {
+  margin-top: 20px;
+  background-color: skyblue;
+  border-radius: 5px;
+  padding-bottom: 10px;
+}
+.Header {
+  display: flex;
+  justify-content: space-between;
+}
+.Header > img {
+  height: 70px;
+  width: 100px;
+  object-fit: cover;
+  object-position: top;
+}
+.subject {
+  display: flex;
+  justify-content: space-between;
+}
+.information {
+  border-radius: 5px;
+  background-color: white;
+  margin: 20px;
+  padding-inline: 20px 300px;
+}
+.due_kwh {
+  border-radius: 5px;
+  background-color: white;
+  margin: 20px;
+  padding-inline: 20px 350px;
+}
+.billing {
+  display: flex;
+  justify-content: space-between;
+}
+.reading {
+  border-radius: 5px;
+  background-color: white;
+  margin: 20px;
+  padding-inline: 20px 340px;
+}
+.amount {
+  border-radius: 5px;
+  background-color: white;
+  margin: 20px;
+  padding-inline: 20px 300px;
+}
+.sign {
+  background-color: white;
+  border-radius: 5px;
+  padding: 5px 20px;
+  margin: 20px;
+}
+.select {
+  margin: 10px;
+  text-align: center;
+}
+.add-section {
+  display: none;
+}
+.update-section {
+  display: none;
+}
+.add-content,
+.update-content,
+.history-content {
+  background-color: rgb(226, 216, 216);
+  padding-block: 30px;
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+}
+.add-Information input,
+.update-Information input,
+.add-Due-kwh input,
+.update-Due-kwh input,
+.add-Billing input,
+.update-Billing input,
+.update-Totalamount input,
+.add-Totalamount input {
+  width: 40%;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+  margin-block: 5px;
+}
+.add-Information label,
+.update-Information label,
+.add-Due-kwh label,
+.update-Due-kwh label,
+.add-Billing label,
+.update-Billing label,
+.update-Totalamount label,
+.add-Totalamount label {
+  width: 40%;
+  height: 20px;
+  border: none;
+  border-radius: 3px;
+}
+.add-Information,
+.add-Due-kwh,
+.add-Billing,
+.add-Totalamount,
+.update-Information,
+.update-Due-kwh,
+.update-Billing,
+.update-Totalamount {
+  margin: 15px;
+
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.history-content {
+  display: flex;
+  flex-direction: column;
+}
+.history-section {
+  display: none;
+}
+.body-history {
+  display: flex;
+  margin-inline: 50px;
+  justify-content: stretch;
+}
+.body-history p {
+  width: 40%;
+}
+#selection {
+  border-radius: 3px;
+  height: 30px;
+}
