@@ -4,8 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Am9 Commercial Conversion</title>
-    <link rel="stylesheet" href="css/index-style.css" />
-    <script src="javascript/index-javascript.js"></script>
+    <link rel="stylesheet" href="../css/index-style.css" />
+    <script src="../javascript/index-javascript.js"></script>
 
     <!-- JSPDF CONVERTER -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
@@ -52,6 +52,10 @@
     <div class="select">
       <label for="selection">Select Tenant: </label>
       <select name="selection" id="selection">
+        <option value="0"></option>
+      </select>
+      <label for="selection_date">Select Date: </label>
+      <select name="selection_date" id="selection_date">
         <option value="0"></option>
       </select>
 
@@ -112,9 +116,10 @@
             >Total Amount: <span class="TotalAmount"></span
           ></label>
         </div>
-        <button class="button green">Add New Tenant</button>
+        <button id="post" class="button green">Add New Tenant</button>
       </div>
     </div>
+
     <div class="update-section">
       <div class="update-content">
         <h1 style="text-align: center">UPDATE READING</h1>
@@ -156,9 +161,10 @@
             >Total Amount: <span class="TotalAmount"></span
           ></label>
         </div>
-        <button class="button">Update</button>
+        <button id="put" class="button">Update</button>
       </div>
     </div>
+
     <div class="history-section">
       <div class="history-content">
         <div class="body-history">
@@ -166,10 +172,13 @@
           <p>Building: <span class="History-Builing"></span></p>
         </div>
         <div class="history"></div>
-        <button class="button">Print</button>
+        <button id="delete" class="button">Print</button>
       </div>
     </div>
 
+    <!-- DATABASE -->
+
+    <!-- this Javascript for button and PDF -->
     <script>
       const jsPDF = window.jspdf;
 
