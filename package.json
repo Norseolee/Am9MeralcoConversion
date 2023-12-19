@@ -1,15 +1,24 @@
 {
   "name": "js-mysql",
   "version": "1.0.0",
-  "description": "",
+  "description": "This is for Am9 Commercial for every month Electricity Bill.",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "norseolee",
   "license": "ISC",
   "dependencies": {
+    "express": "^4.18.2",
     "mysql": "^2.18.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Norseolee/Am9MeralcoConversion.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Norseolee/Am9MeralcoConversion/issues"
+  },
+  "homepage": "https://github.com/Norseolee/Am9MeralcoConversion#readme"
 }
