@@ -178,8 +178,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const postBtn = document.getElementById("put");
   const DelBtn = document.getElementById("input");
 
-  const baseURL = "http://localhost:3000/tenant_database"; // this is the base of the database
-  const baseURL_meralco = "http://localhost:3000/meralco_history";
+  const baseURL = "/tenant_database"; // this is the base of the database
+  const baseURL_meralco = "/meralco_history";
 
   getinfo();
 
