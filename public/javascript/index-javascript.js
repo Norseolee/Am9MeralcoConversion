@@ -178,10 +178,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const postBtn = document.getElementById("put");
   const DelBtn = document.getElementById("input");
 
-  const baseURL =
-    "https://am9-commercial-electricity-billing-system.onrender.com//tenant_database"; // this is the base of the database
-  const baseURL_meralco =
-    "https://am9-commercial-electricity-billing-system.onrender.com//meralco_history";
+  const baseURL = "/tenant_database"; // this is the base of the database
+  const baseURL_meralco = "/meralco_history";
 
   getinfo();
 
