@@ -174,15 +174,11 @@ document.addEventListener("DOMContentLoaded", function () {
 */
 
 document.addEventListener("DOMContentLoaded", function () {
-  const getBtn = document.getElementById("post");
-  const postBtn = document.getElementById("put");
-  const DelBtn = document.getElementById("input");
-
-  const baseURL = "/tenant_database"; // this is the base of the database
-  const baseURL_meralco = "/meralco_history";
+  const baseURL = "/tenant"; // this is the base of the database
+  const baseURL_meralco = "/meralco";
 
   getinfo();
-
+  // get the tenant information
   async function getinfo(e) {
     if (e) {
       e.preventDefault(); // to stop the page from refreshing
@@ -214,11 +210,27 @@ document.addEventListener("DOMContentLoaded", function () {
       // select to show in HTML
       document.querySelector(".Name").innerHTML = selectedObject.name;
       document.querySelector(".Building").innerHTML = selectedObject.building;
+      document.querySelector(".History-Name").innerHTML = selectedObject.name;
+      document.querySelector(".History-Builing").innerHTML =
+        selectedObject.building;
+
+      // select to show in update Form value
+      document.getElementById("updateNameTenant").innerHTML =
+        selectedObject.name;
+      document.getElementById("updateBuildingTenant").innerHTML =
+        selectedObject.building;
+      document.getElementById("updateTenantId").value =
+        selectedObject.tenant_id;
 
       getMeralcoData(selectedTenantId);
+      historymeralco(selectedTenantId);
     });
   }
-
+  //
+  //
+  //
+  //
+  // get the meralco information by tenant selection
   async function getMeralcoData(tenantId) {
     const res = await fetch(`${baseURL_meralco}?tenant_id=${tenantId}`, {
       method: "GET",
@@ -228,23 +240,34 @@ document.addEventListener("DOMContentLoaded", function () {
     const meralcoData = data;
 
     // Filter the meralcoData array based on the selected tenant_id
+
     const selectedTenantData = meralcoData.filter(
       (obj) => obj.tenant_id == tenantId
     );
 
-    let selectionDropdown_date = document.getElementById("selection_date");
+    const currentDate = new Date().toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
 
+    document.getElementById("updatePreviousReading").value = "";
+    document.getElementById("updateCurrentReading").value = "";
+    document.getElementById("updateDueDate").value = "";
+    document.getElementById("updateDateOfReading").value = currentDate;
+    document.getElementById("updatePerKwh").value = "";
+
+    let selectionDropdown_date = document.getElementById("selection_date");
     selectionDropdown_date.innerHTML = "";
 
     let defaultOption = document.createElement("option");
-
     defaultOption.value = "";
     defaultOption.text = "";
     selectionDropdown_date.add(defaultOption);
 
     selectedTenantData.forEach(function (obj) {
       let option = document.createElement("option");
-      option.text = obj.due_date;
+      option.text = obj.date_of_reading;
       selectionDropdown_date.add(option);
     });
 
@@ -254,8 +277,17 @@ document.addEventListener("DOMContentLoaded", function () {
           .text;
 
       let selectedDate = selectedTenantData.find(
-        (obj) => obj.due_date === selected_date
+        (obj) => obj.date_of_reading === selected_date
       );
+
+      if (
+        !selectedDate ||
+        selectedDate.per_kwh === null ||
+        selectedDate.previous_reading === null ||
+        selectedDate.current_reading === null
+      ) {
+        return;
+      }
 
       let PerKWHNumber = selectedDate.per_kwh * 10;
       let PreviousReadingNumber = selectedDate.previous_reading * 10;
@@ -277,7 +309,95 @@ document.addEventListener("DOMContentLoaded", function () {
         selectedDate.current_reading;
       document.querySelector(".Consume").innerHTML = selectedDate.consume;
     });
-
-    console.log(selectedTenantData);
   }
+  //
+  //
+  //
+  //
+  //
+  //
+  // get the tenant meralco history
+  async function historymeralco(tenantId) {
+    const res = await fetch(`${baseURL_meralco}?tenant_id=${tenantId}`, {
+      method: "GET",
+    });
+
+    const meralcoHistoryData = await res.json();
+
+    const selectedTenantData = meralcoHistoryData.filter(
+      (obj) => obj.tenant_id == tenantId
+    );
+
+    const historyContainer = document.querySelector(".history");
+    historyContainer.innerHTML = "";
+
+    selectedTenantData.forEach(function (obj) {
+      let historyEntry = document.createElement("div");
+      historyEntry.classList.add("history-entry");
+
+      historyEntry.innerHTML = `
+      <div class="history_of_tenant">
+      <p>Due Date: <span class="History-Date">${obj.due_date}</span></p>
+      <p>Per Kwh: <span class="History-PerKwh">${obj.per_kwh}</span></p>
+      </div>
+      <div class="history_of_reading">
+      <p>Date of Reading: <span class="History-Date">${obj.date_of_reading}</span></p>
+      <p>Previous Reading: <span class="History-PreviousReading">${obj.previous_reading}</span></p>
+      <p>Current Reading: <span class="History-CurrentReading">${obj.current_reading}</span></p>
+      </div>
+ `;
+
+      //apend the history entry to the .history
+      historyContainer.appendChild(historyEntry);
+    });
+  }
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  // delete tenant
+  window.deleteTenant = async function deleteTenant() {
+    const selectionDropdown = document.getElementById("selection");
+    const selectedTenantId =
+      selectionDropdown.options[selectionDropdown.selectedIndex].value;
+
+    if (!selectedTenantId) {
+      alert("Please select a tenant to delete.");
+      return;
+    }
+
+    const confirmation = confirm(
+      "Are you sure you want to delete this tenant?"
+    );
+
+    if (confirmation) {
+      try {
+        const response = await fetch(`/${selectedTenantId}`, {
+          method: "DELETE",
+        });
+
+        if (response.ok) {
+          alert(`Tenant with ID ${selectedTenantId} has been deleted.`);
+          // Reload the page after successful deletion
+          window.location.reload();
+        } else {
+          alert("Error deleting tenant. Please try again.");
+        }
+      } catch (error) {
+        console.error("Error deleting tenant:", error);
+        alert("An error occurred while deleting the tenant.");
+      }
+    }
+  };
+  //
+  //
+  //
+  //
+  //
+  //
+  //
+  //update tenant
 });

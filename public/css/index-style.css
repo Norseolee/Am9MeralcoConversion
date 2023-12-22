@@ -13,12 +13,15 @@
 .green {
   background-color: rgb(129, 197, 129);
 }
-
 .body {
   margin-top: 20px;
   background-color: skyblue;
   border-radius: 5px;
   padding-bottom: 10px;
+
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 .Header {
   display: flex;
@@ -32,54 +35,71 @@
 }
 .subject {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .information {
   border-radius: 5px;
   background-color: white;
-  margin: 20px;
-  padding-inline: 20px 300px;
+  margin: 10px;
+  padding-inline: 10px;
+  width: 50%;
 }
 .due_kwh {
   border-radius: 5px;
   background-color: white;
-  margin: 20px;
-  padding-inline: 20px 350px;
+  margin: 10px;
+  padding-inline: 10px;
+  width: 50%;
 }
 .billing {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 }
 .reading {
   border-radius: 5px;
   background-color: white;
-  margin: 20px;
-  padding-inline: 20px 340px;
+  margin: 10px;
+  padding-inline: 10px;
+  width: 50%;
 }
 .amount {
   border-radius: 5px;
   background-color: white;
-  margin: 20px;
-  padding-inline: 20px 300px;
+  margin: 10px;
+  padding-inline: 10px;
+  width: 50%;
 }
 .sign {
   background-color: white;
   border-radius: 5px;
   padding: 5px 20px;
-  margin: 20px;
+  margin: 10px;
 }
 .select {
   margin: 10px;
   text-align: center;
 }
-.add-section {
-  display: none;
+.select button {
+  margin: 10px;
 }
-.update-section {
+.design-select {
+  appearance: none;
+  height: 30px;
+  border-radius: 5px;
+  width: 150px;
+  padding-inline: 5px;
+}
+.design-select:focus {
+  outline: none;
+}
+.update-section,
+.add-section,
+.update-section-tenant {
   display: none;
 }
 .add-content,
 .update-content,
+.update-content-tenant,
 .history-content {
   background-color: rgb(226, 216, 216);
   padding-block: 30px;
@@ -90,6 +110,7 @@
 }
 .add-Information input,
 .update-Information input,
+.update-Information-tenant input,
 .add-Due-kwh input,
 .update-Due-kwh input,
 .add-Billing input,
@@ -104,6 +125,7 @@
 }
 .add-Information label,
 .update-Information label,
+.update-Information-tenant label,
 .add-Due-kwh label,
 .update-Due-kwh label,
 .add-Billing label,
@@ -120,6 +142,7 @@
 .add-Billing,
 .add-Totalamount,
 .update-Information,
+.update-Information-tenant,
 .update-Due-kwh,
 .update-Billing,
 .update-Totalamount {
@@ -133,6 +156,29 @@
   display: flex;
   flex-direction: column;
 }
+.body-history {
+  display: flex;
+}
+.history {
+  background-color: rgba(19, 121, 218, 0.685);
+  border-radius: 5px;
+
+  margin: 20px;
+
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+}
+.history_of_tenant {
+  display: flex;
+  justify-content: space-around;
+}
+.history_of_reading {
+  margin: 10px;
+  padding: 10px;
+  background-color: white;
+  border-radius: 5px;
+}
 .history-section {
   display: none;
 }
@@ -143,8 +189,4 @@
 }
 .body-history p {
   width: 40%;
-}
-#selection {
-  border-radius: 3px;
-  height: 30px;
 }
