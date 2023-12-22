@@ -9,21 +9,21 @@ app.use(express.static("public")); // this to serve our public folder
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-// mySQL;
-const pool = mysql.createPool({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "Am9Commercial",
-  connectionLimit: 20,
-});
+//mySQL;
 // const pool = mysql.createPool({
-//   host: "b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com",
-//   user: "u1llarmjzoo3t683",
-//   password: "HKDuDLkfJO1cZQJX58M7",
-//   database: "b18rvltkeprxyrwdxj35",
+//   host: "localhost",
+//   user: "root",
+//   password: "",
+//   database: "Am9Commercial",
 //   connectionLimit: 20,
 // });
+const pool = mysql.createPool({
+  host: "b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com",
+  user: "u1llarmjzoo3t683",
+  password: "HKDuDLkfJO1cZQJX58M7",
+  database: "b18rvltkeprxyrwdxj35",
+  connectionLimit: 20,
+});
 
 // get all the tenant_data
 app.get("/tenant", (req, res) => {
@@ -263,11 +263,6 @@ app.put("/tenant/update-tenant/:tenant_id", (req, res) => {
       building: req.body["building"],
     };
 
-    const meralcoParams = {
-      date_of_reading: req.body["date_of_reading"],
-      current_reading: req.body["current_reading"],
-    };
-
     // Update tenant record
     connection.query(
       "UPDATE tenants SET name = ?, building = ? WHERE tenant_id = ?",
@@ -279,27 +274,8 @@ app.put("/tenant/update-tenant/:tenant_id", (req, res) => {
           return res.status(500).send("Error updating tenant");
         }
 
-        // Update Meralco record for the same tenant
-        connection.query(
-          "UPDATE Meralco SET date_of_reading = ?, current_reading = ? WHERE tenant_id = ?",
-          [
-            meralcoParams.date_of_reading,
-            meralcoParams.current_reading,
-            tenantId,
-          ],
-          (meralcoErr, meralcoResult) => {
-            if (meralcoErr) {
-              return connection.rollback(() => {
-                console.error("Error updating Meralco:", meralcoErr);
-                connection.release();
-                res.status(500).send("Error updating Meralco");
-              });
-            }
-
-            connection.release();
-            res.send(`Tenant with ID ${tenantId} has been updated`);
-          }
-        );
+        connection.release();
+        res.send(`Tenant with ID ${tenantId} has been updated`);
       }
     );
   });

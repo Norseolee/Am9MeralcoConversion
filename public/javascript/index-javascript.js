@@ -38,9 +38,16 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelector(".History-Builing").innerHTML =
         selectedObject.building;
 
-      document.getElementById("updateNameTenant").innerHTML =
+      // show in meralco Form
+      document.getElementById("meralcoNameTenant").innerHTML =
         selectedObject.name;
-      document.getElementById("updateBuildingTenant").innerHTML =
+      document.getElementById("meralcoBuildingTenant").innerHTML =
+        selectedObject.building;
+      document.getElementById("updateTenantId").value =
+        selectedObject.tenant_id;
+      // show in Update Tenant Form
+      document.getElementById("updateNameTenant").value = selectedObject.name;
+      document.getElementById("updateBuildingTenant").value =
         selectedObject.building;
       document.getElementById("updateTenantId").value =
         selectedObject.tenant_id;
@@ -200,6 +207,8 @@ document.addEventListener("DOMContentLoaded", function () {
   window.deleteMeralco = async function deleteMeralco() {
     meralco_id;
 
+    console.log(meralco_id);
+
     if (!meralco_id) {
       alert("Please select a date to delete.");
       return;
@@ -227,4 +236,35 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
   };
+
+  //
+  const updateTenantForm = document.getElementById("updateTenantForm");
+  updateTenantForm.addEventListener("submit", async (event) => {
+    let tenant_Id = document.getElementById("updateTenantId").value;
+    event.preventDefault();
+
+    const tenantId = tenant_Id;
+    const name = document.getElementById("updateNameTenant").value;
+    const building = document.getElementById("updateBuildingTenant").value;
+
+    try {
+      const response = await fetch(`/tenant/update-tenant/${tenantId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, building }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error updating tenant: ${response.statusText}`);
+      }
+
+      const result = await response.text();
+      alert(result);
+    } catch (error) {
+      console.error("Error:", error);
+      // Handle error (e.g., show an error message to the user)
+    }
+  });
 });

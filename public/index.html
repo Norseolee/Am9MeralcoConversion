@@ -116,8 +116,8 @@
       <div class="update-content-tenant">
         <h1 style="text-align: center">UPDATE READING</h1>
         <div class="body-history">
-          <p>Name: <span id="updateNameTenant"></span></p>
-          <p>Building: <span id="updateBuildingTenant"></span></p>
+          <p>Name: <span id="meralcoNameTenant"></span></p>
+          <p>Building: <span id="meralcoBuildingTenant"></span></p>
         </div>
         <form action="/meralco/add-meralco" method="post" id="addMeralcoForm">
           <div class="update-Due-kwh">
@@ -216,16 +216,22 @@
 
     <div class="update-section">
       <div class="update-content">
-        <h1 style="text-align: center">UPDATE READING</h1>
+        <h1 style="text-align: center">UPDATE TENANT INFORMATION</h1>
+        <form id="updateTenantForm">
+          <div class="update-Information">
+            <label for="updateName">Name: </label>
+            <input type="text" name="updateName" id="updateNameTenant" />
 
-        <div class="update-Information">
-          <label for="updateName">Name: </label>
-          <input type="text" name="updateName" id="updateNameTenant" />
+            <label for="updateBuilding">Building and Stall: </label>
+            <input
+              type="text"
+              name="updateBuilding"
+              id="updateBuildingTenant" />
 
-          <label for="updateBuilding">Building and Stall: </label>
-          <input type="text" name="updateBuilding" id="updateBuildingTenant" />
-        </div>
-        <button type="button" id="updateBtn" class="button">Update</button>
+            <input type="hidden" id="updateTenantId" />
+          </div>
+          <button type="submit" id="updateBtn" class="button">Update</button>
+        </form>
       </div>
     </div>
 
