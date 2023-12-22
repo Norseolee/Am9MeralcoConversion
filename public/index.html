@@ -70,8 +70,8 @@
           History
         </button>
 
-        <button class="button red" onclick="deleteTenant();">
-          Delete Tenant
+        <button class="button red" onclick="deleteMeralco()">
+          Delete Meralco
         </button>
       </div>
 
@@ -80,6 +80,9 @@
       </button>
       <button class="button" onclick="toggleSection('update-section')">
         Update Tenant
+      </button>
+      <button class="button red" onclick="deleteTenant();">
+        Delete Tenant
       </button>
     </div>
 
@@ -90,25 +93,24 @@
           <div class="add-Information">
             <label for="add-Name">Name: </label>
             <input type="text" name="name" id="add-Name" />
-    
+
             <label for="add-Building">Building and Stall: </label>
             <input type="text" name="building" id="add-Building" />
           </div>
           <div class="add-Billing">
             <label for="add-DateOfReading">Date of Reading: </label>
             <input type="text" name="date_of_reading" id="add-DateOfReading" />
-    
+
             <label for="add-CurrentReading">Current Reading: </label>
             <input type="text" name="current_reading" id="add-CurrentReading" />
           </div>
-    
+
           <button type="submit" id="post" class="button green">
             Add New Tenant
           </button>
         </form>
       </div>
     </div>
-    
 
     <div class="update-section-tenant">
       <div class="update-content-tenant">
@@ -169,16 +171,20 @@
 
           <div class="update-Totalamount">
             <label for="updateConsume">Consumption: </label>
-            <input type="number" name="updateConsume" class="updateConsume" readonly />
+            <input
+              type="number"
+              name="updateConsume"
+              class="updateConsume"
+              readonly />
             <label for="TotalAmount"
               >Total Amount: <span class="updateTotal"></span
             ></label>
           </div>
-          <button type="submit" id="updateBtn" class="button">
+          <button type="submit" id="AddMeralco" class="button">
             Add Meralco
           </button>
-        </div>
-      </form>
+        </form>
+      </div>
       <script>
         function amountCalculation() {
           let preReading =

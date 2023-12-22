@@ -10,20 +10,20 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 // mySQL;
-// const pool = mysql.createPool({
-//   host: "localhost",
-//   user: "root",
-//   password: "",
-//   database: "Am9Commercial",
-//   connectionLimit: 20,
-// });
 const pool = mysql.createPool({
-  host: "b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com",
-  user: "u1llarmjzoo3t683",
-  password: "HKDuDLkfJO1cZQJX58M7",
-  database: "b18rvltkeprxyrwdxj35",
+  host: "localhost",
+  user: "root",
+  password: "",
+  database: "Am9Commercial",
   connectionLimit: 20,
 });
+// const pool = mysql.createPool({
+//   host: "b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com",
+//   user: "u1llarmjzoo3t683",
+//   password: "HKDuDLkfJO1cZQJX58M7",
+//   database: "b18rvltkeprxyrwdxj35",
+//   connectionLimit: 20,
+// });
 
 // get all the tenant_data
 app.get("/tenant", (req, res) => {
@@ -83,7 +83,7 @@ app.get("/tenant/:tenant_id", (req, res) => {
   });
 });
 
-// delete a record
+// delete tenant record
 app.delete("/tenant/delete/:tenant_id", (req, res) => {
   pool.getConnection((err, connection) => {
     if (err) throw err;
@@ -117,6 +117,32 @@ app.delete("/tenant/delete/:tenant_id", (req, res) => {
             res.send(`Tenant with the tenant ID ${tenantId} has been removed`);
           }
         );
+      }
+    );
+  });
+});
+
+// delete meralco record
+app.delete("/meralco/delete/:meralco_id", (req, res) => {
+  pool.getConnection((err, connection) => {
+    if (err) throw err;
+    console.log(`connected as id ${connection.threadId}`);
+
+    const meralcoId = req.params.meralco_id;
+
+    connection.query(
+      "DELETE FROM Meralco WHERE meralco_id = ?",
+      [meralcoId],
+      (meralcoErr) => {
+        if (meralcoErr) {
+          return connection.rollback(() => {
+            connection.release();
+            throw meralcoErr;
+          });
+        }
+
+        connection.release();
+        res.send(`Tenant with the meralco ID ${meralcoId} has been removed`);
       }
     );
   });
