@@ -168,16 +168,17 @@ app.post("/tenant/add-tenant", (req, res) => {
       current_reading: req.body["current_reading"],
     };
 
+    console.log("Tenant Params:", tenantParams);
+    console.log("Meralco Params:", meralcoParams);
+
     connection.query(
       "INSERT INTO tenants SET ?",
       tenantParams,
       (tenantErr, tenantResult) => {
         if (tenantErr) {
-          return connection.rollback(() => {
-            console.error("Error inserting tenant:", tenantErr);
-            connection.release();
-            res.status(500).send("Error inserting tenant");
-          });
+          console.error("Error inserting tenant:", tenantErr);
+          connection.release();
+          return res.status(500).send("Error inserting tenant");
         }
 
         const newTenantId = tenantResult.insertId;
@@ -189,11 +190,9 @@ app.post("/tenant/add-tenant", (req, res) => {
           meralcoParams,
           (meralcoErr) => {
             if (meralcoErr) {
-              return connection.rollback(() => {
-                console.error("Error inserting Meralco:", meralcoErr);
-                connection.release();
-                res.status(500).send("Error inserting Meralco");
-              });
+              console.error("Error inserting Meralco:", meralcoErr);
+              connection.release();
+              return res.status(500).send("Error inserting Meralco");
             }
 
             connection.release();
@@ -230,11 +229,9 @@ app.post("/meralco/add-meralco", (req, res) => {
       [meralcoParams],
       (meralcoErr, meralcoResult) => {
         if (meralcoErr) {
-          return connection.rollback(() => {
-            console.error("Error inserting Meralco record:", meralcoErr);
-            connection.release();
-            res.status(500).send("Error inserting Meralco record");
-          });
+          console.error("Error inserting Meralco record:", meralcoErr);
+          connection.release();
+          return res.status(500).send("Error inserting Meralco record");
         }
 
         connection.release();

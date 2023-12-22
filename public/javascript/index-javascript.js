@@ -76,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
       year: "numeric",
     });
 
+    // to show in UpdateForm
     document.getElementById("updatePreviousReading").value = "";
     document.getElementById("updateCurrentReading").value = "";
     document.getElementById("updateDueDate").value = "";
@@ -108,10 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
       if (
         !selectedDate ||
         selectedDate.per_kwh === null ||
-        selectedDate.previous_reading === null ||
-        selectedDate.current_reading === null
+        selectedDate.previous_reading === null
       ) {
-        return;
+        selectedDate.per_kwh = 0;
+        selectedDate.previous_reading = 0;
+        selectedDate.consume = selectedDate.current_reading;
       }
 
       let PerKWHNumber = selectedDate.per_kwh * 10;
