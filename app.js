@@ -150,15 +150,13 @@ app.delete("/meralco/delete/:meralco_id", (req, res) => {
 
 //create a record tenant
 app.post("/tenant/add-tenant", (req, res) => {
-  pool.getConnection((err, connection) => {
-    if (err) {
-      console.error("Error getting connection from pool:", err);
+  pool.getConnection((getConnectionErr, connection) => {
+    if (getConnectionErr) {
+      console.error("Error getting connection from pool:", getConnectionErr);
       return res.status(500).send("Internal Server Error");
     }
 
     console.log(`Connected as id ${connection.threadId}`);
-
-    const tenantId = req.params.tenant_id;
 
     const tenantParams = {
       name: req.body["name"],
@@ -276,6 +274,7 @@ app.put("/tenant/update-tenant/:tenant_id", (req, res) => {
 
         connection.release();
         res.send(`Tenant with ID ${tenantId} has been updated`);
+        res.redirect("/");
       }
     );
   });
