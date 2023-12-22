@@ -92,7 +92,7 @@ app.delete("/tenant/delete/:tenant_id", (req, res) => {
     const tenantId = req.params.tenant_id;
 
     connection.query(
-      "DELETE FROM Meralco WHERE tenant_id = ?",
+      "DELETE FROM meralco WHERE tenant_id = ?",
       [tenantId],
       (meralcoErr) => {
         if (meralcoErr) {
@@ -131,7 +131,7 @@ app.delete("/meralco/delete/:meralco_id", (req, res) => {
     const meralcoId = req.params.meralco_id;
 
     connection.query(
-      "DELETE FROM Meralco WHERE meralco_id = ?",
+      "DELETE FROM meralco WHERE meralco_id = ?",
       [meralcoId],
       (meralcoErr) => {
         if (meralcoErr) {
@@ -187,7 +187,7 @@ app.post("/tenant/add-tenant", (req, res) => {
         meralcoParams.tenant_id = newTenantId;
 
         connection.query(
-          "INSERT INTO Meralco SET ?",
+          "INSERT INTO meralco SET ?",
           meralcoParams,
           (meralcoErr) => {
             if (meralcoErr) {
