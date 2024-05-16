@@ -1,16 +1,30 @@
 // models/User.js
 
 const { Model } = require('objection');
+const Role = require('./roleModel'); 
 
 class User extends Model {
     static get tableName() {
-        return 'users'; // Assuming the table name is 'users'
+        return 'users'; 
+    }
+
+    static get relationMappings() {
+        return {
+            role: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Role,
+                join: {
+                    from: 'users.role_id',
+                    to: 'roles.role_id'
+                }
+            }
+        };
     }
 
     static get jsonSchema() {
         return {
             type: 'object',
-            required: ['username', 'password', 'tenant_id','role'],
+            required: ['username', 'password', 'role_id'],
 
             properties: {
                 user_id: { type: 'integer' },
@@ -30,7 +44,6 @@ class User extends Model {
             throw error;
         }
     }
-    
 }
 
 module.exports = User;

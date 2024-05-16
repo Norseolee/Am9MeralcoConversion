@@ -8,12 +8,11 @@ class Role extends Model {
     static get jsonSchema() {
         return {
             type: 'object',
-            required: ['roles_name', 'roles_no'],
+            required: ['roles_name'],
 
             properties: {
                 role_id: { type: 'integer' },
                 roles_name: { type: 'string', maxLength: 255 },
-                roles_no: { type: 'integer' }
             }
         };
     }

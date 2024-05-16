@@ -7,15 +7,15 @@ const User = require('../Models/userModel');
 router.post('/login', async (req, res) => {
   const { username, password } = req.body;
 
-  console.log('Request body:', req.body); // Log the request body for debugging
-
   if (!username || !password) {
       return res.status(400).send('Username and password are required');
   }
 
   try {
       const user = await User.authenticate(username, password);
+      
       if (user) {
+          req.session.user = user;
           res.redirect('/pages/meralco_billing');
       } else {
           res.redirect('/');

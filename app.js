@@ -1,5 +1,9 @@
+// app.js
+require('dotenv').config();
+
 const express = require("express");
 const bodyParser = require("body-parser");
+const session = require('express-session');
 const ejs = require("ejs"); // Import EJS
 const knex = require("./config/db");
 
@@ -15,6 +19,14 @@ app.set("view engine", "ejs"); // Set EJS as the view engine
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Initialize session
+app.use(session({
+    secret: process.env.SESSION_SECRET, 
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false } // Set secure: true if using HTTPS
+  }));
 
 // Use routes for specific functionalities
 app.use("/", meralcoRoutes);

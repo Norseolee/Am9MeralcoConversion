@@ -1,12 +1,13 @@
 // meralcoRoutes.js
 const express = require("express");
 const router = express.Router();
-const Meralco = require("../models/meralcoModel");
+const Meralco = require("../Models/meralcoModel");
+const checkAuth = require('../Middleware/audthMiddleware'); 
 
 // view the meralco
-router.get('/pages/meralco_billing', async (req, res) => {
+router.get('/pages/meralco_billing', checkAuth , async (req, res) => {
   const meralcoRecords = await Meralco.query();
-  res.render('pages/meralco_billing', { records: meralcoRecords });
+  res.render('pages/meralco_billing', { user: req.session.user, records: meralcoRecords });
 })
 // create a record meralco
 router.post("/meralco/add-meralco", (req, res) => {
