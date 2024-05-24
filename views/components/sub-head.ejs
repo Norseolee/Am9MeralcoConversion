@@ -1,5 +1,6 @@
     <% if (view === 'user' && user.role_id === 1) { %>
         <h1>USER</h1>
+        <button id="addUserBtn" class="button">ADD USER</button>
     <% } else if (view === 'tenant' && (user.role_id === 1 || user.role_id === 2)) { %>
         <h1>TENANTS</h1>
     <% } else if (view === 'rent' && (user.role_id === 1 || user.role_id === 3)) { %>
@@ -11,3 +12,5 @@
     <% } else if (view === 'payment' && user.role_id === 1) { %>   
       <h1>PAYMENTS</h1>
     <% } %>   
+
+    <%- include('modal') %>

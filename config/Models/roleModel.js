@@ -2,7 +2,7 @@ const { Model } = require('objection');
 
 class Role extends Model {
     static get tableName() {
-        return 'roles'; // the table name is 'roles'
+        return 'roles'; // The table name is 'roles'
     }
 
     static get jsonSchema() {
@@ -17,3 +17,5 @@ class Role extends Model {
         };
     }
 }
+
+module.exports = Role;
