@@ -1,0 +1,100 @@
+<div>
+    <table>
+        <% if (view === 'meralco') { %>
+        <thead>
+            <tr>
+                <th>meralco id</th>
+                <th>tenant ID</th>
+                <th>Per kWh</th>
+                <th>Due Date</th>
+                <th>Date of Reading</th>
+                <th>Previous Reading</th>
+                <th>Current Reading</th>
+                <th>Consume</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach((meralco) => { %>
+                <tr>
+                    <td><%= meralco.meralco_id %></td>
+                    <td><%= meralco.tenant_id %></td>
+                    <td><%= meralco.per_kwh %></td>
+                    <td><%= meralco.due_date %></td>
+                    <td><%= meralco.date_of_reading %></td>
+                    <td><%= meralco.previous_reading %></td>
+                    <td><%= meralco.current_reading %></td>
+                    <td><%= meralco.consume %></td>
+                    <td>
+                        <%- meralco.is_paid == 1 ? '<span class="green">Paid</span>' : '<span class="red">Not Paid</span>' %>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+        <% } else if (view === 'tenant') { %>
+            <thead>
+            <tr>
+                <th>Tenant ID</th>
+                <th>Name</th>
+                <th>Unit</th>
+                <th>Contact Number</th>
+                <th>Lease Start</th>
+                <th>Lease End</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% data.forEach((tenant) => { %>
+                <tr>
+                    <td><%= tenant.tenant_id %></td>
+                    <td><%= tenant.name %></td>
+                    <td><%= tenant.building %></td>
+                    <td><%= tenant.contact_number %></td>
+                    <td><%= tenant.lease_start %></td>
+                    <td><%= tenant.lease_end %></td>
+                </tr>
+            <% }); %>
+        </tbody>
+        <% } else if (view === 'user') { %>
+            <thead>
+            <tr>
+                <th>User ID</th>
+                <th>Username</th>
+                <th>Role</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+                <% data.forEach((user) => { %>
+                    <tr>
+                        <td><%= user.id %></td>
+                        <td><%= user.username %></td>
+                        <td><%= user.role_id %></td>
+                        <td>Action</td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        <% } %>        
+    </table>
+
+    <div class="pagination">
+        <% if (currentPage > 1) { %>
+            <a href="/dashboard?view=<%= view %>&page=<%= currentPage - 1 %>">&laquo; Previous</a>
+        <% } else { %>
+            <span class="disabled">&laquo; Previous</span>
+        <% } %>
+
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+                <span class="current-page"><%= i %></span>
+            <% } else { %>
+                <a href="/dashboard?view=<%= view %>&page=<%= i %>"><%= i %></a>
+            <% } %>
+        <% } %>
+    
+        <% if (currentPage < totalPages) { %>
+            <a href="/dashboard?view=<%= view %>&page=<%= currentPage + 1 %>">Next &raquo;</a>
+        <% } else { %>
+            <span class="disabled">Next &raquo;</span>
+        <% } %>
+    </div>
+</div>

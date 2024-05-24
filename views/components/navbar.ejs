@@ -1,27 +1,62 @@
-<nav>
+<div class="nav">
+    <img src="/Images/am9commercial.jpg" alt="Am9 Commercial">
     <!-- 
         User Roles
         Admin == 1
         Staff == 2
         User == 3
     -->
-    <% if(user.role_id === 1) { %>
+    <% if(user.role_id === 1) { %> <!-- Admin navbar -->
     <ul>
-        <li><a href="/Dashboard">Home</a></li>
-        <li><a href="/tenant_list">Tenant_List</a></li>
-        <li><a href="/">Contact</a></li>
+        <a href="/dashboard?view=user"><li>User</li></a>
+        <a href="/dashboard?view=tenant"><li>Tenant</li></a>
+        <a href="/dashboard?view=payment"><li>Payment</li></a>
+        <a id="utilityToggle">Utility</a>
+        <ul id="utilitySubMenu">
+            <a href="/dashboard?view=meralco"><li>Meralco</li></a>
+            <a href="/dashboard?view=maynilad"><li>Maynilad</li></a>
+        </ul>
+        
+        <a href="/logout" id="logout"><li>Logout</li></a>
     </ul>
-    <% } else if(user.role_id === 2) { %>
+    <% } else if(user.role_id === 2) { %> <!-- Staff navbar -->
     <ul>
-        <li><a href="/Dashboard">Home</a></li>
-        <li><a href="/tenant_list">Tenant_List</a></li>
-        <li><a href="/">Contact</a></li>
+        
+        <a href="/dashboard?view=meralco"><li>Meralco</li></a>
+        <a href="/dashboard?view=maynilad"><li>Maynilad</li></a>
+        <a href="/dashboard?view=payment"><li>Payment</li></a>
+        <a href="/logout" id="logout"><li>Logout</li></a>
     </ul>
-    <% } else if(user.role_id === 3) { %>
+    <% } else if(user.role_id === 3) { %> <!-- User navbar -->
     <ul>
-        <li><a href="/Dashboard">Home</a></li>
-        <li><a href="/tenant_list">Tenant_List</a></li>
-        <li><a href="/">Contact</a></li>
+        <a href="/dashboard?view=rent"><li>Rental</li></a>
+        <li>
+            <a id="utilityToggle">Utility</a>
+            <ul id="utilitySubMenu">
+                <a href="/dashboard?view=meralco"><li>Meralco</li></a>
+                <a href="/logout" id="logout"><li>Maynilad</li></a>
+            </ul>
+        </li>
+        <a href="/dashboard?view=payment"><li>Payment</li></a>
+        <a href="/logout" id="logout"><li>Logout</li></a>
     </ul>
     <% } %>
-</nav>
+</div>
+
+<script>
+    document.getElementById('utilityToggle').addEventListener('click', function(e) {
+        var subMenu = document.getElementById('utilitySubMenu');
+        if (subMenu.style.display === 'none') {
+            subMenu.style.display = 'block';
+        } else {
+            subMenu.style.display = 'none';
+        }
+    });
+
+    // const logOut = document.querySelector('#logout');
+
+    // logOut.addEventListener('click', function(e) {
+    //     e.preventDefault();
+    //     sessionStorage.removeItem('login');
+    // });
+</script>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="css/login.css">
+    <script src="js/login.js"></script>
+  </head>
+  <body>
+    <img src="../Images/bg.jpg" alt="Am9 Front Commercial" class="bg">
+    <img src="../Images/am9commercial.jpg" class="logo" alt="">
+   
+    <form id="loginForm" action="/login" method="POST">
+      <div class="login-form">
+        <h1>Login</h1>
+        <div class="sub-login">
+          <label for="username">Username: </label>
+          <input type="text" class="input" id="username" name="username">
+        </div>
+        <div class="sub-login">
+          <label for="password">Password: </label>
+          <input type="password" class="input" id="password" name="password">
+        </div>
+        <div class="remember_me">
+          <input type="checkbox" name="remember_me" id="remember_me"><label for="remember_me">Remember me</label>
+        </div>
+        <input type="submit" id="submit_login" class="button" value="Login">
+      </div>
+    </form>
+    
+  </body>
+</html>

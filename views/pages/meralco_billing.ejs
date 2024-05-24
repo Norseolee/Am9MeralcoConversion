@@ -2,205 +2,210 @@
 <html lang="en">
     <%- include('../components/header') %>
   <body>
-    <%- include('../components/navbar') %>
-    <div class="printable">
-      <%- include('../components/meralco_print') %>
-    </div>
-
-    <div class="select">
-      <div>
-        <label for="selection">Select Tenant: </label>
-        <select name="selection" id="selection" class="design-select">
-          <option value="0"></option>
-        </select>
-        <label for="selection_date">Select Date: </label>
-        <select name="selection_date" id="selection_date" class="design-select">
-          <option value="0"></option>
-        </select>
-
-        <button class="button" onclick="printContent()">Print</button>
-
-        <button class="button" onclick="toggleSection('update-section-tenant')">
-          Add Meralco
-        </button>
-
-        <button class="button" onclick="toggleSection('history-section')">
-          History
-        </button>
-
-        <button class="button red" onclick="deleteMeralco()">
-          Delete Meralco
-        </button>
-      </div>
-
-      <button class="button green" onclick="toggleSection('add-section')">
-        Add Tenant
-      </button>
-      <button class="button" onclick="toggleSection('update-section')">
-        Update Tenant
-      </button>
-      <button class="button red" onclick="deleteTenant();">
-        Delete Tenant
-      </button>
-    </div>
-
-    <div class="add-section">
-      <div class="add-content">
-        <form action="/tenant/add-tenant" method="post" id="addTenantForm">
-          <h1 style="text-align: center">ADD NEW TENANT</h1>
-          <div class="add-Information">
-            <label for="add-Name">Name: </label>
-            <input type="text" name="name" id="add-Name" />
-
-            <label for="add-Building">Building and Stall: </label>
-            <input type="text" name="building" id="add-Building" />
-          </div>
-          <div class="add-Billing">
-            <label for="add-DateOfReading">Date of Reading: </label>
-            <input type="text" name="date_of_reading" id="add-DateOfReading" />
-
-            <label for="add-CurrentReading">Current Reading: </label>
-            <input type="text" name="current_reading" id="add-CurrentReading" />
-          </div>
-
-          <button type="submit" id="post" class="button green">
-            Add New Tenant
-          </button>
-        </form>
-      </div>
-    </div>
-
-    <div class="update-section-tenant">
-      <div class="update-content-tenant">
-        <h1 style="text-align: center">UPDATE READING</h1>
-        <div class="body-history">
-          <p>Name: <span id="meralcoNameTenant"></span></p>
-          <p>Building: <span id="meralcoBuildingTenant"></span></p>
+    <div class="main">
+      <%- include('../components/navbar') %>
+  
+      <div class="sub-section">
+        <div class="printable">
+          <%- include('../components/meralco_print') %>
         </div>
-        <form action="/meralco/add-meralco" method="post" id="addMeralcoForm">
-          <div class="update-Due-kwh">
-            <label for="updateTenantId">Tenant ID:</label>
-            <input
-              type="text"
-              name="updateTenantId"
-              id="updateTenantId"
-              readonly />
 
-            <label for="updateDueDate">Due Date: </label>
-            <input
-              type="text"
-              name="updateDueDate"
-              id="updateDueDate"
-              required />
-
-            <label for="updatePerKwh">Per Kwh</label>
-            <input
-              type="text"
-              required
-              oninput="amountCalculation()"
-              name="updatePerKwh"
-              id="updatePerKwh" />
+        <!-- <div class="select">
+          <div>
+            <label for="selection">Select Tenant: </label>
+            <select name="selection" id="selection" class="design-select">
+              <option value="0"></option>
+            </select>
+            <label for="selection_date">Select Date: </label>
+            <select name="selection_date" id="selection_date" class="design-select">
+              <option value="0"></option>
+            </select>
+    
+            <button class="button" onclick="printContent()">Print</button>
+    
+            <button class="button" onclick="toggleSection('update-section-tenant')">
+              Add Meralco
+            </button>
+    
+            <button class="button" onclick="toggleSection('history-section')">
+              History
+            </button>
+    
+            <button class="button red" onclick="deleteMeralco()">
+              Delete Meralco
+            </button>
           </div>
-
-          <div class="update-Billing">
-            <label for="updateDateOfReading">Date of Reading: </label>
-            <input
-              type="text"
-              name="updateDateOfReading"
-              id="updateDateOfReading"
-              readonly />
-
-            <label for="updatePreviousReading">Previous Reading: </label>
-            <input
-              type="text"
-              oninput="amountCalculation()"
-              name="updatePreviousReading"
-              required
-              id="updatePreviousReading" />
-
-            <label for="updateCurrentReading">Current Reading: </label>
-            <input
-              type="text"
-              oninput="amountCalculation()"
-              required
-              name="updateCurrentReading"
-              id="updateCurrentReading" />
-          </div>
-
-          <div class="update-Totalamount">
-            <label for="updateConsume">Consumption: </label>
-            <input
-              type="text"
-              name="updateConsume"
-              class="updateConsume"
-              readonly />
-            <label for="TotalAmount"
-              >Total Amount: <span class="updateTotal"></span
-            ></label>
-          </div>
-          <button type="submit" id="AddMeralco" class="button">
-            Add Meralco
+    
+          <button class="button green" onclick="toggleSection('add-section')">
+            Add Tenant
           </button>
-        </form>
-      </div>
-      <script>
-        function amountCalculation() {
-          let preReading =
-            Number(document.getElementById("updatePreviousReading").value) || 0;
-          let curReading =
-            Number(document.getElementById("updateCurrentReading").value) || 0;
-          let perkwh =
-            Number(document.getElementById("updatePerKwh").value) || 0;
-
-          if (perkwh === null || curReading === null || preReading === null) {
-            return;
-          }
-
-          let PerKWHNumber = perkwh * 10;
-          let PreviousReadingNumber = preReading * 10;
-          let CurrentReadingNumber = curReading * 10;
-
-          let PreviousminusCurrent =
-            CurrentReadingNumber - PreviousReadingNumber;
-          let Calculation = (PreviousminusCurrent * PerKWHNumber) / 100;
-
-          let consume = PreviousminusCurrent / 10;
-
-          document.querySelector(".updateConsume").value = consume;
-          document.querySelector(".updateTotal").innerHTML = Calculation;
-        }
-      </script>
-    </div>
-
-    <div class="update-section">
-      <div class="update-content">
-        <h1 style="text-align: center">UPDATE TENANT INFORMATION</h1>
-        <form id="updateTenantForm">
-          <div class="update-Information">
-            <label for="updateName">Name: </label>
-            <input type="text" name="updateName" id="updateNameTenant" />
-
-            <label for="updateBuilding">Building and Stall: </label>
-            <input
-              type="text"
-              name="updateBuilding"
-              id="updateBuildingTenant" />
-
-            <input type="hidden" id="updateTenantId" />
-          </div>
-          <button type="submit" id="updateBtn" class="button">Update</button>
-        </form>
-      </div>
-    </div>
-
-    <div class="history-section">
-      <div class="history-content">
-        <div class="body-history">
-          <p>Name: <span class="History-Name"></span></p>
-          <p>Building: <span class="History-Builing"></span></p>
+          <button class="button" onclick="toggleSection('update-section')">
+            Update Tenant
+          </button>
+          <button class="button red" onclick="deleteTenant();">
+            Delete Tenant
+          </button>
         </div>
-        <div class="history"></div>
-        <button id="delete" class="button">Print</button>
+    
+        <div class="add-section">
+          <div class="add-content">
+            <form action="/tenant/add-tenant" method="post" id="addTenantForm">
+              <h1 style="text-align: center">ADD NEW TENANT</h1>
+              <div class="add-Information">
+                <label for="add-Name">Name: </label>
+                <input type="text" name="name" id="add-Name" />
+    
+                <label for="add-Building">Building and Stall: </label>
+                <input type="text" name="building" id="add-Building" />
+              </div>
+              <div class="add-Billing">
+                <label for="add-DateOfReading">Date of Reading: </label>
+                <input type="text" name="date_of_reading" id="add-DateOfReading" />
+    
+                <label for="add-CurrentReading">Current Reading: </label>
+                <input type="text" name="current_reading" id="add-CurrentReading" />
+              </div>
+    
+              <button type="submit" id="post" class="button green">
+                Add New Tenant
+              </button>
+            </form>
+          </div>
+        </div>
+    
+        <div class="update-section-tenant">
+          <div class="update-content-tenant">
+            <h1 style="text-align: center">UPDATE READING</h1>
+            <div class="body-history">
+              <p>Name: <span id="meralcoNameTenant"></span></p>
+              <p>Building: <span id="meralcoBuildingTenant"></span></p>
+            </div>
+            <form action="/meralco/add-meralco" method="post" id="addMeralcoForm">
+              <div class="update-Due-kwh">
+                <label for="updateTenantId">Tenant ID:</label>
+                <input
+                  type="text"
+                  name="updateTenantId"
+                  id="updateTenantId"
+                  readonly />
+    
+                <label for="updateDueDate">Due Date: </label>
+                <input
+                  type="text"
+                  name="updateDueDate"
+                  id="updateDueDate"
+                  required />
+    
+                <label for="updatePerKwh">Per Kwh</label>
+                <input
+                  type="text"
+                  required
+                  oninput="amountCalculation()"
+                  name="updatePerKwh"
+                  id="updatePerKwh" />
+              </div>
+    
+              <div class="update-Billing">
+                <label for="updateDateOfReading">Date of Reading: </label>
+                <input
+                  type="text"
+                  name="updateDateOfReading"
+                  id="updateDateOfReading"
+                  readonly />
+    
+                <label for="updatePreviousReading">Previous Reading: </label>
+                <input
+                  type="text"
+                  oninput="amountCalculation()"
+                  name="updatePreviousReading"
+                  required
+                  id="updatePreviousReading" />
+    
+                <label for="updateCurrentReading">Current Reading: </label>
+                <input
+                  type="text"
+                  oninput="amountCalculation()"
+                  required
+                  name="updateCurrentReading"
+                  id="updateCurrentReading" />
+              </div>
+    
+              <div class="update-Totalamount">
+                <label for="updateConsume">Consumption: </label>
+                <input
+                  type="text"
+                  name="updateConsume"
+                  class="updateConsume"
+                  readonly />
+                <label for="TotalAmount"
+                  >Total Amount: <span class="updateTotal"></span
+                ></label>
+              </div>
+              <button type="submit" id="AddMeralco" class="button">
+                Add Meralco
+              </button>
+            </form>
+          </div>
+          <script>
+            function amountCalculation() {
+              let preReading =
+                Number(document.getElementById("updatePreviousReading").value) || 0;
+              let curReading =
+                Number(document.getElementById("updateCurrentReading").value) || 0;
+              let perkwh =
+                Number(document.getElementById("updatePerKwh").value) || 0;
+    
+              if (perkwh === null || curReading === null || preReading === null) {
+                return;
+              }
+    
+              let PerKWHNumber = perkwh * 10;
+              let PreviousReadingNumber = preReading * 10;
+              let CurrentReadingNumber = curReading * 10;
+    
+              let PreviousminusCurrent =
+                CurrentReadingNumber - PreviousReadingNumber;
+              let Calculation = (PreviousminusCurrent * PerKWHNumber) / 100;
+    
+              let consume = PreviousminusCurrent / 10;
+    
+              document.querySelector(".updateConsume").value = consume;
+              document.querySelector(".updateTotal").innerHTML = Calculation;
+            }
+          </script>
+        </div>
+    
+        <div class="update-section">
+          <div class="update-content">
+            <h1 style="text-align: center">UPDATE TENANT INFORMATION</h1>
+            <form id="updateTenantForm">
+              <div class="update-Information">
+                <label for="updateName">Name: </label>
+                <input type="text" name="updateName" id="updateNameTenant" />
+    
+                <label for="updateBuilding">Building and Stall: </label>
+                <input
+                  type="text"
+                  name="updateBuilding"
+                  id="updateBuildingTenant" />
+    
+                <input type="hidden" id="updateTenantId" />
+              </div>
+              <button type="submit" id="updateBtn" class="button">Update</button>
+            </form>
+          </div>
+        </div>
+    
+        <div class="history-section">
+          <div class="history-content">
+            <div class="body-history">
+              <p>Name: <span class="History-Name"></span></p>
+              <p>Building: <span class="History-Builing"></span></p>
+            </div>
+            <div class="history"></div>
+            <button id="delete" class="button">Print</button>
+          </div>
+        </div> -->
       </div>
     </div>
 

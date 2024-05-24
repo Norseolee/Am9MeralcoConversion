@@ -1,0 +1,13 @@
+    <% if (view === 'user' && user.role_id === 1) { %>
+        <h1>USER</h1>
+    <% } else if (view === 'tenant' && (user.role_id === 1 || user.role_id === 2)) { %>
+        <h1>TENANTS</h1>
+    <% } else if (view === 'rent' && (user.role_id === 1 || user.role_id === 3)) { %>
+        <h1>RENTS</h1>
+    <% } else if (view === 'meralco') { %>
+      <h1>MERALCO</h1>
+    <% } else if (view === 'maynilad') { %>
+      <h1>MAYNILAD</h1>
+    <% } else if (view === 'payment' && user.role_id === 1) { %>   
+      <h1>PAYMENTS</h1>
+    <% } %>   

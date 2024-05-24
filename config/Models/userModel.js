@@ -27,7 +27,7 @@ class User extends Model {
             required: ['username', 'password', 'role_id'],
 
             properties: {
-                user_id: { type: 'integer' },
+                id: { type: 'integer' },
                 role_id: { type: ['integer', 'null'] },
                 username: { type: 'string', maxLength: 255 },
                 password: { type: 'string', maxLength: 255 }
