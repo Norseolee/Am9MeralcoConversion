@@ -443,7 +443,7 @@ html {
       margin-inline: 20px;
       flex-grow: 10;
     }
-    #previewSignature {
+    #previewSignature, #previewImageIdFront, #previewImageIdBack {
       padding-inline: 20px;
       width: 200px;
     }

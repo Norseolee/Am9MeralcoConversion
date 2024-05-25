@@ -67,12 +67,20 @@
             <h3>Documents</h3>
 
             <div>
+                <label for="image_id_front"> ID FRONT:</label>
+                <input type="file" id="image_id_front" name="image_id_front" accept="image/*" >
+                <label for="image_id_back"> ID BACK:</label>
+                <input type="file" id="image_id_back" name="image_id_back" accept="image/*" >
+            </div>
+            <div>
                 <label for="signature">Signature:</label>
                 <input type="file" id="signature" name="signature" accept="image/*" >
             </div>
 
             <div>
                 <img id="previewSignature" src="#" alt="Signature Preview" style="display: none;">
+                <img id="previewImageIdFront" src="#" alt="Valid Id Preview Front" style="display: none;">
+                <img id="previewImageIdBack" src="#" alt="Valid Id  Preview Back" style="display: none;">
             </div>
 
             <input type="hidden" name="status" value="active">
@@ -87,7 +95,11 @@
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const signatureInput = document.getElementById('signature');
-    const preview = document.getElementById('previewSignature');
+    const idFront = document.getElementById('image_id_front');
+    const idBack = document.getElementById('image_id_back');
+    const previewSignature = document.getElementById('previewSignature');
+    const previewIdFront = document.getElementById('previewImageIdFront');
+    const previewIdBack = document.getElementById('previewImageIdBack');
 
     signatureInput.addEventListener('change', async function(event) {
         const file = this.files[0];
@@ -106,14 +118,44 @@ document.addEventListener("DOMContentLoaded", function() {
                 }
 
                 const data = await response.json();
-                preview.src = data.base64Image;
-                preview.style.display = 'block';
+                previewSignature.src = data.base64Image;
+                previewSignature.style.display = 'block';
             } catch (error) {
                 console.error('Error:', error);
             }
         } else {
-            preview.src = '#';
-            preview.style.display = 'none';
+            previewSignature.src = '#';
+            previewSignature.style.display = 'none';
+        }
+    });
+
+    idFront.addEventListener('change', async function(event) {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewIdFront.src = e.target.result;
+                previewIdFront.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewIdFront.src = '#';
+            previewIdFront.style.display = 'none';
+        }
+    });
+
+    idBack.addEventListener('change', async function(event) {
+        const file = this.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewIdBack.src = e.target.result;
+                previewIdBack.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewIdBack.src = '#';
+            previewIdBack.style.display = 'none';
         }
     });
 

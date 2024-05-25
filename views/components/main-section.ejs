@@ -69,7 +69,12 @@
                         <td><%= user.id %></td>
                         <td><%= user.username %></td>
                         <td><%= user.role_id %></td>
-                        <td>Action</td>
+                        <td>
+                            <a id="userEditModal" class="small-button">Edit</a>
+                            <% if(session_user.id !== user.id) { %> 
+                                <a href="/user_process/delete-user?id=<%= user.id %>&do=delete" class="small-button red">Delete</a>
+                            <% } %>
+                        </td>
                     </tr>
                 <% }); %>
             </tbody>

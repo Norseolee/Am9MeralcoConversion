@@ -73,6 +73,7 @@ router.get('/logout', checkAuth, (req, res) => {
 router.get('/dashboard', async (req, res) => {
     try {
         let userData, meralcoData, tenantData, roleData;
+        let session_user_id = req.session.user;
 
         // Check if the user is logged in through session
         if (req.session.user) {
@@ -136,6 +137,7 @@ router.get('/dashboard', async (req, res) => {
             totalPages: totalPages,
             view: view,
             roles: roleData,
+            session_user: session_user_id,
         });
         
     } catch (error) {
@@ -161,6 +163,39 @@ router.post("/user_process/add-user", async (req, res) => {
         res.redirect('/dashboard?view=user');
     } catch (error) {
         console.error('Error creating user:', error);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+// Route handler for delete user
+router.get('/user_process/delete-user', async (req, res) => {
+    try {
+        // Check if 'do' parameter is provided and equals 'delete'
+        if (req.query.do === 'delete') {
+            // Check if 'id' parameter is provided
+            if (!req.query.id) {
+                return res.status(400).send('User ID is missing.');
+            }
+
+            const userIdToDelete = req.query.id;
+            const loggedInUserId = req.session.user.id; // Assuming the logged-in user ID is stored in session
+
+            // Prevent deletion if the user is trying to delete themselves
+            if (userIdToDelete === loggedInUserId) {
+                return res.status(400).send('You cannot delete yourself.');
+            }
+            
+            // Delete the user with the provided ID
+            await User.query().deleteById(userIdToDelete);
+            
+            // Redirect back to the dashboard or any other appropriate page
+            res.redirect('/dashboard?view=user');
+        } else {
+            // If 'do' parameter is not 'delete', return a 400 Bad Request status
+            res.status(400).send('Invalid action.');
+        }
+    } catch (error) {
+        console.error('Error deleting user:', error);
         res.status(500).send('Internal Server Error');
     }
 });
