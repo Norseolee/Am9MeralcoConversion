@@ -7,12 +7,15 @@ exports.up = function(knex) {
         table.increments('meralco_id').primary();
         table.integer('tenant_id').notNullable();
         table.integer('per_kwh').notNullable();
-        table.string('due_date', 255).notNullable();
-        table.string('date_of_reading').notNullable();
-        table.integer('previous_reading').notNullable();
-        table.integer('current_reading').notNullable();
-        table.float('consume').notNullable();
-        table.timestamps(true, true);
+        table.string('due_date', 100).notNullable();
+        table.string('date_of_reading', 100).nullable();
+        table.decimal('previous_reading', 10, 1).notNullable();
+        table.decimal('current_reading', 10, 1).notNullable();
+        table.decimal('consume', 10, 1).notNullable();
+        table.boolean('is_paid').nullable();
+        table.date('paid_date').nullable();
+        table.datetime('created').nullable();
+        table.boolean('is_deleted').nullable();
     });
 };
 

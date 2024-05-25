@@ -46,11 +46,11 @@
             <% data.forEach((tenant) => { %>
                 <tr>
                     <td><%= tenant.tenant_id %></td>
-                    <td><%= tenant.name %></td>
-                    <td><%= tenant.building %></td>
+                    <td><%= tenant.business_name %></td>
+                    <td><%= tenant.unit %></td>
                     <td><%= tenant.contact_number %></td>
-                    <td><%= tenant.lease_start %></td>
-                    <td><%= tenant.lease_end %></td>
+                    <td><%= new Date(tenant.lease_start).toLocaleDateString() %></td>
+                    <td><%= new Date(tenant.lease_end).toLocaleDateString() %></td>
                 </tr>
             <% }); %>
         </tbody>

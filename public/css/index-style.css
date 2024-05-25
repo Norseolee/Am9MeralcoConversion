@@ -192,6 +192,9 @@
 } */
 
 /* main */
+:root {
+  font-family: Verdana, Geneva, Tahoma, sans-serif
+}
 html {
   background-color: #64748B;
 }
@@ -269,6 +272,7 @@ html {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    color:#eef2f8;
   }
   .main-section {
     justify-content: start;
@@ -340,7 +344,7 @@ html {
 
 /* inputs */
 
-.input {
+ input, select {
   height: 30px;
 
   border: none;
@@ -377,3 +381,85 @@ html {
     background-color: rgba(19, 121, 218, 0.885);
   }
 }
+
+
+/* Models */
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.4);
+  padding-top: 60px;
+}
+
+.modal-content {
+  border-radius: 18px;
+  background-color: #374151;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%;
+  color:rgb(177, 177, 177);
+  /* display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: stretch; */
+
+  .model-title {
+    display: flex;
+    justify-content: space-between;
+    color:#eef2f8;
+    padding-inline: 20px;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 10px;
+
+    h3 {
+      padding-inline: 20px;
+      margin: 0px;
+    }
+
+    div {
+      display: flex;
+      padding-inline: 20px;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    label {
+      flex-grow: 1;
+    }
+    input[type='text'] , select, input[type='date'], input[type='file'] {
+      margin-inline: 20px;
+      flex-grow: 10;
+    }
+    #previewSignature {
+      padding-inline: 20px;
+      width: 200px;
+    }
+  }
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+
+  &:hover,
+  &:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+  }
+}    

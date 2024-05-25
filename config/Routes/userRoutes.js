@@ -1,5 +1,8 @@
 const express = require('express');
 const router = express.Router();
+const sharp = require('sharp');
+const path = require('path');
+const fs = require('fs');
 const User = require('../Models/userModel');
 const Meralco = require('../Models/meralcoModel');
 const Tenant = require('../Models/tenantModel');
@@ -8,6 +11,7 @@ const checkAuth = require('../Middleware/audthMiddleware');
 const { generateToken } = require('../generateToken');
 const { verifyToken } = require('../verifyToken');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
 
 
 // Route handler for user login
@@ -140,6 +144,8 @@ router.get('/dashboard', async (req, res) => {
     }
 });
 
+
+// Route handler for add new user
 router.post("/user_process/add-user", async (req, res) => {
     try {
         // Hash the password
@@ -148,10 +154,9 @@ router.post("/user_process/add-user", async (req, res) => {
 
         // Insert the user into the database with the hashed password
         const user = await User.query().insert({
-            name: req.body.name,
             username: req.body.username,
-            password: hashedPassword, // Ensure this is correct
-            role_id: role, // Check if req.body.role is correctly assigned
+            password: hashedPassword, 
+            role_id: role, 
         });
         res.redirect('/dashboard?view=user');
     } catch (error) {
@@ -159,5 +164,33 @@ router.post("/user_process/add-user", async (req, res) => {
         res.status(500).send('Internal Server Error');
     }
 });
+
+//Routes handler for preview image
+const upload = multer();
+
+router.post('/preview', upload.single('signature'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        // Process the image to grayscale
+        const processedImageBuffer = await sharp(req.file.buffer)
+            .greyscale() 
+            .threshold(100) 
+            .toFormat('jpeg', { quality: 100 })
+            .toBuffer();
+
+        // Convert buffer to base64
+        const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString('base64')}`;
+
+        // Send the processed image data back as a response
+        res.send({ base64Image });
+    } catch (error) {
+        console.error('Error processing image:', error);
+        res.status(500).send('Error processing image.');
+    }
+});
+
 // Export the router
 module.exports = router;

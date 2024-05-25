@@ -32,9 +32,9 @@ app.use(session({
 
 // Use routes for specific functionalities
 // app.use("/", meralcoRoutes);
-// app.use("/", tenantRoutes);
+app.use("/", tenantRoutes);
 app.use("/", userRoutes);
-// app.use('/', migrationRoutes);
+app.use('/', migrationRoutes);
 
 app.get("/", (req, res) => {
     res.render("login"); 

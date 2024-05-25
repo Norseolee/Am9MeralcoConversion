@@ -1,26 +1,28 @@
-// models/Meralco.js
-
 const { Model } = require('objection');
 
 class Meralco extends Model {
     static get tableName() {
-        return 'meralco'; // the table name is 'users'
+        return 'meralco';
     }
 
     static get jsonSchema() {
         return {
             type: 'object',
-            required: ['tenant_id', 'per_kwh', 'due_date', 'date_of_reading', 'previous_reading', 'current_reading', 'consume'],
+            required: ['tenant_id', 'per_kwh', 'due_date', 'previous_reading', 'current_reading', 'consume', 'is_paid', 'paid_date', 'created', 'is_deleted'],
 
             properties: {
                 meralco_id: { type: 'integer' },
                 tenant_id: { type: 'integer' },
-                per_kwh: { type: 'integer' },
-                due_date: { type: 'string', maxLength: 255 },
-                date_of_reading: { type: 'string' },
-                previous_reading: { type: 'integer' },
-                current_reading: { type: 'integer' },
-                consume: { type: 'number' }
+                per_kwh: { type: ['integer', 'null'] },
+                due_date: { type: 'string', maxLength: 100 },
+                date_of_reading: { type: ['string', 'null'], maxLength: 100 },
+                previous_reading: { type: 'number', precision: 10, scale: 1 },
+                current_reading: { type: 'number', precision: 10, scale: 1 },
+                consume: { type: 'number', precision: 10, scale: 1 },
+                is_paid: { type: 'boolean', nullable: true }, 
+                paid_date: { type: ['string', 'null'], format: 'date' },
+                created: { type: ['string', 'null'], format: 'date-time' },
+                is_deleted: { type: 'boolean' }
             }
         };
     }
