@@ -254,9 +254,7 @@ router.post("/tenant_process/add-tenant", upload.fields([
             contact_number: req.body.contact_number,
             lease_start: req.body.lease_start,
             lease_end: req.body.lease_end,
-            // Do not save the original signature if not provided
             signature: signaturePath,
-            // Set image_id_front and image_id_back to null if not provided
             image_id_front: frontImagePath,
             image_id_back: backImagePath,
             status: req.body.status,
@@ -264,10 +262,11 @@ router.post("/tenant_process/add-tenant", upload.fields([
             modified: new Date().toISOString(),
         });
 
+        notificationCache.set("notification", { type: 'success', text: 'Added new tenant' }, 3);
         res.redirect('/dashboard?view=tenant');
     } catch (error) {
-        console.error('Error creating tenant:', error);
         res.status(500).send('Internal Server Error');
+        notificationCache.set("notification", { type: 'success', text: 'Error creating tenant:' + error }, 3);
     }
 });
 

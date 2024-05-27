@@ -1,196 +1,3 @@
-/* .button {
-  background-color: rgba(19, 121, 218, 0.685);
-  border: transparent;
-  padding: 10px 20px;
-  border-radius: 5px;
-
-  color: white;
-  margin-inline: 20px;
-}
-.red {
-  background-color: rgb(245, 132, 132);
-}
-.green {
-  background-color: rgb(129, 197, 129);
-}
-.body {
-  margin-top: 20px;
-  background-color: skyblue;
-  border-radius: 5px;
-  padding-bottom: 10px;
-
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-}
-.Header {
-  display: flex;
-  justify-content: space-between;
-}
-.Header > img {
-  height: 70px;
-  width: 100px;
-  object-fit: cover;
-  object-position: top;
-}
-.subject {
-  display: flex;
-  justify-content: center;
-}
-.information {
-  border-radius: 5px;
-  background-color: white;
-  margin: 10px;
-  padding-inline: 10px;
-  width: 50%;
-}
-.due_kwh {
-  border-radius: 5px;
-  background-color: white;
-  margin: 10px;
-  padding-inline: 10px;
-  width: 50%;
-}
-.billing {
-  display: flex;
-  justify-content: center;
-}
-.reading {
-  border-radius: 5px;
-  background-color: white;
-  margin: 10px;
-  padding-inline: 10px;
-  width: 50%;
-}
-.amount {
-  border-radius: 5px;
-  background-color: white;
-  margin: 10px;
-  padding-inline: 10px;
-  width: 50%;
-}
-.sign {
-  background-color: white;
-  border-radius: 5px;
-  padding: 5px 20px;
-  margin: 10px;
-}
-.select {
-  margin: 10px;
-  text-align: center;
-}
-.select button {
-  margin: 10px;
-}
-.design-select {
-  appearance: none;
-  height: 30px;
-  border-radius: 5px;
-  width: 150px;
-  padding-inline: 5px;
-}
-.design-select:focus {
-  outline: none;
-}
-.update-section,
-.add-section,
-.update-section-tenant {
-  display: none;
-}
-.add-content,
-.update-content,
-.update-content-tenant,
-.history-content {
-  background-color: rgb(226, 216, 216);
-  padding-block: 30px;
-  border-radius: 5px;
-
-  display: flex;
-  flex-direction: column;
-}
-.add-Information input,
-.update-Information input,
-.update-Information-tenant input,
-.add-Due-kwh input,
-.update-Due-kwh input,
-.add-Billing input,
-.update-Billing input,
-.update-Totalamount input,
-.add-Totalamount input {
-  width: 40%;
-  height: 20px;
-  border: none;
-  border-radius: 3px;
-  margin-block: 5px;
-}
-.add-Information label,
-.update-Information label,
-.update-Information-tenant label,
-.add-Due-kwh label,
-.update-Due-kwh label,
-.add-Billing label,
-.update-Billing label,
-.update-Totalamount label,
-.add-Totalamount label {
-  width: 40%;
-  height: 20px;
-  border: none;
-  border-radius: 3px;
-}
-.add-Information,
-.add-Due-kwh,
-.add-Billing,
-.add-Totalamount,
-.update-Information,
-.update-Information-tenant,
-.update-Due-kwh,
-.update-Billing,
-.update-Totalamount {
-  margin: 15px;
-
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.history-content {
-  display: flex;
-  flex-direction: column;
-}
-.body-history {
-  display: flex;
-}
-.history {
-  background-color: rgba(19, 121, 218, 0.685);
-  border-radius: 5px;
-
-  margin: 20px;
-
-  display: flex;
-  flex-direction: column;
-  padding: 5px;
-}
-.history_of_tenant {
-  display: flex;
-  justify-content: space-around;
-}
-.history_of_reading {
-  margin: 10px;
-  padding: 10px;
-  background-color: white;
-  border-radius: 5px;
-}
-.history-section {
-  display: none;
-}
-.body-history {
-  display: flex;
-  margin-inline: 50px;
-  justify-content: stretch;
-}
-.body-history p {
-  width: 40%;
-} */
-
 /* main */
 :root {
   font-family: Verdana, Geneva, Tahoma, sans-serif
@@ -236,7 +43,7 @@ html {
         
       }
     }
-    a {
+      .a {
       list-style-type: none;
       text-decoration: none;
       color: white;
@@ -279,7 +86,7 @@ html {
     width: 100%;
     flex-grow: 90;
 
-    div {
+    .table-main {
       border-radius: 15px;
       background-color: #1E293B;
       padding: 10px;
@@ -302,23 +109,29 @@ html {
           text-transform: uppercase;
           padding-block: 5px;
           color: #AAAEB5;
+          
           /* background-color: brown;
           border: 4px solid  yellow; */
         }
   
         td {
-          height: 20px;
+          height: 25px;
           justify-self: start;
           text-transform: lowercase;
           color: #eef2f8;
           border-bottom: 1px solid rgb(177, 177, 177);
-          padding-block: 5px;
-          /* border: 4px solid  yellow; */
+          padding-block: 10px;
+        }
+
+        .last-td {
+          display: flex;
+          align-items: center;
+          align-content: center;
         }
       }
     }
-
   }
+  
   .pagination {
     flex-grow: 1;
 
@@ -327,7 +140,7 @@ html {
     gap: 30px;
 
 
-    a {
+    .a {
       color: white;
       text-decoration: none;
     }
@@ -374,12 +187,30 @@ html {
   border: transparent;
   padding: 10px 20px;
   border-radius: 5px;
-
   color: white;
   margin-inline: 20px;
+
+  font-size: 0.8rem;
   &:hover {
     background-color: rgba(19, 121, 218, 0.885);
   }
+}
+
+/* Colors */
+
+.red-button {
+  background-color: rgba(221, 53, 53, 0.842);
+  border: transparent;
+  border-radius: 5px;
+  padding: 10px 15px;
+  &:hover {
+    background-color: rgba(201, 44, 44, 0.788);
+  }
+}
+.red-button > a {
+  font-size: 0.8rem;
+    text-decoration: none;
+    color: white;
 }
 
 
@@ -406,10 +237,6 @@ html {
   border: 1px solid #888;
   width: 60%;
   color:rgb(177, 177, 177);
-  /* display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: stretch; */
 
   .model-title {
     display: flex;
@@ -418,7 +245,13 @@ html {
     padding-inline: 20px;
   }
 
-  form {
+   #addUserForm, .editForm{
+    label {
+      margin-inline: 20px;
+    }
+  }
+
+  form, .editForm {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -463,3 +296,25 @@ html {
     cursor: pointer;
   }
 }    
+
+/* Messeages  */
+#notificationMessage {
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  position: absolute;
+  z-index: 999;
+}
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+

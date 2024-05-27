@@ -1,17 +1,17 @@
-<% if (view === 'user' && user.role_id === 1) { %>
+<% if (view === 'user' && mainUser.role_id === 1) { %>
   <h1>USER</h1>
   <button id="addUserBtn" class="button">ADD USER</button>
-<% } else if (view === 'tenant' && (user.role_id === 1 || user.role_id === 2)) { %>
+<% } else if (view === 'tenant' && (mainUser.role_id === 1 || mainUser.role_id === 2)) { %>
   <h1>TENANTS</h1>
   <button id="tenantUserBtn" class="button">ADD TENANT</button>
-<% } else if (view === 'rent' && (user.role_id === 1 || user.role_id === 3)) { %>
+<% } else if (view === 'rent' && (mainUser.role_id === 1 || mainUser.role_id === 3)) { %>
   <h1>RENTS</h1>
 <% } else if (view === 'meralco') { %>
 <h1>MERALCO</h1>
 <% } else if (view === 'maynilad') { %>
 <h1>MAYNILAD</h1>
-<% } else if (view === 'payment' && user.role_id === 1) { %>   
+<% } else if (view === 'payment' && mainUser.role_id === 1) { %>   
 <h1>PAYMENTS</h1>
 <% } %>
 
-<%- include('modal') %>
+<%- include('add-modal') %>

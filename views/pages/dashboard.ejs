@@ -2,6 +2,13 @@
 <html lang="en">
 <%- include('../components/header') %>
 <body>
+  <% if (notificationMessage) { %>
+    <div class="alert alert-<%= notificationMessage.type %>" id="notificationMessage">
+        <%= notificationMessage.text %>
+    </div>
+<% } %>
+
+
     <div class="main">
         <%- include('../components/navbar') %>
         
@@ -16,5 +23,19 @@
 
         </div>
     </div>
+
+
+    <script>
+      // Function to hide the notification message after 3 seconds
+      setTimeout(() => {
+          const notificationMessage = document.getElementById('notificationMessage');
+          if (notificationMessage) {
+              notificationMessage.style.display = 'none';
+          }
+      }, 3000);
+  </script>
+  
+
 </body>
 </html>
+ 

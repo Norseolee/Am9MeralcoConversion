@@ -1,4 +1,4 @@
-<div>
+<div class="table-main">
     <table>
         <% if (view === 'meralco') { %>
         <thead>
@@ -15,7 +15,7 @@
             </tr>
         </thead>
         <tbody>
-            <% data.forEach((meralco) => { %>
+            <% meralcoData.forEach((meralco) => { %>
                 <tr>
                     <td><%= meralco.meralco_id %></td>
                     <td><%= meralco.tenant_id %></td>
@@ -43,7 +43,7 @@
             </tr>
         </thead>
         <tbody>
-            <% data.forEach((tenant) => { %>
+            <% tenantData.forEach((tenant) => { %>
                 <tr>
                     <td><%= tenant.tenant_id %></td>
                     <td><%= tenant.business_name %></td>
@@ -63,19 +63,84 @@
                 <th>Action</th>
             </tr>
             </thead>
-            <tbody>
-                <% data.forEach((user) => { %>
+            <tbody class="action">
+                <% userData.forEach((userData) => { %>
                     <tr>
-                        <td><%= user.id %></td>
-                        <td><%= user.username %></td>
-                        <td><%= user.role_id %></td>
+                        <td><%= userData.id %></td>
+                        <td><%= userData.username %></td>
+                        <td><%= userData.role_id %></td>
                         <td>
-                            <a id="userEditModal" class="small-button">Edit</a>
-                            <% if(session_user.id !== user.id) { %> 
-                                <a href="/user_process/delete-user?id=<%= user.id %>&do=delete" class="small-button red">Delete</a>
-                            <% } %>
+                            <div class="last-td">
+                                <button id="userEditBtn_<%= userData.id %>" class="button">Edit</button>
+                                <% if(userData.id !== mainUser.id) { %> 
+                                    <button class="red-button"><a href="/user_process/delete-user?id=<%= userData.id %>&do=delete" >Delete</a></button>
+                                <% } %>
+                            </div>
                         </td>
                     </tr>
+
+
+                    <!-- Edit User Modal -->
+                    <div id="editUserModal_<%= userData.id %>" class="modal">
+                        <div class="modal-content">
+                            <div class="model-title">
+                                <h2>Edit User</h2>
+                                <span class="close" data-modal="editUserModal_<%= userData.id %>">&times;</span>
+                            </div>
+
+                            <form id="editUserForm" method="POST" action="user_process/edit-user?id=<%= userData.id %>">
+                                <div class="editForm">
+                                    <label for="username">Username:</label>
+                                    <input type="text" id="username" name="username" value="<%= userData.username %>" required>
+    
+                                    <label for="password">New Password:</label>
+                                    <input type="text" id="password" name="password" >
+    
+                                    <label for="role">Role:</label>
+                                    <select id="role" name="role" required>
+                                        <option value="">Select Role</option>
+                                        <% roles.forEach(role => { %>
+                                            <option value="<%= role.role_id %>" <%= role.role_id === userData.role_id ? 'selected' : '' %>><%= role.roles_name %></option>
+                                        <% }) %>
+                                    </select>
+                                    <br>
+                                    <button class="button" type="submit">Submit Edit User</button>
+                                    <br>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <script>
+                        document.addEventListener("DOMContentLoaded", function() {
+                            const openModal_edit = modalEditId => {
+                                const modal = document.getElementById(modalEditId);
+                                modal.style.display = "block";
+                            };
+                    
+                            const closeModal_edit = modalEditId => {
+                                const modal = document.getElementById(modalEditId);
+                                modal.style.display = "none";
+                            };
+                    
+                            const editHandleButtonClick = event => {
+                                const userId = <%= userData.id %>;
+                                if (event.target.id === 'userEditBtn_' + userId) {
+                                    openModal_edit('editUserModal_' + userId);
+                                }
+                            };
+                    
+                            document.getElementById("userEditBtn_<%= userData.id %>").addEventListener("click", editHandleButtonClick);
+                            
+                    
+                            window.addEventListener("click", event => {
+                                if (event.target.classList.contains('modal')) {
+                                    closeModal_edit(event.target.id);
+                                }
+                            });
+                        });
+                        </script>
+
                 <% }); %>
             </tbody>
         <% } %>        
@@ -83,7 +148,7 @@
 
     <div class="pagination">
         <% if (currentPage > 1) { %>
-            <a href="/dashboard?view=<%= view %>&page=<%= currentPage - 1 %>">&laquo; Previous</a>
+            <a class="a" href="/dashboard?view=<%= view %>&page=<%= currentPage - 1 %>">&laquo; Previous</a>
         <% } else { %>
             <span class="disabled">&laquo; Previous</span>
         <% } %>
@@ -92,14 +157,17 @@
             <% if (i === currentPage) { %>
                 <span class="current-page"><%= i %></span>
             <% } else { %>
-                <a href="/dashboard?view=<%= view %>&page=<%= i %>"><%= i %></a>
+                <a class="a" href="/dashboard?view=<%= view %>&page=<%= i %>"><%= i %></a>
             <% } %>
         <% } %>
     
         <% if (currentPage < totalPages) { %>
-            <a href="/dashboard?view=<%= view %>&page=<%= currentPage + 1 %>">Next &raquo;</a>
+            <a class="a" href="/dashboard?view=<%= view %>&page=<%= currentPage + 1 %>">Next &raquo;</a>
         <% } else { %>
             <span class="disabled">Next &raquo;</span>
         <% } %>
     </div>
+
+   
 </div>
+
