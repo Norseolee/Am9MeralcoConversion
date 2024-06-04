@@ -21,6 +21,8 @@ class Meralco extends Model {
                 consume: { type: 'number', precision: 10, scale: 1 },
                 is_paid: { type: 'boolean', nullable: true }, 
                 paid_date: { type: ['string', 'null'], format: 'date' },
+                total_amount: { type: 'number' },
+                current_total_amount: { type: 'number' },
                 created: { type: ['string', 'null'], format: 'date-time' },
                 is_deleted: { type: 'boolean' }
             }

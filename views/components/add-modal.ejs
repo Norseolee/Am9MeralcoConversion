@@ -51,6 +51,10 @@
                 <input type="text" id="full_name" name="full_name" required>
             </div>
             <div>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div>
                 <label for="email">Email:</label>
                 <input type="text" id="email" name="email" required>
                 <label for="contact_number">Contact Number:</label>
@@ -95,129 +99,6 @@
 
 
 <script>
-// document.addEventListener("DOMContentLoaded", function() {
-//     const signatureInput = document.getElementById('signature');
-//     const idFront = document.getElementById('image_id_front');
-//     const idBack = document.getElementById('image_id_back');
-//     const previewSignature = document.getElementById('previewSignature');
-//     const previewIdFront = document.getElementById('previewImageIdFront');
-//     const previewIdBack = document.getElementById('previewImageIdBack');
-
-//     signatureInput.addEventListener('change', async function(event) {
-//         const file = this.files[0];
-//         if (file) {
-//             const formData = new FormData();
-//             formData.append('signature', file);
-
-//             try {
-//                 const response = await fetch('/preview', {
-//                     method: 'POST',
-//                     body: formData
-//                 });
-
-//                 if (!response.ok) {
-//                     throw new Error('Failed to upload image');
-//                 }
-
-//                 const data = await response.json();
-//                 previewSignature.src = data.base64Image;
-//                 previewSignature.style.display = 'block';
-//             } catch (error) {
-//                 console.error('Error:', error);
-//             }
-//         } else {
-//             previewSignature.src = '#';
-//             previewSignature.style.display = 'none';
-//         }
-//     });
-
-//     idFront.addEventListener('change', async function(event) {
-//         const file = this.files[0];
-//         if (file) {
-//             const reader = new FileReader();
-//             reader.onload = function(e) {
-//                 previewIdFront.src = e.target.result;
-//                 previewIdFront.style.display = 'block';
-//             }
-//             reader.readAsDataURL(file);
-//         } else {
-//             previewIdFront.src = '#';
-//             previewIdFront.style.display = 'none';
-//         }
-//     });
-
-//     idBack.addEventListener('change', async function(event) {
-//         const file = this.files[0];
-//         if (file) {
-//             const reader = new FileReader();
-//             reader.onload = function(e) {
-//                 previewIdBack.src = e.target.result;
-//                 previewIdBack.style.display = 'block';
-//             }
-//             reader.readAsDataURL(file);
-//         } else {
-//             previewIdBack.src = '#';
-//             previewIdBack.style.display = 'none';
-//         }
-//     });
-
-
-//     // Function to handle opening modals
-//     function openModal(modalId) {
-//         var modal = document.getElementById(modalId);
-//         modal.style.display = "block";
-//     }
-
-//     // Function to handle closing modals
-//     function closeModal(modalId) {
-//         var modal = document.getElementById(modalId);
-//         modal.style.display = "none";
-//     }
-
-//     // Function to handle button clicks
-//     function handleButtonClick(event) {
-//         switch (event.target.id) {
-//             case 'addUserBtn':
-//                 openModal('addUserModal');
-//                 break;
-//             case 'tenantUserBtn':
-//                 openModal('tenantUserModal');
-//                 break;
-//         }
-//     }
-
-//     // Function to handle close button clicks
-//     function handleCloseClick(event) {
-//         var modalId = event.target.getAttribute('data-modal');
-//         closeModal(modalId);
-//     }
-
-//     // Add event listeners to buttons
-//     var addUserBtn = document.getElementById("addUserBtn");
-//     if (addUserBtn) {
-//         addUserBtn.addEventListener("click", handleButtonClick);
-//     }
-
-//     var tenantUserBtn = document.getElementById("tenantUserBtn");
-//     if (tenantUserBtn) {
-//         tenantUserBtn.addEventListener("click", handleButtonClick);
-//     }
-
-//     // Add event listeners to close spans
-//     var closeSpans = document.getElementsByClassName("close");
-//     for (var i = 0; i < closeSpans.length; i++) {
-//         closeSpans[i].addEventListener("click", handleCloseClick);
-//     }
-
-//     // Event listener for window click to close modals
-//     window.addEventListener("click", function(event) {
-//         if (event.target.classList.contains('modal')) {
-//             event.target.style.display = "none";
-//         }
-//     });
-// });
-
-
 document.addEventListener("DOMContentLoaded", function() {
     const previewImage = (input, previewElement) => {
         const file = input.files[0];
@@ -313,5 +194,4 @@ document.addEventListener("DOMContentLoaded", function() {
     document.getElementById("addUserBtn")?.addEventListener("click", handleButtonClick);
     document.getElementById("tenantUserBtn")?.addEventListener("click", handleButtonClick);
 });
-
 </script>

@@ -14,6 +14,8 @@ exports.up = function(knex) {
         table.decimal('consume', 10, 1).notNullable();
         table.boolean('is_paid').nullable();
         table.date('paid_date').nullable();
+        table.float('total_amount').notNullable();
+        table.float('current_total_amount').notNullable();
         table.datetime('created').nullable();
         table.boolean('is_deleted').nullable();
     });

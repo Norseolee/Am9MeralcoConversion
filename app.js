@@ -1,43 +1,54 @@
-// app.js
 require('dotenv').config();
 
 const express = require("express");
 const bodyParser = require("body-parser");
 const session = require('express-session');
-const ejs = require("ejs"); // Import EJS
-const cookieParser = require('cookie-parser'); // Import cookie-parser
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
 const knex = require("./config/db");
 
 const userRoutes = require("./config/Routes/userRoutes");
+const mainRoutes = require("./config/Routes/mainRoutes");
 const meralcoRoutes = require("./config/Routes/meralcoRoutes");
 const tenantRoutes = require("./config/Routes/tenantRoutes");
 const migrationRoutes = require("./config/Routes/migrationRoutes");
 
 const port = process.env.PORT || 3000;
 const app = express();
+
 app.use(express.static("public"));
-app.set("view engine", "ejs"); // Set EJS as the view engine
+app.set("view engine", "ejs");
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser()); // Use cookie-parser middleware
+app.use(cookieParser());
 
 // Initialize session
 app.use(session({
-    secret: process.env.SESSION_SECRET, 
+    secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: { secure: false } // Set secure: true if using HTTPS
 }));
 
+// Initialize flash after session
+app.use(flash());
+
+// Middleware to make flash messages available to all templates
+app.use((req, res, next) => {
+    res.locals.message = req.flash('message');
+    next();
+});
+
 // Use routes for specific functionalities
 // app.use("/", meralcoRoutes);
 app.use("/", tenantRoutes);
 app.use("/", userRoutes);
+app.use("/", mainRoutes);
 app.use('/', migrationRoutes);
 
 app.get("/", (req, res) => {
-    res.render("login"); 
+    res.render("login", { message: res.locals.message });
 });
 
 app.listen(port, () => console.log(`Listening on port ${port}`));

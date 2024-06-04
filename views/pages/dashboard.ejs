@@ -2,40 +2,31 @@
 <html lang="en">
 <%- include('../components/header') %>
 <body>
-  <% if (notificationMessage) { %>
-    <div class="alert alert-<%= notificationMessage.type %>" id="notificationMessage">
-        <%= notificationMessage.text %>
-    </div>
-<% } %>
-
+    <% if (message && message.length > 0) { %>
+        <div class="alert alert-<%= message[0].type %> mt-3" role="alert">
+            <%= message[0].text %>
+        </div>
+    <% } %>
 
     <div class="main">
         <%- include('../components/navbar') %>
-        
         <div class="sub-section">
-          <div class="sub-head">
-            <%- include('../components/sub-head') %>
-          </div>
-          <div class="main-section">
-            <%- include('../components/main-section') %>
-          </div>
-
-
+            <div class="sub-head">
+                <%- include('../components/sub-head') %>
+            </div>
+            <div class="main-section">
+                <%- include('../components/main-section') %>
+            </div>
         </div>
     </div>
 
-
     <script>
-      // Function to hide the notification message after 3 seconds
-      setTimeout(() => {
-          const notificationMessage = document.getElementById('notificationMessage');
-          if (notificationMessage) {
-              notificationMessage.style.display = 'none';
-          }
-      }, 3000);
-  </script>
-  
-
+        setTimeout(() => {
+            const alert = document.querySelector('.alert');
+            if (alert) {
+                alert.style.display = 'none';
+            }
+        }, 3000);
+    </script>
 </body>
 </html>
- 

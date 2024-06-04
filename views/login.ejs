@@ -26,5 +26,19 @@
       </div>
     </form>
     
+    <% if (message && message.length > 0) { %>
+      <div class="alert alert-<%= message[0].type %> mt-3" role="alert">
+        <%= message[0].text %>
+      </div>
+    <% } %>
+    
+    <script>
+      setTimeout(() => {
+          const notificationMessage = document.querySelector('.alert');
+          if (notificationMessage) {
+              notificationMessage.style.display = 'none';
+          }
+      }, 3000);
+    </script>
   </body>
 </html>
