@@ -8,6 +8,34 @@ const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
 
+//Routes handler for preview image
+const upload_preview = multer();
+
+router.post('/preview', upload_preview.single('signature'), async (req, res) => {
+    try {
+        if (!req.file) {
+            return res.status(400).send('No file uploaded.');
+        }
+
+        // Process the image to grayscale
+        const processedImageBuffer = await sharp(req.file.buffer)
+            .greyscale() 
+            .threshold(100) 
+            .toFormat('jpeg', { quality: 100 })
+            .toBuffer();
+
+        // Convert buffer to base64
+        const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString('base64')}`;
+
+        // Send the processed image data back as a response
+        res.send({ base64Image });
+    } catch (error) {
+        console.error('Error processing image:', error);
+        res.status(500).send('Error processing image.');
+    }
+});
+
+
 // Configure multer for file upload
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {

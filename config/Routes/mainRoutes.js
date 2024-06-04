@@ -15,32 +15,6 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 
 // THIS IS COMMON ROUTES
-//Routes handler for preview image
-const upload_preview = multer();
-
-router.post('/preview', upload_preview.single('signature'), async (req, res) => {
-    try {
-        if (!req.file) {
-            return res.status(400).send('No file uploaded.');
-        }
-
-        // Process the image to grayscale
-        const processedImageBuffer = await sharp(req.file.buffer)
-            .greyscale() 
-            .threshold(100) 
-            .toFormat('jpeg', { quality: 100 })
-            .toBuffer();
-
-        // Convert buffer to base64
-        const base64Image = `data:image/jpeg;base64,${processedImageBuffer.toString('base64')}`;
-
-        // Send the processed image data back as a response
-        res.send({ base64Image });
-    } catch (error) {
-        console.error('Error processing image:', error);
-        res.status(500).send('Error processing image.');
-    }
-});
 
 // Route handler for all dashboards
 router.get('/dashboard', async (req, res) => {
@@ -79,21 +53,21 @@ router.get('/dashboard', async (req, res) => {
         switch(view) {
             case 'tenant':
                 [totalCount, tenantData] = await Promise.all([
-                    Tenant.query().resultSize(),
-                    Tenant.query().limit(limit).offset(offset)
+                    Tenant.query().where('is_deleted', 0).resultSize(),
+                    Tenant.query().where('is_deleted', 0).limit(limit).offset(offset)
                 ]);
                 break;
             case 'meralco':
                 [totalCount, meralcoData] = await Promise.all([
-                    Meralco.query().resultSize(),
-                    Meralco.query().limit(limit).offset(offset)
+                    Meralco.query().where('is_deleted', 0).resultSize(),
+                    Meralco.query().where('is_deleted', 0).limit(limit).offset(offset)
                 ]);
                 break;
             case 'user':
             default:
                 [totalCount, data] = await Promise.all([
-                    User.query().resultSize(),
-                    User.query().limit(limit).offset(offset)
+                    User.query().where('is_deleted', 0).resultSize(),
+                    User.query().where('is_deleted', 0).limit(limit).offset(offset)
                 ]);
                 break;
         }

@@ -17,6 +17,7 @@ exports.up = function(knex) {
                 table.string('username', 255).notNullable().unique();
                 table.string('password', 255).notNullable();
                 table.timestamps(true, true);
+                table.boolean('is_deleted').defaultTo(false); 
             }).then(function() {
                 // Insert a user with the hashed password
                 return knex('users').insert([

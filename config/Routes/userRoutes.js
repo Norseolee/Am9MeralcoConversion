@@ -2,6 +2,7 @@
 const express = require('express');
 const router = express.Router();
 const User = require('../Models/userModel');
+const bcrypt = require('bcrypt');
 
 // Route handler for add new user
 router.post("/user_process/add-user", async (req, res) => {
@@ -71,11 +72,12 @@ router.get('/user_process/delete-user', async (req, res) => {
 
             // Prevent deletion if the user is trying to delete themselves
             if (userIdToDelete === loggedInUserId) {
-                return req.flash('message', { text: 'You cannot delete yourself', type: 'danger' });
+                req.flash('message', { text: 'You cannot delete yourself', type: 'danger' });
+                return res.redirect('/dashboard?view=user');
             }
             
             // Delete the user with the provided ID
-            await User.query().deleteById(userIdToDelete);
+            await User.query().findById(userIdToDelete).patch({ is_deleted: 1 });
             
             // Redirect back to the dashboard or any other appropriate page
             req.flash('message', { text: 'user deleted successfully', type: 'success' });

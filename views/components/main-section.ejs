@@ -1,20 +1,21 @@
 <div class="table-main">
     <table>
         <% if (view === 'meralco') { %>
-        <thead>
-            <tr>
-                <th>meralco id</th>
-                <th>tenant ID</th>
-                <th>Per kWh</th>
-                <th>Due Date</th>
-                <th>Date of Reading</th>
-                <th>Previous Reading</th>
-                <th>Current Reading</th>
-                <th>Consume</th>
-                <th>Status</th>
-            </tr>
-        </thead>
-        <tbody>
+            <!-- MERALCO LIST -->
+            <thead>
+                <tr>
+                    <th>meralco id</th>
+                    <th>tenant ID</th>
+                    <th>Per kWh</th>
+                    <th>Due Date</th>
+                    <th>Date of Reading</th>
+                    <th>Previous Reading</th>
+                    <th>Current Reading</th>
+                    <th>Consume</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
             <% meralcoData.forEach((meralco) => { %>
                 <tr>
                     <td><%= meralco.meralco_id %></td>
@@ -30,19 +31,20 @@
                     </td>
                 </tr>
             <% }); %>
-        </tbody>
+            </tbody>
         <% } else if (view === 'tenant') { %>
+            <!-- TENANT LIST -->
             <thead>
-            <tr>
-                <th>Tenant ID</th>
-                <th>Name</th>
-                <th>Unit</th>
-                <th>Contact Number</th>
-                <th>Lease Start</th>
-                <th>Lease End</th>
-            </tr>
-        </thead>
-        <tbody>
+                <tr>
+                    <th>Tenant ID</th>
+                    <th>Name</th>
+                    <th>Unit</th>
+                    <th>Contact Number</th>
+                    <th>Lease Start</th>
+                    <th>Lease End</th>
+                </tr>
+            </thead>
+            <tbody>
             <% tenantData.forEach((tenant) => { %>
                 <tr>
                     <td><%= tenant.tenant_id %></td>
@@ -53,15 +55,16 @@
                     <td><%= new Date(tenant.lease_end).toLocaleDateString() %></td>
                 </tr>
             <% }); %>
-        </tbody>
+            </tbody>
         <% } else if (view === 'user') { %>
+            <!-- USER LIST -->
             <thead>
-            <tr>
-                <th>User ID</th>
-                <th>Username</th>
-                <th>Role</th>
-                <th>Action</th>
-            </tr>
+                <tr>
+                    <th>User ID</th>
+                    <th>Username</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                </tr>
             </thead>
             <tbody class="action">
                 <% userData.forEach((userData) => { %>

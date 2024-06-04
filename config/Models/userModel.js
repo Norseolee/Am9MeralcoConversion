@@ -29,7 +29,8 @@ class User extends Model {
                 role_id: { type: ['integer', 'null'] },
                 tenant_id: { type: ['integer', 'null'] }, 
                 username: { type: 'string', maxLength: 255 },
-                password: { type: 'string', maxLength: 255 }
+                password: { type: 'string', maxLength: 255 },
+                is_deleted: { type: 'boolean', default: false }
             }
         };
     }
