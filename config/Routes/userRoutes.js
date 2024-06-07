@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../Models/userModel');
 const bcrypt = require('bcrypt');
+const { verifyToken } = require('../verifyToken');
 
 // Route handler for add new user
 router.post("/user_process/add-user", async (req, res) => {
@@ -32,7 +33,6 @@ router.post('/user_process/edit-user', async (req, res) => {
             let userId = req.query.id;
             let role = parseInt(req.body.role);
             let { username, password } = req.body;
-
 
             let updateFields = {
                 username: username,

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../components/header') %>
+<body>
+    <div class="main">
+        <%- include('../components/navbar') %>
+        <div class="sub-section">
+            <div class="sub-head">
+                <%- include('../components/sub-head') %>
+            </div>
+            <div class="main-section">
+                <div>            
+                    <form method="POST" action="tenant_process/edit-tenant" enctype="multipart/form-data">
+                        <h3>Primary Information</h3>
+                        <div>
+                            <label for="business_name">Business Name:</label>
+                            <input type="text" id="business_name" name="business_name" required value="<%= tenantData.business_name %>" <%= edit ? '' : 'readonly' %> >
+                            <label for="unit">Unit: </label>
+                            <input type="text" id="unit" name="unit" required value="<%= tenantData.unit %>" <%= edit ? '' : 'readonly' %>> 
+                        </div>
+                        <div>
+                            <label for="full_name">Full name:</label>
+                            <input type="text" id="full_name" name="full_name" required value="<%= tenantData.full_name %>" <%= edit ? '' : 'readonly' %>>
+                        </div>
+                        <div>
+                            <label for="address">Address:</label>
+                            <input type="text" id="address" name="address" required value="<%= tenantData.address %>" <%= edit ? '' : 'readonly' %>>
+                        </div>
+                        <div>
+                            <label for="email">Email:</label>
+                            <input type="text" id="email" name="email" required value="<%= tenantData.email %>" <%= edit ? '' : 'readonly' %>>
+                            <label for="contact_number">Contact Number:</label>
+                            <input type="text" id="contact_number" name="contact_number" required value="<%= tenantData.contact_number %>" <%= edit ? '' : 'readonly' %>>
+                        </div>
+                        <div>
+                            <label for="lease_start">Lease Start:</label>
+                            <input type="date" id="lease_start" name="lease_start" required value="<%= tenantData.lease_start %>" <%= edit ? '' : 'readonly' %>>
+                            <label for="lease_end">Lease End:</label>
+                            <input type="date" id="lease_end" name="lease_end" required value="<%= tenantData.lease_end %>" <%= edit ? '' : 'readonly' %>>
+                        </div>
+            
+                        <br>
+                        <h3>Documents</h3>
+
+                        <div>
+                            <label for="image_id_front">ID FRONT:</label>
+                            <img src="/uploads/<%= tenantData.image_id_front %>" alt="Tenant Front ID">
+                            <label for="image_id_back">ID BACK:</label>
+                            <img src="/uploads/<%= tenantData.image_id_back %>" alt="Tenant Back ID">
+                        </div>
+
+                        <div>
+                            <label">Signature: </label>
+                            <img src="/uploads/<%= tenantData.signature %>" alt="tenant_signature">
+                        </div>
+                        
+                        <% if (edit === 'true') { %>
+                            <div>
+                                <label for="image_id_front">ID FRONT:</label>
+                                <input type="file" id="image_id_front" name="image_id_front" accept="image/*">
+                                <label for="image_id_back">ID BACK:</label>
+                                <input type="file" id="image_id_back" name="image_id_back" accept="image/*">
+                            </div>
+                            <div>
+                                <label for="signature">Signature:</label>
+                                <input type="file" id="signature" name="signature" accept="image/*">
+                            </div>
+                            
+                            <div>
+                                <img id="previewSignature" src="#" alt="Signature Preview" style="display: none;">
+                                <img id="previewImageIdFront" src="#" alt="Valid Id Preview Front" style="display: none;">
+                                <img id="previewImageIdBack" src="#" alt="Valid Id Preview Back" style="display: none;">
+                            </div>
+                            
+                            <select name="status" id="status">
+                                <option value=""></option>
+                                <option value="active">Active</option>
+                                <option value="inactive">Inactive</option>
+                            </select>
+                            
+                            <br>
+                            <button type="submit" class="button">Add User</button>
+                            <br>
+                            <% } %>     
+                  
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const previewImage = (input, previewElement) => {
+                const file = input.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        previewElement.src = e.target.result;
+                        previewElement.style.display = 'block';
+                    }
+                    reader.readAsDataURL(file);
+                } else {
+                    previewElement.src = '#';
+                    previewElement.style.display = 'none';
+                }
+            };
+        
+            const uploadImage = async (input, previewElement, url) => {
+                const file = input.files[0];
+                if (file) {
+                    const formData = new FormData();
+                    formData.append(input.name, file);
+        
+                    try {
+                        const response = await fetch(url, {
+                            method: 'POST',
+                            body: formData
+                        });
+        
+                        if (!response.ok) throw new Error('Failed to upload image');
+        
+                        const data = await response.json();
+                        previewElement.src = data.base64Image;
+                        previewElement.style.display = 'block';
+                    } catch (error) {
+                        console.error('Error:', error);
+                    }
+                } else {
+                    previewElement.src = '#';
+                    previewElement.style.display = 'none';
+                }
+            };
+        
+            const setupFilePreview = (inputId, previewId, upload = false, url = '') => {
+                const input = document.getElementById(inputId);
+                const previewElement = document.getElementById(previewId);
+        
+                input.addEventListener('change', function() {
+                    if (upload) {
+                        uploadImage(input, previewElement, url);
+                    } else {
+                        previewImage(input, previewElement);
+                    }
+                });
+            };
+        
+            setupFilePreview('signature', 'previewSignature', true, '/preview');
+            setupFilePreview('image_id_front', 'previewImageIdFront');
+            setupFilePreview('image_id_back', 'previewImageIdBack');
+        });
+
+    </script>
+</body>
+</html>

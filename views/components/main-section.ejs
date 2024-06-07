@@ -42,19 +42,27 @@
                     <th>Contact Number</th>
                     <th>Lease Start</th>
                     <th>Lease End</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
-            <% tenantData.forEach((tenant) => { %>
-                <tr>
-                    <td><%= tenant.tenant_id %></td>
-                    <td><%= tenant.business_name %></td>
-                    <td><%= tenant.unit %></td>
-                    <td><%= tenant.contact_number %></td>
-                    <td><%= new Date(tenant.lease_start).toLocaleDateString() %></td>
-                    <td><%= new Date(tenant.lease_end).toLocaleDateString() %></td>
-                </tr>
-            <% }); %>
+                <% tenantData.forEach((tenant) => { %>
+                    <tr>
+                        <td><%= tenant.tenant_id %></td>
+                        <td><%= tenant.business_name %></td>
+                        <td><%= tenant.unit %></td>
+                        <td><%= tenant.contact_number %></td>
+                        <td><%= new Date(tenant.lease_start).toLocaleDateString() %></td>
+                        <td><%= new Date(tenant.lease_end).toLocaleDateString() %></td>
+                        <td>
+                            <div>
+                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=false">View</a>
+                                <a href="/tenant_process/tenant_edit_view?id=<%= tenant.tenant_id %>&edit=true">Edit</a>
+                                <button class="red-button"><a href="/tenant_process/delete-tenant?id=<%= tenant.tenant_id %>&do=delete">Delete</a></button>
+                            </div>
+                        </td>
+                    </tr>
+                <% }); %>
             </tbody>
         <% } else if (view === 'user') { %>
             <!-- USER LIST -->

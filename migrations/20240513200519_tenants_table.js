@@ -22,7 +22,7 @@ exports.up = function(knex) {
         table.string('image_id_front', 255).nullable();
         table.string('image_id_back', 255).nullable();
         table.date('created_at').nullable();
-        table.boolean('is_deleted').nullable();
+        table.boolean('is_deleted').defaultTo(false); 
         table.date('modified').nullable().defaultTo(knex.fn.now());
     });
 };

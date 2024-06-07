@@ -2,12 +2,6 @@
 <html lang="en">
 <%- include('../components/header') %>
 <body>
-    <% if (message && message.length > 0) { %>
-        <div class="alert alert-<%= message[0].type %> mt-3" role="alert">
-            <%= message[0].text %>
-        </div>
-    <% } %>
-
     <div class="main">
         <%- include('../components/navbar') %>
         <div class="sub-section">
@@ -19,14 +13,5 @@
             </div>
         </div>
     </div>
-
-    <script>
-        setTimeout(() => {
-            const alert = document.querySelector('.alert');
-            if (alert) {
-                alert.style.display = 'none';
-            }
-        }, 3000);
-    </script>
 </body>
 </html>
