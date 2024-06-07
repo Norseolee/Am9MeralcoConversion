@@ -16,7 +16,7 @@ exports.up = function(knex) {
                 table.integer('tenant_id').nullable();
                 table.string('username', 255).notNullable().unique();
                 table.string('password', 255).notNullable();
-                table.timestamps(true, true);
+                table.date('created_at').nullable();
                 table.boolean('is_deleted').defaultTo(false); 
             }).then(function() {
                 // Insert a user with the hashed password

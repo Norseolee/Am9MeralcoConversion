@@ -30,6 +30,7 @@ class User extends Model {
                 tenant_id: { type: ['integer', 'null'] }, 
                 username: { type: 'string', maxLength: 255 },
                 password: { type: 'string', maxLength: 255 },
+                created_at: { type: 'string', format: 'date' },
                 is_deleted: { type: 'boolean', default: false }
             }
         };

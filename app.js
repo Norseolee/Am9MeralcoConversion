@@ -41,7 +41,7 @@ app.use((req, res, next) => {
 });
 
 // Use routes for specific functionalities
-// app.use("/", meralcoRoutes);
+app.use("/", meralcoRoutes);
 app.use("/", tenantRoutes);
 app.use("/", userRoutes);
 app.use("/", mainRoutes);

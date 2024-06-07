@@ -4,6 +4,10 @@ class Tenant extends Model {
     static get tableName() {
         return 'tenants';
     }
+    static get idColumn() {
+        return 'tenant_id'; 
+    }
+    
 
     static get jsonSchema() {
         return {
@@ -31,9 +35,9 @@ class Tenant extends Model {
                 image_contract_03: { type: ['string', 'null'], maxLength: 255 },
                 image_id_front: { type: ['string', 'null'], maxLength: 255 },
                 image_id_back: { type: ['string', 'null'], maxLength: 255 },
-                created_at: { type: 'string', format: 'date-time' },
+                created_at: { type: 'string', format: 'date' },
                 is_deleted: { type: 'boolean', default: false },
-                modified: { type: 'string', format: 'date-time' }
+                modified: { type: 'string', format: 'date' }
             }
         };
     }

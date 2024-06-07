@@ -11,6 +11,7 @@ exports.up = function(knex) {
       table.integer('mode_payment_id').unsigned().notNullable();
       table.integer('utility_id').notNullable();
       table.enu('payment_type', ['meralco', 'maynilad', 'rent']).notNullable();
+      table.date('created_at').nullable();
     });
   };
   

@@ -180,6 +180,16 @@ html {
   }
 }
 
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+/* input[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+ 
+*/
+
 /* Buttons */
 
 .button {
@@ -283,6 +293,65 @@ html {
   }
 }
 
+.tenant_details {
+  max-width: 1300px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tenant_details_primary {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.tenant_details_primary > div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 20px;
+ 
+}
+.tenant_details_primary > div > input {
+  flex: 1;
+}
+.tenant_details_edit {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.tenant_details_edit > div {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.tenant_details_edit > div > input  {
+  flex: 1;
+}
+.form_image {
+  display: flex;
+  flex-direction: column;
+}
+.form_image > div {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.form_image > div > div {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.image_preview {
+  width: 300px;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 25px;
+}
+
 .close {
   color: #aaa;
   float: right;
@@ -311,7 +380,6 @@ html {
   background-color: #d4edda;
   border-color: #c3e6cb;
 }
-
 .alert-danger {
   color: #721c24;
   background-color: #f8d7da;

@@ -59,8 +59,12 @@ router.get('/dashboard', async (req, res) => {
                 break;
             case 'meralco':
                 [totalCount, meralcoData] = await Promise.all([
-                    Meralco.query().where('is_deleted', 0).resultSize(),
-                    Meralco.query().where('is_deleted', 0).limit(limit).offset(offset)
+                    Meralco.query().where(builder => {
+                        builder.where('is_deleted', 0);
+                    }).resultSize(),
+                    Meralco.query().where(builder => {
+                        builder.where('is_deleted', 0);
+                    }).orderBy('meralco_id', 'desc').limit(limit).offset(offset)
                 ]);
                 break;
             case 'user':

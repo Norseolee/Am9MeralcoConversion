@@ -1,26 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Am9 Commercial Conversion</title>
-    <link rel="stylesheet" href="../css/index-style.css" />
-    <script src="../js/index-javascript.js"></script>
-
+    <link rel="stylesheet" href="/css/index-style.css" /> <!-- Update CSS path -->
+    
     <!-- JSPDF CONVERTER -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
 
     <!-- HTML2PDF LIBRARY -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.js"></script>
 </head>
+<body>
     <% if (message && message.length > 0) { %>
         <div class="alert alert-<%= message[0].type %> mt-3" role="alert">
             <%= message[0].text %>
         </div>
     <% } %>
-<script>
-    setTimeout(() => {
-        const alert = document.querySelector('.alert');
-        if (alert) {
-            alert.style.display = 'none';
-        }
-    }, 3000);
-</script>
+</body>
+</html>

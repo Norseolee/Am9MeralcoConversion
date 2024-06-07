@@ -17,6 +17,7 @@ class Payment extends Model {
         mode_payment_id: { type: 'integer' },
         utility_id: { type: 'integer' },
         payment_type: { type: 'string', enum: ['meralco', 'maynilad', 'rent'] },
+        created_at: { type: 'string', format: 'date' },
       },
     };
   }
