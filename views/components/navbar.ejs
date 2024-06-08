@@ -1,0 +1,55 @@
+<div class="nav">
+    <img src="/Images/am9commercial.jpg" alt="Am9 Commercial">
+    <!-- 
+        User Roles
+        Admin == 1
+        Staff == 2
+        User == 3
+    -->
+    <% if(mainUser.role_id === 1) { %> <!-- Admin navbar -->
+    <ul>
+        <a class="a" href="/dashboard?view=user"><li>User</li></a>
+        <a class="a" href="/dashboard?view=tenant"><li>Tenant</li></a>
+        <a class="a" href="/dashboard?view=payment"><li>Payment</li></a>
+        <a class="a" id="utilityToggle">Utility</a>
+        <ul id="utilitySubMenu">
+            <a class="a" href="/dashboard?view=meralco"><li>Meralco</li></a>
+            <a class="a" href="/dashboard?view=maynilad"><li>Maynilad</li></a>
+        </ul>
+        
+        <a class="a" href="/logout" id="logout"><li>Logout</li></a>
+    </ul>
+    <% } else if(mainUser.role_id === 2) { %> <!-- Staff navbar -->
+    <ul>
+        
+        <a class="a" href="/dashboard?view=meralco"><li>Meralco</li></a>
+        <a class="a" href="/dashboard?view=maynilad"><li>Maynilad</li></a>
+        <a class="a" href="/dashboard?view=payment"><li>Payment</li></a>
+        <a class="a" href="/logout" id="logout"><li>Logout</li></a>
+    </ul>
+    <% } else if(mainUser.role_id === 3) { %> <!-- User navbar -->
+    <ul>
+        <a class="a" href="/dashboard?view=rent"><li>Rental</li></a>
+        <li>
+            <a class="a" id="utilityToggle">Utility</a>
+            <ul id="utilitySubMenu">
+                <a class="a" href="/dashboard?view=meralco"><li>Meralco</li></a>
+                <a class="a" href="/logout" id="logout"><li>Maynilad</li></a>
+            </ul>
+        </li>
+        <a class="a" href="/dashboard?view=payment"><li>Payment</li></a>
+        <a class="a" href="/logout" id="logout"><li>Logout</li></a>
+    </ul>
+    <% } %>
+</div>
+
+<script>
+    document.getElementById('utilityToggle').addEventListener('click', function(e) {
+        var subMenu = document.getElementById('utilitySubMenu');
+        if (subMenu.style.display === 'none') {
+            subMenu.style.display = 'block';
+        } else {
+            subMenu.style.display = 'none';
+        }
+    });
+</script>

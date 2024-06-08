@@ -1,0 +1,197 @@
+<!-- Add User Modal -->
+<div id="addUserModal" class="modal">
+    <div class="modal-content">
+        <div class="model-title">
+            <h2>Add New User</h2>
+            <span class="close" data-modal="addUserModal">&times;</span>
+        </div>
+
+        <form id="addUserForm" method="POST" action="user_process/add-user">
+   
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
+
+            <label for="password">Password:</label>
+            <input type="text" id="password" name="password" required>
+
+            <label for="role">Role:</label>
+            <select id="role" name="role" required>
+                <option value="">Select Role</option>
+                <% roles.forEach(role => { %>
+                    <option value="<%= role.role_id %>"><%= role.roles_name %></option>
+                <% }) %>
+            </select>
+            <br>
+            <button class="button" type="submit">Add User</button>
+            <br>
+        </form>
+    </div>
+</div>
+
+<!-- Add Tenant Modal -->
+<div id="tenantUserModal" class="modal">
+    <div class="modal-content">
+        <div class="model-title">
+            <h2>Add Tenant</h2>
+            <span class="close" data-modal="tenantUserModal">&times;</span>
+        </div>
+
+
+        <form id="addTenantForm" method="POST" action="tenant_process/add-tenant" enctype="multipart/form-data">
+            <h3>Primary Information</h3>
+            <div>
+                <label for="business_name">Business Name:</label>
+                <input type="text" id="business_name" name="business_name" required>
+
+                <label for="unit">Unit: </label>
+                <input type="text" id="unit" name="unit" required>
+            </div>
+            <div>
+                <label for="full_name">Full name:</label>
+                <input type="text" id="full_name" name="full_name" required>
+            </div>
+            <div>
+                <label for="address">Address:</label>
+                <input type="text" id="address" name="address" required>
+            </div>
+            <div>
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required>
+                <label for="contact_number">Contact Number:</label>
+                <input type="text" id="contact_number" name="contact_number" required>
+            </div>
+            <div>
+                <label for="lease_start">Lease Start:</label>
+                <input type="date" id="lease_start" name="lease_start" required>
+                <label for="lease_end">Lease End:</label>
+                <input type="date" id="lease_end" name="lease_end" required>
+            </div>
+
+            <br>
+            <h3>Documents</h3>
+
+            <div>
+                <label for="image_id_front"> ID FRONT:</label>
+                <input type="file" id="image_id_front" name="image_id_front" accept="image/*" >
+                <label for="image_id_back"> ID BACK:</label>
+                <input type="file" id="image_id_back" name="image_id_back" accept="image/*" >
+            </div>
+            <div>
+                <label for="signature">Signature:</label>
+                <input type="file" id="signature" name="signature" accept="image/*" >
+            </div>
+
+            <div>
+                <img id="previewSignature" src="#" alt="Signature Preview" style="display: none;">
+                <img id="previewImageIdFront" src="#" alt="Valid Id Preview Front" style="display: none;">
+                <img id="previewImageIdBack" src="#" alt="Valid Id  Preview Back" style="display: none;">
+            </div>
+
+            <input type="hidden" name="status" value="active">
+            
+            <br>
+            <button type="submit" class="button">Add User</button>
+            <br>
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    const previewImage = (input, previewElement) => {
+        const file = input.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                previewElement.src = e.target.result;
+                previewElement.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewElement.src = '#';
+            previewElement.style.display = 'none';
+        }
+    };
+
+    const uploadImage = async (input, previewElement, url) => {
+        const file = input.files[0];
+        if (file) {
+            const formData = new FormData();
+            formData.append(input.name, file);
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) throw new Error('Failed to upload image');
+
+                const data = await response.json();
+                previewElement.src = data.base64Image;
+                previewElement.style.display = 'block';
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        } else {
+            previewElement.src = '#';
+            previewElement.style.display = 'none';
+        }
+    };
+
+    const setupFilePreview = (inputId, previewId, upload = false, url = '') => {
+        const input = document.getElementById(inputId);
+        const previewElement = document.getElementById(previewId);
+
+        input.addEventListener('change', function() {
+            if (upload) {
+                uploadImage(input, previewElement, url);
+            } else {
+                previewImage(input, previewElement);
+            }
+        });
+    };
+
+    setupFilePreview('signature', 'previewSignature', true, '/preview');
+    setupFilePreview('image_id_front', 'previewImageIdFront');
+    setupFilePreview('image_id_back', 'previewImageIdBack');
+
+    const openModal = modalId => {
+        const modal = document.getElementById(modalId);
+        modal.style.display = "block";
+    };
+
+    const closeModal = modalId => {
+        const modal = document.getElementById(modalId);
+        modal.style.display = "none";
+    };
+
+    document.querySelectorAll("[data-modal]").forEach(closeBtn => {
+        closeBtn.addEventListener("click", event => closeModal(event.target.getAttribute('data-modal')));
+    });
+
+    document.querySelectorAll(".modal").forEach(modal => {
+        modal.addEventListener("click", event => {
+            if (event.target.classList.contains('modal')) {
+                closeModal(modal.id);
+            }
+        });
+    });
+
+    const handleButtonClick = event => {
+        switch (event.target.id) {
+            case 'addUserBtn':
+                openModal('addUserModal');
+                break;
+            case 'tenantUserBtn':
+                openModal('tenantUserModal');
+                break;
+        }
+    };
+
+    document.getElementById("addUserBtn")?.addEventListener("click", handleButtonClick);
+    document.getElementById("tenantUserBtn")?.addEventListener("click", handleButtonClick);
+});
+</script>
