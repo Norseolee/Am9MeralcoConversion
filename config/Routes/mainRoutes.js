@@ -35,6 +35,7 @@ router.get('/dashboard', async (req, res) => {
                 mainUserData = await User.query().findById(user.id);
             } else {
                 // Redirect to login if user cannot be authenticated
+                req.flash('message', { text: 'wrong password', type: 'danger' });
                 return res.redirect('/');
             }
         } else {
@@ -116,7 +117,7 @@ router.post('/login', async (req, res) => {
 
         if (user) {
             const passwordMatch = await bcrypt.compare(password, user.password);
-
+            console.log(`Password match: ${passwordMatch}`);
             if (passwordMatch) {
                 req.session.user = user;
                 if (remember_me) {
