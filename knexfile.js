@@ -1,8 +1,7 @@
-// Update with your config settings.
-
 /**
  * @type { Object.<string, import("knex").Knex.Config> }
  */
+
 module.exports = {
   development: {
     client: 'mysql',
@@ -10,40 +9,51 @@ module.exports = {
       host: 'localhost',
       user: 'root',
       password: '',
-      database: 'am9commercial'
-    }
+      database: 'am9commercial',
+      connectionLimit: 20,
+    },
+    pool: {
+      min: 2,
+      max: 10,
+    },
+    migrations: {
+      tableName: 'knex_migrations',
+    },
   },
 
   staging: {
-    client: 'postgresql',
+    client: 'mysql',
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      host: 'b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com',
+      user: 'u1llarmjzoo3t683',
+      password: 'HKDuDLkfJO1cZQJX58M7',
+      database: 'b18rvltkeprxyrwdxj35',
+      connectionLimit: 20,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      tableName: 'knex_migrations'
-    }
+      tableName: 'knex_migrations',
+    },
   },
 
   production: {
-    client: 'postgresql',
+    client: 'mysql',
     connection: {
-      database: 'my_db',
-      user:     'username',
-      password: 'password'
+      host: 'b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com',
+      user: 'u1llarmjzoo3t683',
+      password: 'HKDuDLkfJO1cZQJX58M7',
+      database: 'b18rvltkeprxyrwdxj35',
+      connectionLimit: 20,
     },
     pool: {
       min: 2,
-      max: 10
+      max: 10,
     },
     migrations: {
-      tableName: 'knex_migrations'
-    }
-  }
-
+      tableName: 'knex_migrations',
+    },
+  },
 };
