@@ -25,9 +25,10 @@ const Knex = require('knex');
 const { Model } = require('objection');
 const knexConfig = require('../knexfile');
 
-const knex = Knex(knexConfig.development,
-    acquireConnectionTimeout: 60000
-);
+const knex = Knex({
+    ...knexConfig.development,
+    acquireConnectionTimeout: 60000 
+});
 
 // Bind all Models to the Knex instance
 Model.knex(knex);
