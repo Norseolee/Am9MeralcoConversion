@@ -10,7 +10,10 @@
   <h1>RENTS</h1>
 <% } else if (view === 'meralco') { %>
 <h1>MERALCO</h1>
-<a href="/dashboard/meralco/add-meralco" class="button">ADD MERALCO</a>
+<div>
+  <a href="/dashboard/meralco/add-meralco" class="button">ADD MERALCO</a>
+  <a href="/dashboard/meralco/print-meralco" class="button">PRINT</a>
+</div>
 <% } else if (view === 'maynilad') { %>
 <h1>MAYNILAD</h1>
 <% } else if (view === 'payment' && mainUser.role_id === 1) { %>   

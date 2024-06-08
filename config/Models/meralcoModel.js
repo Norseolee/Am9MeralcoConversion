@@ -4,6 +4,9 @@ class Meralco extends Model {
     static get tableName() {
         return 'meralco';
     }
+    static get idColumn() {
+        return 'meralco_id';
+    }
 
     static get jsonSchema() {
         return {

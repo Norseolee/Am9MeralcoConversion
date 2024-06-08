@@ -58,7 +58,7 @@ router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) 
     }
   });
   
-  router.post('/dashboard/meralco_process/add-meralco', async (req, res) => {
+router.post('/dashboard/meralco_process/add-meralco', async (req, res) => {
 
       const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
@@ -88,7 +88,7 @@ router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) 
         }
   })
   
-  router.get('/dashboard/meralco/previous-reading', async (req, res) => {
+router.get('/dashboard/meralco/previous-reading', async (req, res) => {
     try {
       const tenantId = req.query.tenant_id;
       // Get the current Meralco record for the tenant
@@ -112,7 +112,7 @@ router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) 
     }
   });
   
-  router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res) => {
+router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res) => {
     try {
         let mainUserData;
 
@@ -151,6 +151,41 @@ router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) 
         res.redirect('/dashboard?view=meralco');
     }
 })
+router.post('/meralco_process/meralco_edit', checkAdminStaff, async (req, res) => {
+  try {
+      let meralcoID = req.query.id;
+      let { per_kwh, due_date, date_of_reading, previous_reading, current_reading, consume, total_amount } = req.body;
+
+      // Convert numeric values to floats
+      per_kwh = parseFloat(per_kwh);
+      previous_reading = parseFloat(previous_reading);
+      current_reading = parseFloat(current_reading);
+      consume = parseFloat(consume);
+      total_amount = parseFloat(total_amount);
+
+      let updateFields = {
+        per_kwh,
+        due_date,
+        date_of_reading,
+        previous_reading,
+        current_reading,
+        consume,
+        total_amount
+      };
+
+      const updatedMeralco = await Meralco.query().patchAndFetchById(meralcoID, updateFields);
+
+      req.flash('message', { text: 'Meralco updated successfully', type: 'success' });
+      res.redirect('/dashboard?view=meralco');
+  } catch(error) {
+    console.error(error);
+    req.flash('message', { text: 'Internal Error', type: 'danger' });
+    res.redirect('/dashboard?view=meralco');
+  }
+});
+
+
+
 
 router.get('/get-meralco', checkAdminStaff, async (req, res) => {
   try {

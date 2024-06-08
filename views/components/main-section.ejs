@@ -13,6 +13,9 @@
                     <th>Current Reading</th>
                     <th>Consume</th>
                     <th>Status</th>
+                    <% if(mainUser.role_id == 1) { %>
+                    <th>Action</th>
+                    <% } %>
                 </tr>
             </thead>
             <tbody>
@@ -29,7 +32,117 @@
                     <td>
                         <%- meralco.is_paid == 1 ? '<span class="green">Paid</span>' : '<span class="red">Not Paid</span>' %>
                     </td>
+                    <% if(mainUser.role_id == 1) { %>
+                    <td>
+                        <button id="meralcoEditBtn_<%= meralco.meralco_id %>" class="button">Edit</button>
+                    </td>
+                    <% } %>
                 </tr>
+
+                <div id="meralcoEditModal_<%= meralco.meralco_id %>" class="modal">
+                    <div class="modal-content">
+                        <div class="model-title">
+                            <h2>Edit Meralco</h2>
+                            <span class="close" data-modal="meralcoEditModal_<%= meralco.meralco_id %>">&times;</span>
+                        </div>
+                
+                        <form id="editUserForm_<%= meralco.meralco_id %>" method="POST" action="/meralco_process/meralco_edit?id=<%= meralco.meralco_id %>">
+                            <div class="editForm">
+        
+                                <div>
+                                    <label for="per_kwh_<%= meralco.meralco_id %>">Per Kwh: </label>
+                                    <input type="number" name="per_kwh" id="per_kwh_<%= meralco.meralco_id %>" step="0.01" value="<%= meralco.per_kwh %>">
+                                </div>
+        
+                                <div>
+                                    <label for="due_date_<%= meralco.meralco_id %>">Due Date: </label>
+                                    <input type="date" name="due_date" id="due_date_<%= meralco.meralco_id %>" value="<%= meralco.due_date %>">
+                                </div>
+        
+                                <div>
+                                    <label for="date_of_reading_<%= meralco.meralco_id %>">Date of Reading: </label>
+                                    <input type="date" name="date_of_reading" id="date_of_reading_<%= meralco.meralco_id %>" value="<%= meralco.date_of_reading %>">
+                                </div>
+        
+                                <div>
+                                    <label for="previous_reading_<%= meralco.meralco_id %>">Previous Reading: </label>
+                                    <input type="number" name="previous_reading" id="previous_reading_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.previous_reading %>">
+                                </div>
+        
+                                <div>
+                                    <label for="current_reading_<%= meralco.meralco_id %>">Current Reading: </label>
+                                    <input type="number" name="current_reading" id="current_reading_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.current_reading %>">
+                                </div>
+        
+                                <div>
+                                    <label for="consume_<%= meralco.meralco_id %>">Consume :</label>
+                                    <input type="number" name="consume" id="consume_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.consume %>">
+                                </div>
+        
+                                <div>
+                                    <label for="total_amount_<%= meralco.meralco_id %>">Total Amount: </label>
+                                    <input type="number" name="total_amount" id="total_amount_<%= meralco.meralco_id %>" step="0.01" value="<%= meralco.total_amount %>">
+                                </div>
+        
+                                <br>
+                                <button class="button" type="submit">Submit</button>
+                                <br>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <script>
+                    document.addEventListener("DOMContentLoaded", function() {
+                        const openModalEdit = modalEditId => {
+                            const modal = document.getElementById(modalEditId);
+                            modal.style.display = "block";
+                        };
+                
+                        const closeModalEdit = modalEditId => {
+                            const modal = document.getElementById(modalEditId);
+                            modal.style.display = "none";
+                        };
+                
+                        document.getElementById("meralcoEditBtn_<%= meralco.meralco_id %>").addEventListener("click", function() {
+                            openModalEdit('meralcoEditModal_<%= meralco.meralco_id %>');
+                        });
+                        
+                        document.querySelectorAll('.close[data-modal]').forEach(closeButton => {
+                            closeButton.addEventListener('click', function() {
+                                closeModalEdit(closeButton.getAttribute('data-modal'));
+                            });
+                        });
+                        
+                        window.addEventListener("click", event => {
+                            if (event.target.classList.contains('modal')) {
+                                closeModalEdit(event.target.id);
+                            }
+                        });
+
+                        const previousReadingInput = document.getElementById("previous_reading_<%= meralco.meralco_id %>");
+                        const currentReadingInput = document.getElementById("current_reading_<%= meralco.meralco_id %>");
+                        const perKwhInput = document.getElementById("per_kwh_<%= meralco.meralco_id %>");
+                        const consumeInput = document.getElementById("consume_<%= meralco.meralco_id %>");
+                        const totalAmountInput = document.getElementById("total_amount_<%= meralco.meralco_id %>");
+
+                        function updateValues() {
+                            let previousReading = parseFloat(previousReadingInput.value) || 0;
+                            let currentReading = parseFloat(currentReadingInput.value) || 0;
+                            let perKwh = parseFloat(perKwhInput.value) || 0;
+
+                            let consume = currentReading - previousReading;
+                            let totalAmount = (consume * perKwh).toFixed(2);
+
+                            consumeInput.value = consume >= 0 ? consume.toFixed(1) : "0.0";
+                            totalAmountInput.value = totalAmount;
+                        }
+
+                        previousReadingInput.addEventListener("input", updateValues);
+                        currentReadingInput.addEventListener("input", updateValues);
+                        perKwhInput.addEventListener("input", updateValues);
+                    });
+                </script>
             <% }); %>
             </tbody>
         <% } else if (view === 'tenant') { %>
@@ -57,7 +170,7 @@
                         <td>
                             <div>
                                 <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=false">View</a>
-                                <a href="/tenant_process/tenant_edit_view?id=<%= tenant.tenant_id %>&edit=true">Edit</a>
+                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=true">Edit</a>
                                 <button class="red-button"><a href="/tenant_process/delete-tenant?id=<%= tenant.tenant_id %>&do=delete">Delete</a></button>
                             </div>
                         </td>
