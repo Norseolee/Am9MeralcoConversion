@@ -35,6 +35,7 @@ router.get('/dashboard', async (req, res) => {
                 mainUserData = await User.query().findById(user.id);
             } else {
                 // Redirect to login if user cannot be authenticated
+                req.flash('message', { text: 'wrong password', type: 'danger' });
                 return res.redirect('/');
             }
         } else {

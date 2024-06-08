@@ -13,11 +13,7 @@ const meralcoRoutes = require("./config/Routes/meralcoRoutes");
 const tenantRoutes = require("./config/Routes/tenantRoutes");
 const migrationRoutes = require("./config/Routes/migrationRoutes");
 
-<<<<<<< HEAD
-const port = process.env.PORT || 5432;
-=======
 const port = process.env.PORT || 3000;
->>>>>>> parent of b2b0a0b (added port from 3000 to 3306)
 const app = express();
 
 app.use(express.static("public"));
