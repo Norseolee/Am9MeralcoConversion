@@ -3,7 +3,7 @@
  * @returns { Promise<void> }
  */
 
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 exports.up = function(knex) {
     // Hash the password asynchronously
