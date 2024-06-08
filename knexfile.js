@@ -10,7 +10,7 @@ module.exports = {
       user: 'root',
       password: '',
       database: 'am9commercial',
-      connectionLimit: 20,
+      connectionLimit: 	5,
     },
     pool: {
       min: 2,
@@ -28,7 +28,7 @@ module.exports = {
       user: 'u1llarmjzoo3t683',
       password: 'HKDuDLkfJO1cZQJX58M7',
       database: 'b18rvltkeprxyrwdxj35',
-      connectionLimit: 20,
+      connectionLimit: 	5,
     },
     pool: {
       min: 2,
@@ -46,7 +46,7 @@ module.exports = {
       user: 'u1llarmjzoo3t683',
       password: 'HKDuDLkfJO1cZQJX58M7',
       database: 'b18rvltkeprxyrwdxj35',
-      connectionLimit: 20,
+      connectionLimit: 	5,
     },
     pool: {
       min: 2,
