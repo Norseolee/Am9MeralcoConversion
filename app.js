@@ -13,7 +13,7 @@ const meralcoRoutes = require("./config/Routes/meralcoRoutes");
 const tenantRoutes = require("./config/Routes/tenantRoutes");
 const migrationRoutes = require("./config/Routes/migrationRoutes");
 
-const port = process.env.PORT || 3306;
+const port = process.env.PORT || 3000;
 const app = express();
 
 app.use(express.static("public"));
