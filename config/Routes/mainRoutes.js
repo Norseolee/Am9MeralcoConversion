@@ -11,7 +11,7 @@ const Role = require('../Models/roleModel');
 const checkAuth = require('../Middleware/audthMiddleware'); // Fixed typo
 const { generateToken } = require('../generateToken');
 const { verifyToken } = require('../verifyToken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 const multer = require('multer');
 
 // THIS IS COMMON ROUTES
