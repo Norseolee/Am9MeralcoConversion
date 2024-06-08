@@ -1,44 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link rel="stylesheet" href="css/login.css">
-    <script src="js/login.js"></script>
+    <style>
+      .container_login_form {
+        position: absolute;
+        inset: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .container_login {
+        background-image: url("../Images/bg.jpg");
+        background-size: cover;
+        background-repeat: no-repeat;
+        height: 100vh;
+        margin: 0; /* Remove default margin */
+        clip-path: polygon(100% 100%, 0 100%, 100% 0);
+
+        position: absolute;
+        inset: 0px;
+        z-index: -10;
+      }
+
+      .Am9_Logo {
+        width: 200px;
+        height: 100px;
+        mix-blend-mode: multiply;
+        object-fit: cover;
+      }
+
+    </style>
   </head>
+  <%- include('./components/header') %>
   <body>
-    <img src="../Images/bg.jpg" alt="Am9 Front Commercial" class="bg">
-    <img src="../Images/am9commercial.jpg" class="logo" alt="">
-   
-    <form id="loginForm" action="/login" method="POST">
-      <div class="login-form">
-        <h1>Login</h1>
-        <div class="sub-login">
-          <label for="username">Username: </label>
-          <input class="input" type="text" id="username" name="username">
+    <div class="container_login">
+    </div>
+    <div class="container_login_form">
+      <img src="../Images/am9commercial.jpg" class="Am9_Logo" alt="">
+      <br><br>
+      <form action="/login" method="POST">
+        <div class="rounded border p-4 d-flex flex-column gap-4 bg-white">
+          <h1 class="text-center">Login</h1>
+  
+          <div class="d-flex flex-column gap-3">
+            <div class="">
+              <label for="username" class="form-label">Username: </label>
+              <input class="form-control" type="text" id="username" name="username">
+            </div>
+            <div class="">
+              <label for="password" class="form-label">Password: </label>
+              <input class="form-control" type="password" id="password" name="password">
+            </div>
+            <div class="">
+              <input type="checkbox" class="form-check-input" name="remember_me" id="remember_me"><label for="remember_me" class="form-check-label ms-2">Remember me</label>
+            </div>
+          </div>
+  
+          <input type="submit" id="submit_login" class="btn btn-primary" value="Login">
         </div>
-        <div class="sub-login">
-          <label for="password">Password: </label>
-          <input class="input" type="password" id="password" name="password">
-        </div>
-        <div class="remember_me">
-          <input type="checkbox" name="remember_me" id="remember_me"><label for="remember_me">Remember me</label>
-        </div>
-        <input type="submit" id="submit_login" class="button" value="Login">
-      </div>
-    </form>
+      </form>
+    </div>
     
-    <% if (message && message.length > 0) { %>
-      <div class="alert alert-<%= message[0].type %> mt-3" role="alert">
-        <%= message[0].text %>
-      </div>
-    <% } %>
-    
-    <script>
-      setTimeout(() => {
-          const notificationMessage = document.querySelector('.alert');
-          if (notificationMessage) {
-              notificationMessage.style.display = 'none';
-          }
-      }, 3000);
-    </script>
   </body>
 </html>
