@@ -45,7 +45,7 @@ router.get('/dashboard', async (req, res) => {
 
         // This is for pagination
         const page = parseInt(req.query.page) || 1;
-        const limit = 15;
+        const limit = 14;
         const view = req.query.view || 'user';
         const offset = (page - 1) * limit;
 
@@ -65,7 +65,7 @@ router.get('/dashboard', async (req, res) => {
                     }).resultSize(),
                     Meralco.query().where(builder => {
                         builder.where('is_deleted', 0);
-                    }).orderBy('meralco_id', 'desc').limit(limit).offset(offset)
+                    }).orderBy('meralco_id', 'desc').limit(17).offset(offset)
                 ]);
                 break;
             case 'user':

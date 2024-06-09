@@ -1,297 +1,108 @@
-<div class="table-main">
-    <table>
-        <% if (view === 'meralco') { %>
-            <!-- MERALCO LIST -->
-            <thead>
-                <tr>
-                    <th>meralco id</th>
-                    <th>tenant ID</th>
-                    <th>Per kWh</th>
-                    <th>Due Date</th>
-                    <th>Date of Reading</th>
-                    <th>Previous Reading</th>
-                    <th>Current Reading</th>
-                    <th>Consume</th>
-                    <th>Status</th>
-                    <% if(mainUser.role_id == 1) { %>
-                    <th>Action</th>
-                    <% } %>
-                </tr>
-            </thead>
-            <tbody>
-            <% meralcoData.forEach((meralco) => { %>
-                <tr>
-                    <td><%= meralco.meralco_id %></td>
-                    <td><%= meralco.tenant_id %></td>
-                    <td><%= meralco.per_kwh %></td>
-                    <td><%= meralco.due_date %></td>
-                    <td><%= meralco.date_of_reading %></td>
-                    <td><%= meralco.previous_reading %></td>
-                    <td><%= meralco.current_reading %></td>
-                    <td><%= meralco.consume %></td>
-                    <td>
-                        <%- meralco.is_paid == 1 ? '<span class="green">Paid</span>' : '<span class="red">Not Paid</span>' %>
-                    </td>
-                    <% if(mainUser.role_id == 1) { %>
-                    <td>
-                        <button id="meralcoEditBtn_<%= meralco.meralco_id %>" class="button">Edit</button>
-                    </td>
-                    <% } %>
-                </tr>
-
-                <div id="meralcoEditModal_<%= meralco.meralco_id %>" class="modal">
-                    <div class="modal-content">
-                        <div class="model-title">
-                            <h2>Edit Meralco</h2>
-                            <span class="close" data-modal="meralcoEditModal_<%= meralco.meralco_id %>">&times;</span>
-                        </div>
-                
-                        <form id="editUserForm_<%= meralco.meralco_id %>" method="POST" action="/meralco_process/meralco_edit?id=<%= meralco.meralco_id %>">
-                            <div class="editForm">
-        
-                                <div>
-                                    <label for="per_kwh_<%= meralco.meralco_id %>">Per Kwh: </label>
-                                    <input type="number" name="per_kwh" id="per_kwh_<%= meralco.meralco_id %>" step="0.01" value="<%= meralco.per_kwh %>">
-                                </div>
-        
-                                <div>
-                                    <label for="due_date_<%= meralco.meralco_id %>">Due Date: </label>
-                                    <input type="date" name="due_date" id="due_date_<%= meralco.meralco_id %>" value="<%= meralco.due_date %>">
-                                </div>
-        
-                                <div>
-                                    <label for="date_of_reading_<%= meralco.meralco_id %>">Date of Reading: </label>
-                                    <input type="date" name="date_of_reading" id="date_of_reading_<%= meralco.meralco_id %>" value="<%= meralco.date_of_reading %>">
-                                </div>
-        
-                                <div>
-                                    <label for="previous_reading_<%= meralco.meralco_id %>">Previous Reading: </label>
-                                    <input type="number" name="previous_reading" id="previous_reading_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.previous_reading %>">
-                                </div>
-        
-                                <div>
-                                    <label for="current_reading_<%= meralco.meralco_id %>">Current Reading: </label>
-                                    <input type="number" name="current_reading" id="current_reading_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.current_reading %>">
-                                </div>
-        
-                                <div>
-                                    <label for="consume_<%= meralco.meralco_id %>">Consume :</label>
-                                    <input type="number" name="consume" id="consume_<%= meralco.meralco_id %>" step="0.1" value="<%= meralco.consume %>">
-                                </div>
-        
-                                <div>
-                                    <label for="total_amount_<%= meralco.meralco_id %>">Total Amount: </label>
-                                    <input type="number" name="total_amount" id="total_amount_<%= meralco.meralco_id %>" step="0.01" value="<%= meralco.total_amount %>">
-                                </div>
-        
-                                <br>
-                                <button class="button" type="submit">Submit</button>
-                                <br>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <script>
-                    document.addEventListener("DOMContentLoaded", function() {
-                        const openModalEdit = modalEditId => {
-                            const modal = document.getElementById(modalEditId);
-                            modal.style.display = "block";
-                        };
-                
-                        const closeModalEdit = modalEditId => {
-                            const modal = document.getElementById(modalEditId);
-                            modal.style.display = "none";
-                        };
-                
-                        document.getElementById("meralcoEditBtn_<%= meralco.meralco_id %>").addEventListener("click", function() {
-                            openModalEdit('meralcoEditModal_<%= meralco.meralco_id %>');
-                        });
-                        
-                        document.querySelectorAll('.close[data-modal]').forEach(closeButton => {
-                            closeButton.addEventListener('click', function() {
-                                closeModalEdit(closeButton.getAttribute('data-modal'));
-                            });
-                        });
-                        
-                        window.addEventListener("click", event => {
-                            if (event.target.classList.contains('modal')) {
-                                closeModalEdit(event.target.id);
-                            }
-                        });
-
-                        const previousReadingInput = document.getElementById("previous_reading_<%= meralco.meralco_id %>");
-                        const currentReadingInput = document.getElementById("current_reading_<%= meralco.meralco_id %>");
-                        const perKwhInput = document.getElementById("per_kwh_<%= meralco.meralco_id %>");
-                        const consumeInput = document.getElementById("consume_<%= meralco.meralco_id %>");
-                        const totalAmountInput = document.getElementById("total_amount_<%= meralco.meralco_id %>");
-
-                        function updateValues() {
-                            let previousReading = parseFloat(previousReadingInput.value) || 0;
-                            let currentReading = parseFloat(currentReadingInput.value) || 0;
-                            let perKwh = parseFloat(perKwhInput.value) || 0;
-
-                            let consume = currentReading - previousReading;
-                            let totalAmount = (consume * perKwh).toFixed(2);
-
-                            consumeInput.value = consume >= 0 ? consume.toFixed(1) : "0.0";
-                            totalAmountInput.value = totalAmount;
-                        }
-
-                        previousReadingInput.addEventListener("input", updateValues);
-                        currentReadingInput.addEventListener("input", updateValues);
-                        perKwhInput.addEventListener("input", updateValues);
-                    });
-                </script>
-            <% }); %>
-            </tbody>
-        <% } else if (view === 'tenant') { %>
-            <!-- TENANT LIST -->
-            <thead>
-                <tr>
-                    <th>Tenant ID</th>
-                    <th>Name</th>
-                    <th>Unit</th>
-                    <th>Contact Number</th>
-                    <th>Lease Start</th>
-                    <th>Lease End</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% tenantData.forEach((tenant) => { %>
+    <div class="table-responsive">
+        <table class="table table-sm align-middle text-white">
+            <% if (view === 'meralco') { %>
+                <!-- MERALCO LIST -->
+                <thead class="table-dark text-nowrap text-start">
                     <tr>
-                        <td><%= tenant.tenant_id %></td>
-                        <td><%= tenant.business_name %></td>
-                        <td><%= tenant.unit %></td>
-                        <td><%= tenant.contact_number %></td>
-                        <td><%= new Date(tenant.lease_start).toLocaleDateString() %></td>
-                        <td><%= new Date(tenant.lease_end).toLocaleDateString() %></td>
-                        <td>
-                            <div>
-                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=false">View</a>
-                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=true">Edit</a>
-                                <button class="red-button"><a href="/tenant_process/delete-tenant?id=<%= tenant.tenant_id %>&do=delete">Delete</a></button>
-                            </div>
-                        </td>
+                        <th scope="col">id</th>
+                        <th scope="col">tenant ID</th>
+                        <th scope="col">Per kWh</th>
+                        <th scope="col">Due Date</th>
+                        <th scope="col">Date of Reading</th>
+                        <th scope="col">Previous Reading</th>
+                        <th scope="col">Current Reading</th>
+                        <th scope="col">Consume</th>
+                        <th scope="col">Status</th>
+                        <% if(mainUser.role_id == 1) { %>
+                        <th scope="col">Action</th>
+                        <% } %>
                     </tr>
-                <% }); %>
-            </tbody>
-        <% } else if (view === 'user') { %>
-            <!-- USER LIST -->
-            <thead>
-                <tr>
-                    <th>User ID</th>
-                    <th>Username</th>
-                    <th>Role</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody class="action">
-                <% userData.forEach((userData) => { %>
+                </thead>
+                <tbody class="text-nowrap text-start">
+                <% meralcoData.forEach((meralco) => { %>
                     <tr>
-                        <td><%= userData.id %></td>
-                        <td><%= userData.username %></td>
-                        <td><%= userData.role_id %></td>
+                        <td scope="row"><%= meralco.meralco_id %></td>
+                        <td><%= meralco.tenant_id %></td>
+                        <td><%= meralco.per_kwh %></td>
+                        <td><%= meralco.due_date %></td>
+                        <td><%= meralco.date_of_reading %></td>
+                        <td><%= meralco.previous_reading %></td>
+                        <td><%= meralco.current_reading %></td>
+                        <td><%= meralco.consume %></td>
                         <td>
-                            <div class="last-td">
-                                <button id="userEditBtn_<%= userData.id %>" class="button">Edit</button>
-                                <% if(userData.id !== mainUser.id) { %> 
-                                    <button class="red-button"><a href="/user_process/delete-user?id=<%= userData.id %>&do=delete" >Delete</a></button>
-                                <% } %>
-                            </div>
+                            <%- meralco.is_paid == 1 ? '<span class="green">Paid</span>' : '<span class="red">Not Paid</span>' %>
                         </td>
-                    </tr>
-
-
-                    <!-- Edit User Modal -->
-                    <div id="editUserModal_<%= userData.id %>" class="modal">
-                        <div class="modal-content">
-                            <div class="model-title">
-                                <h2>Edit User</h2>
-                                <span class="close" data-modal="editUserModal_<%= userData.id %>">&times;</span>
-                            </div>
-
-                            <form id="editUserForm" method="POST" action="user_process/edit-user?id=<%= userData.id %>">
-                                <div class="editForm">
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" name="username" value="<%= userData.username %>" required>
-    
-                                    <label for="password">New Password:</label>
-                                    <input type="text" id="password" name="password" >
-    
-                                    <label for="role">Role:</label>
-                                    <select id="role" name="role" required>
-                                        <option value="">Select Role</option>
-                                        <% roles.forEach(role => { %>
-                                            <option value="<%= role.role_id %>" <%= role.role_id === userData.role_id ? 'selected' : '' %>><%= role.roles_name %></option>
-                                        <% }) %>
-                                    </select>
-                                    <br>
-                                    <button class="button" type="submit">Submit Edit User</button>
-                                    <br>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-
-                    <script>
-                        document.addEventListener("DOMContentLoaded", function() {
-                            const openModal_edit = modalEditId => {
-                                const modal = document.getElementById(modalEditId);
-                                modal.style.display = "block";
-                            };
-                    
-                            const closeModal_edit = modalEditId => {
-                                const modal = document.getElementById(modalEditId);
-                                modal.style.display = "none";
-                            };
-                    
-                            const editHandleButtonClick = event => {
-                                const userId = <%= userData.id %>;
-                                if (event.target.id === 'userEditBtn_' + userId) {
-                                    openModal_edit('editUserModal_' + userId);
-                                }
-                            };
-                    
-                            document.getElementById("userEditBtn_<%= userData.id %>").addEventListener("click", editHandleButtonClick);
-                            
-                    
-                            window.addEventListener("click", event => {
-                                if (event.target.classList.contains('modal')) {
-                                    closeModal_edit(event.target.id);
-                                }
-                            });
-                        });
-                        </script>
-
+                        <% if(mainUser.role_id == 1) { %>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#meralcoEditModal_<%= meralco.meralco_id %>">
+                                    Edit
+                                </button>
+                            </td>
+                        <% } %>
+                        <%- include('./edit-modal.ejs', { meralco: meralco }) %>
+                    </tr>    
                 <% }); %>
-            </tbody>
-        <% } %>        
-    </table>
-
-    <div class="pagination">
-        <% if (currentPage > 1) { %>
-            <a class="a" href="/dashboard?view=<%= view %>&page=<%= currentPage - 1 %>">&laquo; Previous</a>
-        <% } else { %>
-            <span class="disabled">&laquo; Previous</span>
-        <% } %>
-
-        <% for (let i = 1; i <= totalPages; i++) { %>
-            <% if (i === currentPage) { %>
-                <span class="current-page"><%= i %></span>
-            <% } else { %>
-                <a class="a" href="/dashboard?view=<%= view %>&page=<%= i %>"><%= i %></a>
-            <% } %>
-        <% } %>
-    
-        <% if (currentPage < totalPages) { %>
-            <a class="a" href="/dashboard?view=<%= view %>&page=<%= currentPage + 1 %>">Next &raquo;</a>
-        <% } else { %>
-            <span class="disabled">Next &raquo;</span>
-        <% } %>
+                </tbody>
+            <% } else if (view === 'tenant') { %>
+                <!-- TENANT LIST -->
+                <thead class="table-dark text-nowrap text-start">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Unit</th>
+                        <th>Contact Number</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap text-start">
+                    <% tenantData.forEach((tenant) => { %>
+                        <tr>
+                            <td><%= tenant.tenant_id %></td>
+                            <td><%= tenant.business_name %></td>
+                            <td><%= tenant.unit %></td>
+                            <td><%= tenant.contact_number %></td>
+                            <td><%= tenant.status %></td>
+                            <td>
+                                <div>
+                                    <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=false" class="btn btn-primary btn-sm">View</a>
+                                    <a href="/dashboard/tenant?view=tenant_view&id=<%= tenant.tenant_id %>&edit=true" class="btn btn-warning m-1 btn-sm">Edit</a>
+                                    <a href="/tenant_process/delete-tenant?id=<%= tenant.tenant_id %>&do=delete" class="btn btn-danger btn-sm">Delete</a>
+                                </div>
+                            </td>
+                        </tr>
+                    <% }); %>
+                </tbody>
+            <% } else if (view === 'user') { %>
+                <!-- USER LIST -->
+                <thead class="table-dark text-nowrap text-start">
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Role</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap text-start">
+                    <% userData.forEach((userData) => { %>
+                        <tr>
+                            <td><%= userData.id %></td>
+                            <td><%= userData.username %></td>
+                            <td><%= userData.role_id %></td>
+                            <td>
+                                <div class="last-td">
+                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#userEditModal_<%= userData.id %>">
+                                        Edit
+                                    </button>
+                                    <% if(userData.id !== mainUser.id) { %> 
+                                        <a href="/user_process/delete-user?id=<%= userData.id %>&do=delete" class="btn btn-danger btn-sm">Delete</a>
+                                    <% } %>
+                                </div>
+                            </td>
+                        </tr>
+                        <%- include('./edit-modal.ejs', { userData: userData }) %>
+                    <% }); %>
+                </tbody>
+            <% } %>        
+        </table>
     </div>
-
-   
-</div>
-

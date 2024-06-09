@@ -1,0 +1,35 @@
+<nav aria-label="Page navigation ">
+    <ul class="h6 pagination justify-content-start ">
+        <% if (currentPage > 1) { %>
+            <li class="page-item">
+                <a class="page-link bg-dark text-light" href="/dashboard?view=<%= view %>&page=<%= currentPage - 1 %>">&laquo; Previous</a>
+            </li>
+        <% } else { %>
+            <li class="page-item disabled">
+                <a class="page-link bg-dark text-light" href="#" tabindex="-1" aria-disabled="true">&laquo; Previous</a>
+            </li>
+        <% } %>
+
+        <% for (let i = 1; i <= totalPages; i++) { %>
+            <% if (i === currentPage) { %>
+                <li class="page-item active" aria-current="page">
+                    <span class="page-link bg-dark text-light"><%= i %></span>
+                </li>
+            <% } else { %>
+                <li class="page-item">
+                    <a class="page-link bg-dark text-light" href="/dashboard?view=<%= view %>&page=<%= i %>"><%= i %></a>
+                </li>
+            <% } %>
+        <% } %>
+
+        <% if (currentPage < totalPages) { %>
+            <li class="page-item">
+                <a class="page-link bg-dark text-light" href="/dashboard?view=<%= view %>&page=<%= currentPage + 1 %>">Next &raquo;</a>
+            </li>
+        <% } else { %>
+            <li class="page-item disabled">
+                <a class="page-link bg-dark text-light" href="#" tabindex="-1" aria-disabled="true">Next &raquo;</a>
+            </li>
+        <% } %>
+    </ul>
+</nav>

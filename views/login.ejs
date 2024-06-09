@@ -46,13 +46,14 @@
           <h1 class="text-center">Login</h1>
   
           <div class="d-flex flex-column gap-3">
-            <div class="">
-              <label for="username" class="form-label">Username: </label>
-              <input class="form-control" type="text" id="username" name="username">
+            <div class="form-floating">
+              
+              <input class="form-control" type="text" id="username" name="username" placeholder="username">
+              <label for="username" class="form-label" >Username: </label>
             </div>
-            <div class="">
+            <div class="form-floating">
+              <input class="form-control" type="password" id="password" name="password" placeholder="password">
               <label for="password" class="form-label">Password: </label>
-              <input class="form-control" type="password" id="password" name="password">
             </div>
             <div class="">
               <input type="checkbox" class="form-check-input" name="remember_me" id="remember_me"><label for="remember_me" class="form-check-label ms-2">Remember me</label>
