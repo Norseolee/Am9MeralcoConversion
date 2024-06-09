@@ -5,12 +5,17 @@
     <div class="main">
         <%- include('../components/navbar') %>
         <div class="sub-section">
-            <div class="sub-head">
+            <div class="d-flex justify-content-between">
                 <%- include('../components/sub-head') %>
             </div>
-            <div class="main-section">
+            
+            <%- include('../components/pagination', { currentPage, totalPages }) %>
+            
+            <div class="main-section overflow-auto mb-2 rounded-3 bg-brand h6">
                 <%- include('../components/main-section') %>
             </div>
+
+            <%- include('../components/pagination', { currentPage, totalPages }) %>
         </div>
     </div>
 </body>

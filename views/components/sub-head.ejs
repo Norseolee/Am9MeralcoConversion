@@ -1,19 +1,26 @@
 <% if (view === 'user' && mainUser.role_id === 1) { %>
   <h1>USER</h1>
-  <button id="addUserBtn" class="button">ADD USER</button>
+  <!-- <button id="addUserBtn" class="btn btn-info">ADD USER</button> -->
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
+    ADD USER
+</button>
   <%- include('add-modal') %>
 <% } else if (view === 'tenant' && (mainUser.role_id === 1 || mainUser.role_id === 2)) { %>
   <h1>TENANTS</h1>
-  <button id="tenantUserBtn" class="button">ADD TENANT</button>
+  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addtenantModal">
+    ADD USER
+</button>
   <%- include('add-modal') %>
 <% } else if (view === 'rent' && (mainUser.role_id === 1 || mainUser.role_id === 3)) { %>
   <h1>RENTS</h1>
 <% } else if (view === 'meralco') { %>
 <h1>MERALCO</h1>
+<% if(mainUser.role_id == 1 || mainUser.role_id == 2){ %>
 <div>
-  <a href="/dashboard/meralco/add-meralco" class="button">ADD MERALCO</a>
-  <a href="/dashboard/meralco/print-meralco" class="button">PRINT</a>
+  <a href="/dashboard/meralco/add-meralco" class="btn btn-primary">ADD MERALCO</a>
+  <a href="/dashboard/meralco/print-meralco" class="btn btn-primary">PRINT</a>
 </div>
+<% } %>
 <% } else if (view === 'maynilad') { %>
 <h1>MAYNILAD</h1>
 <% } else if (view === 'payment' && mainUser.role_id === 1) { %>   

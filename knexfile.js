@@ -6,10 +6,10 @@ module.exports = {
   development: {
     client: 'mysql',
     connection: {
-      host: 'b18rvltkeprxyrwdxj35-mysql.services.clever-cloud.com',
-      user: 'u1llarmjzoo3t683',
-      password: 'HKDuDLkfJO1cZQJX58M7',
-      database: 'b18rvltkeprxyrwdxj35',
+      host: 'localhost',
+      user: 'root',
+      password: '',
+      database: 'am9commercial',
       connectionLimit: 20,
     },
     pool: {

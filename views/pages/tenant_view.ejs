@@ -6,38 +6,50 @@
         <%- include('../components/navbar') %>
         <div class="sub-section">
             <div class="main-section">
-                <div class="tenant_details">            
+                <div class="tenant_details bg-brand p-4 rounded-3 text-white">            
                     <form method="POST" action="/tenant_process/edit-tenant?id=<%= tenantData.tenant_id %>" enctype="multipart/form-data">
-                        <div class="tenant_details_primary">
-                            <div>
+                        <div class="tenant_details_primary ">
+                            <div class="d-flex justify-content-between">
                                 <h3>Primary Information</h3>
-                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenantData.tenant_id %>&edit=true" class="button">Edit</a>
+                                <a href="/dashboard/tenant?view=tenant_view&id=<%= tenantData.tenant_id %>&edit=true" class="btn btn-warning">Edit</a>
+                            </div>
+                            <div  class="d-flex gap-5">
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="business_name">Business Name:</label>
+                                    <input class="text-white bg-brand form-control" type="text" id="business_name" name="business_name" value="<%= tenantData.business_name %>" <%= edit ? '' : 'readonly' %> >
+                                </div>
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="unit">Unit: </label>
+                                    <input class="text-white bg-brand form-control" type="text" id="unit" name="unit" value="<%= tenantData.unit %>" <%= edit ? '' : 'readonly' %>> 
+                                </div>
                             </div>
                             <div>
-                                <label for="business_name">Business Name:</label>
-                                <input type="text" id="business_name" name="business_name" value="<%= tenantData.business_name %>" <%= edit ? '' : 'readonly' %> >
-                                <label for="unit">Unit: </label>
-                                <input type="text" id="unit" name="unit" value="<%= tenantData.unit %>" <%= edit ? '' : 'readonly' %>> 
+                                <label class="form-label" for="full_name">Full name:</label>
+                                <input class="text-white bg-brand form-control" type="text" id="full_name" name="full_name" value="<%= tenantData.full_name %>" <%= edit ? '' : 'readonly' %>>
                             </div>
                             <div>
-                                <label for="full_name">Full name:</label>
-                                <input type="text" id="full_name" name="full_name" value="<%= tenantData.full_name %>" <%= edit ? '' : 'readonly' %>>
+                                <label class="form-label" for="address">Address:</label>
+                                <input class="text-white bg-brand form-control" type="text" id="address" name="address" value="<%= tenantData.address %>" <%= edit ? '' : 'readonly' %>>
                             </div>
-                            <div>
-                                <label for="address">Address:</label>
-                                <input type="text" id="address" name="address" value="<%= tenantData.address %>" <%= edit ? '' : 'readonly' %>>
+                            <div class="d-flex gap-5">
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="email">Email:</label>
+                                    <input class="text-white bg-brand form-control" type="text" id="email" name="email" value="<%= tenantData.email %>" <%= edit ? '' : 'readonly' %>>
+                                </div>
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="contact_number">Contact Number:</label>
+                                    <input class="text-white bg-brand form-control" type="text" id="contact_number" name="contact_number" value="<%= tenantData.contact_number %>" <%= edit ? '' : 'readonly' %>>
+                                </div>                                
                             </div>
-                            <div>
-                                <label for="email">Email:</label>
-                                <input type="text" id="email" name="email" value="<%= tenantData.email %>" <%= edit ? '' : 'readonly' %>>
-                                <label for="contact_number">Contact Number:</label>
-                                <input type="text" id="contact_number" name="contact_number" value="<%= tenantData.contact_number %>" <%= edit ? '' : 'readonly' %>>
-                            </div>
-                            <div>
-                                <label for="lease_start">Lease Start:</label>
-                                <input type="date" id="lease_start" name="lease_start" value="<%= tenantData.lease_start ? tenantData.lease_start.toISOString().split('T')[0]  : '' %>" >
-                                <label for="lease_end">Lease End:</label>
-                                <input type="date" id="lease_end" name="lease_end" value="<%=  tenantData.lease_end ? tenantData.lease_end.toISOString().split('T')[0] : '' %>" >                                
+                            <div  class="d-flex gap-5">
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="lease_start">Lease Start:</label>
+                                    <input class="text-white bg-brand form-control" type="date" id="lease_start" name="lease_start" value="<%= tenantData.lease_start ? tenantData.lease_start.toISOString().split('T')[0]  : '' %>" >
+                                </div>
+                                <div class="flex-grow-1 flex-shrink-1">
+                                    <label class="form-label" for="lease_end">Lease End:</label>
+                                    <input class="text-white bg-brand form-control" type="date" id="lease_end" name="lease_end" value="<%=  tenantData.lease_end ? tenantData.lease_end.toISOString().split('T')[0] : '' %>" >                                
+                                </div>
                             </div>
                         </div>
                         <div class="form_image">
@@ -45,19 +57,19 @@
                             <div>
                                 <div>
                                     <% if (edit === 'true' || tenantData.image_id_front) { %> 
-                                        <label for="image_id_front">ID FRONT:</label>
+                                        <label class="form-label" for="image_id_front">ID FRONT:</label>
                                         <img id="previewImageIdFront" src="/uploads/<%= tenantData.image_id_front %>" alt="Tenant Front ID" class="image_preview">
                                     <% } %>
                                 </div>
                                 <div>
                                     <% if (edit === 'true' || tenantData.image_id_back) { %> 
-                                        <label for="image_id_back">ID BACK:</label>
+                                        <label class="form-label" for="image_id_back">ID BACK:</label>
                                         <img id="previewImageIdBack" src="/uploads/<%= tenantData.image_id_back %>" alt="Tenant Back ID" class="image_preview">
                                     <% } %>
                                 </div>
                                 <div>
                                     <% if (edit === 'true' || tenantData.signature) { %> 
-                                        <label for="signature">Signature: </label>
+                                        <label class="form-label" for="signature">Signature: </label>
                                         <img id="previewSignature" src="/uploads/<%= tenantData.signature %>" alt="Tenant Signature" class="image_preview">
                                     <% } %>
                                 </div>
@@ -68,26 +80,30 @@
                         <% if (edit === 'true') { %>
                             <div class="tenant_details_edit">
                                 <div>
-                                    <label for="image_id_front">ID FRONT:</label>
-                                    <input type="file" id="image_id_front" name="image_id_front" accept="image/*">
-                                    <label for="image_id_back">ID BACK:</label>
-                                    <input type="file" id="image_id_back" name="image_id_back" accept="image/*">
+                                    <label class="form-label" for="image_id_front">ID FRONT:</label>
+                                    <input class="text-white bg-brand form-control" type="file" id="image_id_front" name="image_id_front" accept="image/*">
+                                    <label class="form-label" for="image_id_back">ID BACK:</label>
+                                    <input class="text-white bg-brand form-control" type="file" id="image_id_back" name="image_id_back" accept="image/*">
                                 </div>
                                 <div>
-                                    <label for="signature">Signature:</label>
-                                    <input type="file" id="signature" name="signature" accept="image/*">
+                                    <label class="form-label" for="signature">Signature:</label>
+                                    <input class="text-white bg-brand form-control" type="file" id="signature" name="signature" accept="image/*">
                                 </div>          
                                 <div>
                                     <img src="#" alt="Signature Preview" style="display: none;">
                                     <img src="#" alt="Valid Id Preview Front" style="display: none;">
                                     <img src="#" alt="Valid Id Preview Back" style="display: none;">
+                                </div>
+                                <div>
+                                    <label class="form-label" for="status">Status</label>
+                                    <select class="bg-brand form-control" name="status" id="status">
+                                        <option value=""></option>
+                                        <option value="active">Active</option>
+                                        <option value="inactive">Inactive</option>
+                                    </select>
                                 </div>                   
-                                <select name="status" id="status">
-                                    <option value=""></option>
-                                    <option value="active">Active</option>
-                                    <option value="inactive">Inactive</option>
-                                </select>
-                                <button type="submit" class="button">Add User</button>
+
+                                <button type="submit" class="btn btn-success mt-4">Submit</button>
                             </div>
                         <% } %>     
                     </form>
