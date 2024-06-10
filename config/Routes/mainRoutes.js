@@ -4,45 +4,29 @@ const router = express.Router();
 const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
-const User = require('../Models/userModel');
-const Meralco = require('../Models/meralcoModel');
-const Tenant = require('../Models/tenantModel');
-const Role = require('../Models/roleModel');
+
 const checkAuth = require('../Middleware/audthMiddleware'); // Fixed typo
 const { generateToken } = require('../generateToken');
 const { verifyToken } = require('../verifyToken');
 const bcrypt = require('bcryptjs');
-const multer = require('multer');
+
+const User = require('../Models/userModel');
+const Meralco = require('../Models/meralcoModel');
+const Tenant = require('../Models/tenantModel');
+const Role = require('../Models/roleModel');
+const Payment = require('../Models/paymentModel.js');
+const ModeofPayment = require('../Models/modePaymentModel');
+
 
 // THIS IS COMMON ROUTES
 
 // Route handler for all dashboards
-router.get('/dashboard', async (req, res) => {
+router.get('/dashboard', checkAuth,  async (req, res) => {
     try {
-        let mainUserData, tenantData, meralcoData, roleData;
+        let mainUserData, tenantData, meralcoData, roleData, paymentData;
 
-        // Check if the user is logged in through session
-        if (req.session.user) {
-            // Retrieve main user data (currently logged-in user)
-            mainUserData = await User.query().findById(req.session.user.id);
-        } else if (req.cookies.remember_token) {
-            // Authenticate user using remember token
-            const user = await verifyToken(req.cookies.remember_token);
-            if (user) {
-                // Store user in session
-                req.session.user = user;
-                // Retrieve main user data
-                mainUserData = await User.query().findById(user.id);
-            } else {
-                // Redirect to login if user cannot be authenticated
-                req.flash('message', { text: 'wrong password', type: 'danger' });
-                return res.redirect('/');
-            }
-        } else {
-            // Redirect to login if user session or token is not found
-            return res.redirect('/');
-        }
-
+        mainUserData = req.user; 
+        
         // This is for pagination
         const page = parseInt(req.query.page) || 1;
         const limit = 14;
@@ -68,6 +52,21 @@ router.get('/dashboard', async (req, res) => {
                     }).orderBy('meralco_id', 'desc').limit(17).offset(offset)
                 ]);
                 break;
+                case 'payment':
+                    [totalCount, paymentData] = await Promise.all([
+                        Payment.query().resultSize(),
+                        Payment.query()
+                            .withGraphFetched('[meralco, tenant, modepayment]')
+                            .modifyGraph('tenant', builder => {
+                                builder.select('*'); // Select all columns from the tenant table
+                            })
+                            .modifyGraph('meralco', builder => {
+                                builder.select('*'); // Select all columns from the meralco table
+                            })
+                            .limit(limit)
+                            .offset(offset)
+                    ]);
+                    break;                
             case 'user':
             default:
                 [totalCount, data] = await Promise.all([
@@ -75,6 +74,7 @@ router.get('/dashboard', async (req, res) => {
                     User.query().where('is_deleted', 0).limit(limit).offset(offset)
                 ]);
                 break;
+            case 'user':
         }
 
         const totalPages = Math.ceil(totalCount / limit);
@@ -87,7 +87,8 @@ router.get('/dashboard', async (req, res) => {
             mainUser: mainUserData, 
             userData: data,       
             tenantData: tenantData, 
-            meralcoData: meralcoData, 
+            meralcoData: meralcoData,
+            paymentData: paymentData, 
             currentPage: page, 
             totalPages: totalPages,
             view: view,
@@ -117,7 +118,6 @@ router.post('/login', async (req, res) => {
 
         if (user) {
             const passwordMatch = await bcrypt.compare(password, user.password);
-            console.log(`Password match: ${passwordMatch}`);
             if (passwordMatch) {
                 req.session.user = user;
                 if (remember_me) {

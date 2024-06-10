@@ -1,11 +1,30 @@
 // authMiddleware.js
-const checkAuth = (req, res, next) => {
-    if (req.session && req.session.user) {
+const { verifyToken } = require('../verifyToken');
+const User = require('../Models/userModel');
+
+const checkAuth = async (req, res, next) => {
+  try {
+      if (req.session && req.session.user) {
+          req.user = await User.query().findById(req.session.user.id);
+      } else if (req.cookies.remember_token) {
+          const user = await verifyToken(req.cookies.remember_token);
+          if (user) {
+              req.session.user = user;
+              req.user = await User.query().findById(user.id);
+          } else {
+              req.flash('message', { text: 'wrong password', type: 'danger' });
+              return res.redirect('/');
+          }
+      } else {
+          return res.redirect('/');
+      }
       next();
-    } else {
-      res.redirect('/'); // Redirect to login page if not authenticated
-    }
-  };
+  } catch (error) {
+      console.error('Error in authentication:', error);
+      req.flash('message', { text: 'Internal Server Error', type: 'danger' });
+      res.redirect('/');
+  }
+};
   
   module.exports = checkAuth;
   

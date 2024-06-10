@@ -1,0 +1,71 @@
+<div class="modal fade" id="viewPaymentModal_<%= payment.payment_id %>" tabindex="-1" aria-labelledby="viewPaymentLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content bg-brand text-white">
+            <div class="modal-header">
+                <h5 class="modal-title" id="viewPaymentLabel">View Details <%= payment.payment_id %></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body bg-brand text-white">
+                <div class="mb-3">
+                    <div class="row mb-2">
+                        <div class="col-md-6 d-flex flex-column gap-2">
+                            <label for="payment_id">Payment ID: </label>
+                            <input type="text" readonly value="<%= payment.payment_id %>" class="form-control bg-brand text-white">
+                        </div>
+                        <div class="col-md-6 d-flex flex-column gap-2">
+                            <label for="staff_id">Staff ID: </label>
+                            <input type="text" readonly value="<%= payment.staff_id %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label for="tenant_business_name">Tenant Name:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly value="<%= payment.tenant ? payment.tenant.business_name : 'N/A' %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label for="tenant_unit">Unit:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly value="<%= payment.tenant ? payment.tenant.unit : 'N/A' %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label for="meralco_total_amount">Total Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly value="<%= payment.meralco ? payment.meralco.total_amount : 'N/A' %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label for="payment_amount">Payment Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly value="<%= payment.payment_amount %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                    <div class="row mb-2">
+                        <div class="col-md-4">
+                            <label for="meralco_current_total_amount">Current Amount:</label>
+                        </div>
+                        <div class="col-md-8">
+                            <input type="text" readonly value="<%= payment.meralco ? payment.meralco.current_total_amount : 'N/A' %>" class="form-control bg-brand text-white">
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>

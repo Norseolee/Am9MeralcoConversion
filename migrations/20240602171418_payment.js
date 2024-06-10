@@ -5,6 +5,7 @@
 exports.up = function(knex) {
     return knex.schema.createTable('payments', function(table) {
       table.increments('payment_id').primary();
+      table.integer('tenant_id').notNullable();
       table.integer('payment_amount').notNullable();
       table.integer('total_amount').notNullable();
       table.integer('staff_id').notNullable();
