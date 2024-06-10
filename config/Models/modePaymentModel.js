@@ -5,6 +5,9 @@ class ModePayment extends Model {
     static get tableName() {
         return 'mode_payments'; 
     }
+    static get idColumn() {
+      return 'mode_payment_id'; 
+  }
   static get jsonSchema() {
     return {
       type: 'object',

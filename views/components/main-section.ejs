@@ -103,6 +103,34 @@
                         <%- include('./edit-modal.ejs', { userData: userData }) %>
                     <% }); %>
                 </tbody>
-            <% } %>        
+            <% } else if (view ===  'payment') { %>
+                <thead class="table-dark text-nowrap text-start">
+                    <tr>
+                        <th>ID</th>
+                        <th>Tenant</th>
+                        <th>Utility</th>
+                        <th>Payment Amount</th>
+                        <th>Mode of Payment</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody class="text-nowrap text-start">
+                    <% paymentData.forEach((payment) => { %>
+                        <tr>
+                            <td><%= payment.payment_id %></td>
+                            <td><%= payment.tenant.business_name %></td>
+                            <td><%= payment.payment_type %></td>
+                            <td><%= payment.payment_amount %></td>
+                            <td><%= payment.modepayment.type %></td>
+                            <td>
+                                <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#viewPaymentModal_<%= payment.payment_id %>">
+                                    View
+                                </button>
+                            </td>
+                        </tr>
+                        <%- include('./view-modal', { payment: payment }) %>
+                     <% }) %>
+                </tbody>
+            <% } %>
         </table>
     </div>
