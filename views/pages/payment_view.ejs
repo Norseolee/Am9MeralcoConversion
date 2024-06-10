@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <%- include('../components/header') %>
+    <body>
+        <div class="main text-white">
+          <%- include('../components/navbar') %>
+            <div class="sub-section">
+                <div class="sub-head">
+                    <div>
+                        <h1>Add Meralco</h1>
+                    </div>
+                </div>
+
+                <div class="main-section bg-brand rounded p-5">
+                    <form method="POST" action="/dashboard/meralco_process/add-meralco">
+                        <div>
+                            <label class="form-label" for="tenant_id">Select Tenant: </label>
+                            <select class="bg-brand text-white form-control" name="tenant_id" id="tenant_id">
+                                <option value=""></option>
+                                <% tenantData.forEach(function(tenant) { %>
+                                    <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>
+                                <% }); %>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-5">
+                            <div class="flex-grow-1 flex-shrink-1">
+                                <label class="form-label" for="per_kwh">Per Kwh: </label>
+                                <input class="bg-brand text-white form-control" type="number" name="per_kwh" id="per_kwh" step="0.01">
+                            </div>
+
+                            <div class="flex-grow-1 flex-shrink-1">
+                                <label class="form-label" for="due_date">Due Date: </label>
+                                <input class="bg-brand text-white form-control" type="date" name="due_date" id="due_date">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="form-label" for="date_of_reading">Date of Reading: </label>
+                            <input class="bg-brand text-white form-control" type="date" name="date_of_reading" id="date_of_reading">
+                        </div>
+
+                        <div class="d-flex gap-5 flex-wrap">
+                            <div class="flex-grow-1 flex-shrink-1">
+                                <label class="form-label" for="previous_reading">Previous Reading: </label>
+                                <input class="bg-brand text-white form-control" type="number" name="previous_reading" id="previous_reading" step="0.1" readonly>
+                            </div>
+    
+                            <div class="flex-grow-1 flex-shrink-1 flex-wrap">
+                                <label class="form-label" for="current_reading">Current Reading: </label>
+                                <input class="bg-brand text-white form-control" type="number" name="current_reading" id="current_reading" step="0.1">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="form-label" for="consume">Consume :</label>
+                            <input class="bg-brand text-white form-control" type="number" name="consume" id="consume" step="0.1" readonly>
+                        </div>
+
+                        <div>
+                            <label class="form-label" for="current_total">Total Amount: </label>
+                            <input class="bg-brand text-white form-control" type="number" name="total_amount" id="total_amount" step="0.01" readonly>
+                        </div>
+
+                        <!-- <div>
+                            <label class="form-label" for="current_total_amount">Total Amount</label>
+                            <input class="bg-brand text-white form-control" type="number" name="current_total_amount" id="current_total_amount" step="0.01">
+                        </div> -->
+                        <br>
+                        <div>
+                            <button type="submit" class="btn btn-success">Submit</button>
+                            <button type="reset" class="btn btn-light">Reset</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <script>
+            // get the previous_reading
+            document.getElementById("tenant_id").addEventListener("change", async function() {
+                const tenantId = this.value;
+                try {
+                    const response = await fetch(`/dashboard/meralco/previous-reading?tenant_id=${tenantId}`);
+                    const data = await response.json();
+                    document.getElementById("previous_reading").value = data.previousReading || "";
+                } catch (error) {
+                    console.error("Error fetching previous reading:", error);
+                }
+            });
+
+            // Get today's date
+            let today = new Date();
+            let dueDate = new Date(today);
+            dueDate.setDate(dueDate.getDate() + 5);
+
+            // Format the due date and read of reading as YYYY-MM-DD 
+            let formattedDueDate = dueDate.toISOString().substr(0, 10);
+            let formattedDateOfReading = today.toISOString().substr(0, 10);
+            // Set the value of the due date input and read of reading input
+            document.getElementById("due_date").value = formattedDueDate;
+            document.getElementById("date_of_reading").value = formattedDateOfReading;
+
+            // computation of consume and total Amount
+            document.getElementById("current_reading").addEventListener("input", function() {
+                let previousReading = parseFloat(document.getElementById("previous_reading").value) || 0;
+                let currentReading = parseFloat(this.value) || 0;
+                let consume = currentReading - previousReading;
+
+                let perkwh = parseFloat(document.getElementById("per_kwh").value) || 0;
+                let totalAmount = (consume * perkwh).toFixed(2);
+
+                document.getElementById('total_amount').value = totalAmount;
+                document.getElementById("consume").value = consume >= 0 ? consume.toFixed(1) : "0.0";
+            });
+            
+        </script>
+    </body>
+</html>

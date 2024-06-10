@@ -4,14 +4,14 @@
 <body>
     <div class="main">
         <%- include('../components/navbar') %>
-        <div class="sub-section">
+        <div class="sub-section overflow-auto">
             <div class="d-flex justify-content-between">
                 <%- include('../components/sub-head') %>
             </div>
             
             <%- include('../components/pagination', { currentPage, totalPages }) %>
             
-            <div class="main-section overflow-auto mb-2 rounded-3 bg-brand h6">
+            <div class="main-section mb-2 rounded-3 bg-brand h6">
                 <%- include('../components/main-section') %>
             </div>
 
