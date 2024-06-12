@@ -106,7 +106,7 @@
             <% } else if (view ===  'payment') { %>
                 <thead class="table-dark text-nowrap text-start">
                     <tr>
-                        <th>ID</th>
+                        <th>Transaction No.</th>
                         <th>Tenant</th>
                         <th>Utility</th>
                         <th>Payment Amount</th>
@@ -117,7 +117,7 @@
                 <tbody class="text-nowrap text-start">
                     <% paymentData.forEach((payment) => { %>
                         <tr>
-                            <td><%= payment.payment_id %></td>
+                            <td><%= payment.transaction_number %></td>
                             <td><%= payment.tenant.business_name %></td>
                             <td><%= payment.payment_type %></td>
                             <td><%= payment.payment_amount %></td>

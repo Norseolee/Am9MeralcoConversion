@@ -4,6 +4,7 @@ const router = express.Router();
 const Meralco = require("../Models/meralcoModel");
 const User = require("../Models/userModel");
 const Tenant = require("../Models/tenantModel");
+const Payment = require("../Models/paymentModel");
 const { verifyToken } = require('../verifyToken');
 const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
 
@@ -67,10 +68,11 @@ router.post('/dashboard/meralco_process/add-meralco', async (req, res) => {
             per_kwh: parseFloat(req.body.per_kwh),
             due_date: req.body.due_date,
             date_of_reading: req.body.date_of_reading,
-            previous_reading: parseFloat(req.body.previous_reading),
+            previous_reading: parseFloat(req.body.previous_reading) || 0,
             current_reading: parseFloat(req.body.current_reading),
             consume: parseFloat(req.body.consume),
             total_amount: parseFloat(req.body.total_amount),
+            current_total_amount:  parseFloat(req.body.total_amount),
             created_at: formatDate( new Date()),
             is_deleted: false
         };
@@ -191,6 +193,9 @@ router.get('/get-meralco', checkAdminStaff, async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const meralcoData = await Meralco.query().where('tenant_id', tenantId);
+      // const meralcoID = meralcoData.meralco_id;
+
+      // const PaymentData = await Payment.query().where('utility_id', meralcoID);
       res.json(meralcoData);
   } catch (error) {
       res.status(500).json({ error: error.message });
@@ -210,7 +215,11 @@ router.get('/get-billing-info', checkAdminStaff, async (req, res) => {
       const { tenant_id, meralco_id } = req.query;
       // Fetch billing information based on the selected tenantId and meralcoId
       const billingInfo = await Meralco.query().findOne({ tenant_id, meralco_id });
-      res.json(billingInfo);
+      const paymentData = await Payment.query().where('utility_id', meralco_id).sum('payment_amount');
+
+      const totalPaidAmount = paymentData[0]['sum(`payment_amount`)'] || 0;
+
+      res.status(200).json({ billingInfo, totalPaidAmount }); 
   } catch (error) {
       res.status(500).json({ error: error.message });
   }

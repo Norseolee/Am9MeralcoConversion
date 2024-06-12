@@ -4,7 +4,7 @@
  */
 exports.up = function(knex) {
     return knex.schema.createTable('payments', function(table) {
-      table.increments('payment_id').primary();
+      table.increments('payment_id', 20).primary();
       table.integer('tenant_id').notNullable();
       table.integer('payment_amount').notNullable();
       table.integer('total_amount').notNullable();
@@ -12,6 +12,7 @@ exports.up = function(knex) {
       table.integer('mode_payment_id').unsigned().notNullable();
       table.integer('utility_id').notNullable();
       table.enu('payment_type', ['meralco', 'maynilad', 'rent']).notNullable();
+      table.string('transaction_number').notNullable();
       table.date('created_at').nullable();
     });
   };

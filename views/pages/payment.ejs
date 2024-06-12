@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../components/header') %>
+<title>Am9 Commercial - Payments</title>
+<body>
+    <div class="main ">
+        <%- include('../components/navbar') %>
+        <div class="sub-section overflow-auto">
+            <form id="addUserForm" method="POST" action="/payment_process/add-payment">
+                <div class="modal-body bg-brand">
+                    <div>
+                        <label for="payment_type">Payment Type: </label>
+                        <select name="payment_type" id="payment_type">
+                            <option value=""></option>
+                            <option value="meralco">Meralco</option>
+                            <option value="maynilad">Maynilad</option>
+                            <option value="rent">Rent</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="mode_payment_id">Mode of Payment: </label>
+                        <select name="mode_payment_id" id="mode_payment_id">
+                            <option value=""></option>
+                            <% modePayments.forEach((modePayment) => { %>
+                                <option value="<%= modePayment.mode_payment_id %>"><%= modePayment.type %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="tenant_id">Select Tenant: </label>
+                        <select name="tenant_id" id="tenant_id" disabled>
+                            <option value=""></option>
+                            <% tenantData.forEach((tenant) => { %>
+                                <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>                            
+                            <% }); %>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="latestUtilityBill">Utility Bill: </label>
+                        <input type="number" name="latestUtilityBill" id="latestUtilityBill" step="0.01">
+                    </div>
+                    <div>
+                        <label for="perKwh">Per kWh: </label>
+                        <input type="text" name="perKwh" id="perKwh" readonly>
+                    </div>
+                    <div>
+                        <label for="currentReading">Current Reading: </label>
+                        <input type="text" name="currentReading" id="currentReading" readonly>
+                    </div>
+                    <div>
+                        <label for="previousReading">Previous Reading: </label>
+                        <input type="text" name="previousReading" id="previousReading" readonly>
+                    </div>
+                    <div>
+                        <label for="current_total_amount">Current amount to pay: </label>
+                        <input type="text" name="current_total_amount" id="current_total_amount" readonly>
+                    </div>
+                    <div>
+                        <label for="payment_amount">Payment Amount: </label>
+                        <input type="number" name="payment_amount" id="payment_amount" step="0.01">
+                    </div>
+                    <div>
+                        <label for="total_amount">Total Amount: </label>
+                        <input type="text" id="total_amount" name="total_amount" readonly step="0.01">
+                    </div>
+                    <input type="hidden" id="staff_id" name="staff_id" value="<% mainUser.user_id %>">
+                    <input type="hidden" id="utility_id" name="utility_id">
+                </div>
+                <button class="btn btn-success" type="submit">Submit</button>
+            </form> 
+        </div>
+    </div>
+    <script>
+        document.getElementById('payment_amount').addEventListener('input', function() {
+            let payment_amount = parseFloat(this.value);
+            let utility_bill = parseFloat(document.getElementById('current_total_amount').value);
+
+            let remaining_amount = utility_bill - payment_amount;
+
+            document.getElementById('total_amount').value = remaining_amount.toFixed(2);
+        });
+
+        document.getElementById("payment_type").addEventListener("change", function() {
+            const paymentType = this.value;
+            const tenantSelect = document.getElementById("tenant_id");
+            
+            if (paymentType) {
+                tenantSelect.disabled = false;
+            } else {
+                tenantSelect.disabled = true;
+                tenantSelect.value = "";
+                document.getElementById("latestUtilityBill").value = "";
+            }
+        });
+        document.getElementById("tenant_id").addEventListener("change", async function() {
+            const tenantId = this.value;
+            const paymentType = document.getElementById("payment_type").value;
+
+            try {
+                const response = await fetch(`/payment_process/total_amount?tenant_id=${tenantId}&payment_type=${paymentType}`);
+                const data = await response.json();
+                const utility = data.totalAmountBilling;
+                if(paymentType == 'meralco'){
+                    document.getElementById("utility_id").value = utility.meralco_id || "";
+                } else if(paymentType == 'maynilad'){
+                    document.getElementById("utility_id").value = utility.maynilad_id || "";
+                } else if(paymentType == 'rent'){
+                    document.getElementById("utility_id").value = utility.rend_id || "";
+                }
+
+                document.getElementById("current_total_amount").value = utility.current_total_amount || "";
+                document.getElementById("latestUtilityBill").value = utility.total_amount || "";
+                document.getElementById("perKwh").value = utility ? utility.per_kwh : "";
+                document.getElementById("currentReading").value = utility ? utility.current_reading : "";
+                document.getElementById("previousReading").value = utility ? utility.previous_reading : "";
+            } catch (error) {
+                console.error("Error fetching previous reading:", error);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -120,7 +120,9 @@
                 <p>Consume: <input type="text" readonly id="print_consume"></p>
               </div>
               <div class="amount">
-                <p>Total Amount: PHP <input type="text" readonly id="print_total_amount"></p>
+                <p>Billing Amount: PHP <input type="text" readonly id="print_total_amount"></p>
+                <p>Paid Amount: PHP <input type="text" readonly id="print_paid_amount"></p>
+                <p>Total Amount: PHP <input type="text" readonly id="print_current_total_amount"></p>
               </div>
             </div>
             <div class="sign">
@@ -210,29 +212,41 @@
                       meralcoSelect.innerHTML = '<option value=""></option>';
                   }
               });
-              document.getElementById('meralco_id').addEventListener('change', function() {
-                  var tenantId = document.getElementById('tenant_id').value;
-                  var meralcoId = this.value;
+              document.getElementById('meralco_id').addEventListener('change', async function() {
+    var tenantId = document.getElementById('tenant_id').value;
+    var meralcoId = this.value;
+
+    if (tenantId && meralcoId) {
+        try {
+            var response = await fetch(`/get-billing-info?tenant_id=${tenantId}&meralco_id=${meralcoId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            var data = await response.json();
+
+            var billingInfo = data.billingInfo;
+            var paymentData = data.totalPaidAmount ;
+
+            // Now you can use billingInfo and paymentData as needed
+            document.getElementById('print_due_date').value = billingInfo.due_date;
+            document.getElementById('print_per_kwh').value = billingInfo.per_kwh;
+            document.getElementById('print_date_of_reading').value = billingInfo.date_of_reading;
+            document.getElementById('print_previous_reading').value = billingInfo.previous_reading;
+            document.getElementById('print_current_reading').value = billingInfo.current_reading;
+            document.getElementById('print_consume').value = billingInfo.consume;
+            document.getElementById('print_total_amount').value = billingInfo.total_amount || 0;
+            document.getElementById('print_current_total_amount').value = billingInfo.current_total_amount || 0;
+            document.getElementById('print_paid_amount').value = paymentData || 0;
+
+        } catch (error) {
+            console.error('Error fetching billing info:', error);
+            // Handle error cases here
+        }
+    }
+});
+
           
-                  if (tenantId && meralcoId) {
-                      var xhr = new XMLHttpRequest();
-                      xhr.open('GET', '/get-billing-info?tenant_id=' + tenantId + '&meralco_id=' + meralcoId, true);
-                      xhr.onreadystatechange = function() {
-                          if (xhr.readyState === 4 && xhr.status === 200) {
-                              var billingInfo = JSON.parse(xhr.responseText);
-                              document.getElementById('print_due_date').value = billingInfo.due_date;
-                              document.getElementById('print_per_kwh').value = billingInfo.per_kwh;
-                              document.getElementById('print_date_of_reading').value = billingInfo.date_of_reading;
-                              document.getElementById('print_previous_reading').value = billingInfo.previous_reading;
-                              document.getElementById('print_current_reading').value = billingInfo.current_reading;
-                              document.getElementById('print_consume').value = billingInfo.consume;
-                              document.getElementById('print_total_amount').value = billingInfo.total_amount;
-                          }
-                      };
-                      xhr.send();
-                  }
-              });
-          });
+            });
           
           </script>
         </div>

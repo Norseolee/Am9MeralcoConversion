@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <div class="modal-content bg-brand text-white">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewPaymentLabel">View Details <%= payment.payment_id %></h5>
+                <h5 class="modal-title" id="viewPaymentLabel"><%= payment.transaction_number %></h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body bg-brand text-white">
@@ -44,7 +44,7 @@
                             <label for="meralco_total_amount">Total Amount:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" readonly value="<%= payment.meralco ? payment.meralco.total_amount : 'N/A' %>" class="form-control bg-brand text-white">
+                            <input type="text" id="meralco_total_amount_<%= payment.payment_id %>" readonly value="<%= payment.meralco ? payment.meralco.total_amount : 'N/A' %>" class="form-control bg-brand text-white">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -52,7 +52,7 @@
                             <label for="payment_amount">Payment Amount:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" readonly value="<%= payment.payment_amount %>" class="form-control bg-brand text-white">
+                            <input type="text" id="payment_amount_<%= payment.payment_id %>" readonly value="<%= payment.payment_amount %>" class="form-control bg-brand text-white">
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -60,7 +60,7 @@
                             <label for="meralco_current_total_amount">Current Amount:</label>
                         </div>
                         <div class="col-md-8">
-                            <input type="text" readonly value="<%= payment.meralco ? payment.meralco.current_total_amount : 'N/A' %>" class="form-control bg-brand text-white">
+                            <input type="text" readonly id="current_total_amount_<%= payment.payment_id %>" class="form-control bg-brand text-white">
                         </div>
                     </div>
                 </div>
@@ -68,4 +68,13 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var totalAmount = parseFloat(document.getElementById('meralco_total_amount_<%= payment.payment_id %>').value) || 0;
+            var paymentAmount = parseFloat(document.getElementById('payment_amount_<%= payment.payment_id %>').value) || 0;
+            var currentAmount = totalAmount - paymentAmount;
+            
+            document.getElementById('current_total_amount_<%= payment.payment_id %>').value = currentAmount.toFixed(2);
+        });
+    </script>
 </div>
