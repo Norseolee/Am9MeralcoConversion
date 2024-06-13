@@ -2,75 +2,219 @@
 <html lang="en">
 <%- include('../components/header') %>
 <title>Am9 Commercial - Payments</title>
-<body>
-    <div class="main ">
+<style>
+    @media print {
+        .main, .navs {
+            display: none;
+        }
+        .table, .table * {
+            display: none;
+        }
+        .print {
+            margin: 0;
+            padding: 0;
+            width: 180px;
+            font-size: 10px;
+            display: block !important; /* Ensure display is set explicitly */
+        }
+        .print_header {
+            margin-block: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding-inline: 5px;
+        }
+        @page {
+            margin: 0px;
+        }
+
+        body {
+            -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
+            color-adjust: exact; /* Firefox */
+            background-color: white !important;
+            margin: none;
+        }
+    }
+</style>
+<body class="d-flex justify-content-between align-items-start" style="background-color: #64748B;">
+    <div class="main">
         <%- include('../components/navbar') %>
-        <div class="sub-section overflow-auto">
-            <form id="addUserForm" method="POST" action="/payment_process/add-payment">
-                <div class="modal-body bg-brand">
-                    <div>
-                        <label for="payment_type">Payment Type: </label>
-                        <select name="payment_type" id="payment_type">
-                            <option value=""></option>
-                            <option value="meralco">Meralco</option>
-                            <option value="maynilad">Maynilad</option>
-                            <option value="rent">Rent</option>
-                        </select>
+        <div class="sub-section overflow-auto text-white">
+            <form id="addUserForm" method="POST" class="d-flex flex-column bg-brand rounded p-1" action="/payment_process/add-payment">
+                <div class="modal-body">
+                    <h2>Payments</h2>
+                    <div class="d-flex gap-5">
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="payment_type">Payment Type: </label>
+                            <select class="form-control text-white" name="payment_type" id="payment_type">
+                                <option value=""></option>
+                                <option value="meralco">Meralco</option>
+                                <option value="maynilad">Maynilad</option>
+                                <option value="rent">Rent</option>
+                            </select>
+                        </div>
+
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="tenant_id">Select Tenant: </label>
+                            <select class="form-control text-white" name="tenant_id" id="tenant_id" disabled>
+                                <option value=""></option>
+                                <% tenantData.forEach((tenant) => { %>
+                                    <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>                            
+                                <% }); %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="mode_payment_id">Mode of Payment: </label>
-                        <select name="mode_payment_id" id="mode_payment_id">
-                            <option value=""></option>
-                            <% modePayments.forEach((modePayment) => { %>
-                                <option value="<%= modePayment.mode_payment_id %>"><%= modePayment.type %></option>
-                            <% }); %>
-                        </select>
+
+                    <div class="d-flex gap-5">
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="latestUtilityBill">Utility Bill: </label>
+                            <input class="form-control text-white bg-brand" type="number" name="latestUtilityBill" id="latestUtilityBill" step="0.01">
+                        </div>
+
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="perKwh">Per kWh: </label>
+                            <input class="form-control text-white" type="text" name="perKwh" id="perKwh" readonly>
+                        </div>
                     </div>
-                    <div>
-                        <label for="tenant_id">Select Tenant: </label>
-                        <select name="tenant_id" id="tenant_id" disabled>
-                            <option value=""></option>
-                            <% tenantData.forEach((tenant) => { %>
-                                <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>                            
-                            <% }); %>
-                        </select>
+
+                    <div class="d-flex gap-5">
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="currentReading">Current Reading: </label>
+                            <input class="form-control text-white" type="text" name="currentReading" id="currentReading" readonly>
+                        </div>
+
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="previousReading">Previous Reading: </label>
+                            <input class="form-control text-white" type="text" name="previousReading" id="previousReading" readonly>
+                        </div>
+                        
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="current_total_amount">Current amount to pay: </label>
+                            <input class="form-control text-white" type="text" name="current_total_amount" id="current_total_amount" readonly>
+                        </div>
                     </div>
+
                     <div>
-                        <label for="latestUtilityBill">Utility Bill: </label>
-                        <input type="number" name="latestUtilityBill" id="latestUtilityBill" step="0.01">
+                        <label class="form-label" for="payment_amount">Payment Amount: </label>
+                        <input class="form-control text-white bg-brand" type="number" name="payment_amount" id="payment_amount" step="0.01">
                     </div>
+
                     <div>
-                        <label for="perKwh">Per kWh: </label>
-                        <input type="text" name="perKwh" id="perKwh" readonly>
+                        <label class="form-label" for="total_amount">Total Amount: </label>
+                        <input class="form-control text-white" type="text" id="total_amount" name="total_amount" readonly step="0.01">
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="mode_payment_id">Mode of Payment: </label>
+                            <select class="form-control text-white" name="mode_payment_id" id="mode_payment_id">
+                                <option value=""></option>
+                                <% modePayments.forEach((modePayment) => { %>
+                                    <option value="<%= modePayment.mode_payment_id %>"><%= modePayment.type %></option>
+                                <% }); %>
+                            </select>
+                        </div>
                     </div>
-                    <div>
-                        <label for="currentReading">Current Reading: </label>
-                        <input type="text" name="currentReading" id="currentReading" readonly>
-                    </div>
-                    <div>
-                        <label for="previousReading">Previous Reading: </label>
-                        <input type="text" name="previousReading" id="previousReading" readonly>
-                    </div>
-                    <div>
-                        <label for="current_total_amount">Current amount to pay: </label>
-                        <input type="text" name="current_total_amount" id="current_total_amount" readonly>
-                    </div>
-                    <div>
-                        <label for="payment_amount">Payment Amount: </label>
-                        <input type="number" name="payment_amount" id="payment_amount" step="0.01">
-                    </div>
-                    <div>
-                        <label for="total_amount">Total Amount: </label>
-                        <input type="text" id="total_amount" name="total_amount" readonly step="0.01">
-                    </div>
-                    <input type="hidden" id="staff_id" name="staff_id" value="<% mainUser.user_id %>">
-                    <input type="hidden" id="utility_id" name="utility_id">
+                    <input  type="hidden" id="staff_id" name="staff_id" value="<% mainUser.user_id %>">
+                    <input  type="hidden" id="utility_id" name="utility_id">
                 </div>
-                <button class="btn btn-success" type="submit">Submit</button>
+                <button class="btn btn-success mx-3 mb-2" type="submit">Submit</button>
             </form> 
         </div>
     </div>
+    <div class="m-2">
+        <table class="table table-sm align-middle text-white text-nowrap" style="font-size: 14px;">
+        
+            <thead class="table-dark text-nowrap text-start">
+                <tr>
+                    <th>Transaction Name</th>
+                    <th>Tenant Name</th>
+                    <th>Payment Amount</th>
+                    <th>Payment Type</th>
+                    <th>Created At</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            
+            <tbody class="text-nowrap text-start">
+                <% paymentreceipt.forEach((receipt) => { %>
+                <tr>
+                    <td><%= receipt.transaction_number %></td>
+                    <td><%= receipt.tenant.business_name %></td>
+                    <td><%= receipt.payment_amount %></td>
+                    <td><%= receipt.payment_type %></td>
+                    <td><%= receipt.created_at %></td>
+                    <td>
+                        <button class="btn btn-sm btn-primary" onclick="printReceipt('<%= receipt.payment_id %>')">Print Receipt</button>
+                    </td>
+
+                    <div class="rawr" style="display: none;" id="printReceipt-<%= receipt.payment_id %>">
+                        <div class="print_header">
+                            <img src="/Images/am9commercial.jpg" alt="" width="70px" height="50px" style="object-fit: cover; mix-blend-mode: multiply; margin-bottom: 0;" />
+                            <P>AM9 COMMERCIAL SPACE</P>
+                            <p class="text-center" style="margin-bottom: 0;">Nia Road Carsadang Bagu 2, Near Alpha Mart, Infront of palazzo bello 1</p>
+                        </div>
+                        <hr>
+                        <div class="d-flex flex-column" style="margin: 0;">
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Date : <span id="date"><%= receipt.created_at %></span>
+                            </p>
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Transaction Number: <span id="transaction_number"><%= receipt.transaction_number %></span>
+                            </p>
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Tenant Name: <span id="tenant_business_name"><%= receipt.tenant.business_name %></span>
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="d-flex flex-column" style="margin: 0;">
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Transaction Type: <span id="payment_type"><%= receipt.payment_type %></span>
+                            </p>
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Total Amount: PHP<span id="total_amount"><%= receipt.total_amount %></span>
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="d-flex flex-column" style="margin: 0;">
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Mode of Payment: <span id="total_amount"><%= receipt.modepayment.type %></span>
+                            </p>
+                            <p style="margin: 0; display: flex; justify-content: space-between;">
+                                Payment Amount: PHP<span id="payment_amount"><%= receipt.payment_amount %></span>
+                            </p>
+                        </div>   
+                        <hr>
+                        <div class="text-center" style="font-size: 8px;">
+                            <p>For Assistance, Send us a Message On the Following Channel</p>
+                            <p>Facebook: https://www.facebook.com/Am9MiniMall</p>
+                        </div>
+                        <hr>
+                        <div>
+                            <h1 class="text-center text-danger"><% if(receipt.meralco.is_paid == 1) { %>FULL PAID<% } %></h1>
+                        </div>
+                        <hr>
+                        <div class="text-center">
+                            <p>Thank you for your payment.</p>
+                            <p>Have a nice day!</p>
+                        </div>
+
+                    </div>
+                </tr>
+                <% }) %>
+            </tbody>
+        </table>
+
+    
+    </div>
+</div>
     <script>
+        function printReceipt(receiptId) {
+            const receiptElement = document.getElementById(`printReceipt-${receiptId}`);
+            if (receiptElement) {
+                receiptElement.setAttribute('class', 'print');
+                window.print();
+                receiptElement.removeAttribute('class', 'print');
+            }
+        }
         document.getElementById('payment_amount').addEventListener('input', function() {
             let payment_amount = parseFloat(this.value);
             let utility_bill = parseFloat(document.getElementById('current_total_amount').value);
