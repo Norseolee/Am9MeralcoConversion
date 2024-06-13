@@ -14,7 +14,7 @@ const User = require('../Models/userModel');
 const Meralco = require('../Models/meralcoModel');
 const Tenant = require('../Models/tenantModel');
 const Role = require('../Models/roleModel');
-const Payment = require('../Models/paymentModel.js');
+const Payment = require('../Models/paymentModel');
 const ModeofPayment = require('../Models/modePaymentModel');
 
 

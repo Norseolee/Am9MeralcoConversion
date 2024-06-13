@@ -11,6 +11,7 @@ const userRoutes = require("./config/Routes/userRoutes");
 const mainRoutes = require("./config/Routes/mainRoutes");
 const meralcoRoutes = require("./config/Routes/meralcoRoutes");
 const tenantRoutes = require("./config/Routes/tenantRoutes");
+const paymentRoutes = require("./config/Routes/paymentRoutes");
 const migrationRoutes = require("./config/Routes/migrationRoutes");
 
 const port = process.env.PORT || 3306;
@@ -46,6 +47,7 @@ app.use("/", tenantRoutes);
 app.use("/", userRoutes);
 app.use("/", mainRoutes);
 app.use('/', migrationRoutes);
+app.use('/', paymentRoutes);
 
 app.get("/", (req, res) => {
     res.render("login", { message: res.locals.message });

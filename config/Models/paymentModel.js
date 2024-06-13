@@ -11,20 +11,21 @@ class Payment extends Model {
   static get jsonSchema() {
     return {
       type: 'object',
-      required: ['payment_amount', 'total_amount', 'staff_id', 'mode_payment_id', 'utility_id', 'payment_type'],
+      required: ['payment_amount', 'total_amount', 'staff_id', 'mode_payment_id', 'utility_id', 'payment_type', 'transaction_number'],
       properties: {
         payment_id: { type: 'integer' },
         tenant_id: { type: 'integer' },
-        payment_amount: { type: 'integer' },
-        total_amount: { type: 'integer' },
+        payment_amount: { type: 'number' },
+        total_amount: { type: 'number' },
         staff_id: { type: 'integer' },
         mode_payment_id: { type: 'integer' },
         utility_id: { type: 'integer' },
         payment_type: { type: 'string', enum: ['meralco', 'maynilad', 'rent'] },
+        transaction_number: { type: 'string', pattern: '^[A-Za-z0-9]+$' }, // Adding transaction_number field with the pattern
         created_at: { type: 'string', format: 'date' },
       },
     };
-  }
+  }  
 
   static get relationMappings() {
     const Meralco = require('./meralcoModel');

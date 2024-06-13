@@ -1,28 +1,8 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('../components/header') %>
+<title>Meralco Print</title>
 <style>
-  @media print {
-    .selection, .selection > * {
-      display: none;
-    }
-    @page {
-        size: A4;
-        margin: 20px;
-    }
-    body {
-      -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
-      color-adjust: exact; /* Firefox */
-    }
-    .body {
-        background-color: rgb(89, 136, 223) !important;
-    }
-    .subject > div, .billing > div, .sign {
-        background-color: whitesmoke !important;
-    }
-  }
-  .selection {
-    display: flex;
-    justify-content: center;
-    gap: 50px;
-  }
   .PDF {
         width: 100%; 
         height: 50%; 
@@ -33,12 +13,14 @@
         justify-content: space-between;
         font-size: 1.2em; 
   }
-
   input {
         border: none;
         background-color: transparent; 
         font-size: inherit; 
   } 
+  body {
+    background-color: transparent;
+  }
   .body {
     background-color: rgb(89, 136, 223);
     border-radius: 25px;
@@ -65,164 +47,209 @@
 
     font-size: 1.5vw;
   }
+  @media print {
+    .selection , .selection > * , .navs {
+      display: none;
+    }
+    @page {
+        size: A4;
+        margin: 20px;
+    }
+    body {
+      -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
+      color-adjust: exact; /* Firefox */
+      background-color: white;
+    }
+    .body {
+        background-color: rgb(89, 136, 223) !important;
+    }
+    .subject > div, .billing > div, .sign {
+        background-color: whitesmoke !important;
+    }
+    .sub-section {
+      margin: 0px;
+      background-color: white;
+    }
+
+  }
 </style>
+<body>
+    <div class="main">
+        <%- include('../components/navbar') %>
+        <div class="sub-section">
+          <div class="d-flex justify-content-between align-center text-white selection">
+            <div class="d-flex text-nowrap gap-2 selection">
+              <label class="form-label" for="tenant_id">Select Tenant: </label>
+              <select class="form-control bg-brand text-white" name="tenant_id" id="tenant_id" >
+                  <option value=""></option>
+                  <% tenantData.forEach(function(tenant) { %>
+                      <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>
+                  <% }); %>
+              </select>
+            </div>
+            <div class="d-flex text-nowrap gap-2 selection">
+              <label class="form-label" for="meralco_id">Select Meralco: </label>
+              <select class="form-control bg-brand text-white" name="meralco_id" id="meralco_id" style="width: 150px">
+                  <option value=""></option>
+              </select>      
+            </div>
+            <button onclick="printPDF()" class="btn btn-primary">Print</button>
+          </div>
+          <div class="PDF py-3">
+            <div class="Header py-3">
+              <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
+              <h1>Am9 Electricity Billing</h1>
+              <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover; mix-blend-mode: multiply;"/>
+            </div>
+          <div class="body">
+            <div class="subject">
+              <div class="information">
+                <p>Name: <input type="text" readonly id="print_business_name"></p>
+                <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
+              </div>
+              <div class="due_kwh">
+                <p>Due Date: <input type="text" readonly id="print_due_date"></p>
+                <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
+              </div>
+            </div>
+            <div class="billing">
+              <div class="reading">
+                <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
+                <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
+                <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
+                <p>Consume: <input type="text" readonly id="print_consume"></p>
+              </div>
+              <div class="amount">
+                <p>Billing Amount: PHP <input type="text" readonly id="print_total_amount"></p>
+                <p>Paid Amount: PHP <input type="text" readonly id="print_paid_amount"></p>
+                <p>Total Amount: PHP <input type="text" readonly id="print_current_total_amount"></p>
+              </div>
+            </div>
+            <div class="sign">
+              <p>Date Paid:</p>
+              <p>Staff Signature and name:</p>
+            </div>
+          </div>
+          
+          <div class="PDF" style="display: none">
+            <div class="Header">
+              <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
+              <h1>Am9 Electricity Billing</h1>
+              <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover;"/>
+            </div>
+            <div class="body">
+              <div class="subject">
+                <div class="information">
+                  <p>Name: <input type="text" readonly id="print_business_name"></p>
+                  <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
+                </div>
+                <div class="due_kwh">
+                  <p>Due Date: <input type="text" readonly id="print_due_date"></p>
+                  <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
+                </div>
+              </div>
+              <div class="billing">
+                <div class="reading">
+                  <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
+                  <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
+                  <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
+                  <p>Consume: <input type="text" readonly id="print_consume"></p>
+                </div>
+                <div class="amount">
+                  <p>Total Amount: PHP <input type="text" readonly id="print_total_amount"></p>
+                </div>
+              </div>
+              <div class="sign">
+                <p>Date Paid:</p>
+                <p>Staff Signature and name:</p>
+              </div>
+            </div>
+          </div>
+          </div>
+          
+          
+          
+          <script>
+             function printPDF() {
+                      window.print();
+                  }
+          document.addEventListener('DOMContentLoaded', function() {
+              document.getElementById('tenant_id').addEventListener('change', function() {
+                  var tenantId = this.value;
+                  var meralcoSelect = document.getElementById('meralco_id');
+                  meralcoSelect.innerHTML = '<option value="">Loading...</option>';
+          
+                  if (tenantId) {
+                      var xhr = new XMLHttpRequest();
+                      xhr.open('GET', '/get-meralco?tenant_id=' + tenantId, true);
+                      xhr.onreadystatechange = function() {
+                          if (xhr.readyState === 4 && xhr.status === 200) {
+                              var meralcoData = JSON.parse(xhr.responseText);
+                              meralcoSelect.innerHTML = '<option value=""></option>';
+                              meralcoData.forEach(function(meralco) {
+                                  var option = document.createElement('option');
+                                  option.value = meralco.meralco_id;
+                                  option.text = meralco.date_of_reading;
+                                  meralcoSelect.appendChild(option);
+                              });
+                          }
+                      };
+                      xhr.send();
+          
+                      // Fetch additional tenant information
+                      var tenantInfoXhr = new XMLHttpRequest();
+                      tenantInfoXhr.open('GET', '/get-tenant-info?tenant_id=' + tenantId, true);
+                      tenantInfoXhr.onreadystatechange = function() {
+                          if (tenantInfoXhr.readyState === 4 && tenantInfoXhr.status === 200) {
+                              var tenantInfo = JSON.parse(tenantInfoXhr.responseText);
+                              document.getElementById('print_business_name').value = tenantInfo.business_name;
+                              document.getElementById('print_unit').value = tenantInfo.unit;
+                              // You can populate other fields here similarly
+                          }
+                      };
+                      tenantInfoXhr.send();
+                  } else {
+                      meralcoSelect.innerHTML = '<option value=""></option>';
+                  }
+              });
+              document.getElementById('meralco_id').addEventListener('change', async function() {
+    var tenantId = document.getElementById('tenant_id').value;
+    var meralcoId = this.value;
 
-<div class="selection">
-  <div>
-    <label for="tenant_id">Select Tenant: </label>
-    <select name="tenant_id" id="tenant_id">
-        <option value=""></option>
-        <% tenantData.forEach(function(tenant) { %>
-            <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>
-        <% }); %>
-    </select>
-  </div>
-  <div style="width: 300px">
-    <label for="meralco_id">Select Meralco: </label>
-    <select name="meralco_id" id="meralco_id">
-        <option value=""></option>
-    </select>      
-  </div>
-  <button onclick="printPDF()">Print</button>
-</div>
-<div class="PDF">
-  <div class="Header">
-    <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
-    <h1>Am9 Electricity Billing</h1>
-    <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover;"/>
-  </div>
-<div class="body">
-  <div class="subject">
-    <div class="information">
-      <p>Name: <input type="text" readonly id="print_business_name"></p>
-      <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
-    </div>
-    <div class="due_kwh">
-      <p>Due Date: <input type="text" readonly id="print_due_date"></p>
-      <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
-    </div>
-  </div>
-  <div class="billing">
-    <div class="reading">
-      <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
-      <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
-      <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
-      <p>Consume: <input type="text" readonly id="print_consume"></p>
-    </div>
-    <div class="amount">
-      <p>Total Amount: PHP <input type="text" readonly id="print_total_amount"></p>
-    </div>
-  </div>
-  <div class="sign">
-    <p>Date Paid:</p>
-    <p>Staff Signature and name:</p>
-  </div>
-</div>
+    if (tenantId && meralcoId) {
+        try {
+            var response = await fetch(`/get-billing-info?tenant_id=${tenantId}&meralco_id=${meralcoId}`);
+            if (!response.ok) {
+                throw new Error(`HTTP error! Status: ${response.status}`);
+            }
+            var data = await response.json();
 
-<div class="PDF" style="display: none">
-  <div class="Header">
-    <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
-    <h1>Am9 Electricity Billing</h1>
-    <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover;"/>
-  </div>
-  <div class="body">
-    <div class="subject">
-      <div class="information">
-        <p>Name: <input type="text" readonly id="print_business_name"></p>
-        <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
-      </div>
-      <div class="due_kwh">
-        <p>Due Date: <input type="text" readonly id="print_due_date"></p>
-        <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
-      </div>
-    </div>
-    <div class="billing">
-      <div class="reading">
-        <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
-        <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
-        <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
-        <p>Consume: <input type="text" readonly id="print_consume"></p>
-      </div>
-      <div class="amount">
-        <p>Total Amount: PHP <input type="text" readonly id="print_total_amount"></p>
-      </div>
-    </div>
-    <div class="sign">
-      <p>Date Paid:</p>
-      <p>Staff Signature and name:</p>
-    </div>
-  </div>
-</div>
-</div>
+            var billingInfo = data.billingInfo;
+            var paymentData = data.totalPaidAmount ;
 
+            // Now you can use billingInfo and paymentData as needed
+            document.getElementById('print_due_date').value = billingInfo.due_date;
+            document.getElementById('print_per_kwh').value = billingInfo.per_kwh;
+            document.getElementById('print_date_of_reading').value = billingInfo.date_of_reading;
+            document.getElementById('print_previous_reading').value = billingInfo.previous_reading;
+            document.getElementById('print_current_reading').value = billingInfo.current_reading;
+            document.getElementById('print_consume').value = billingInfo.consume;
+            document.getElementById('print_total_amount').value = billingInfo.total_amount || 0;
+            document.getElementById('print_current_total_amount').value = billingInfo.current_total_amount || 0;
+            document.getElementById('print_paid_amount').value = paymentData || 0;
 
-
-<script>
-   function printPDF() {
-            window.print();
+        } catch (error) {
+            console.error('Error fetching billing info:', error);
+            // Handle error cases here
         }
-document.addEventListener('DOMContentLoaded', function() {
-    document.getElementById('tenant_id').addEventListener('change', function() {
-        var tenantId = this.value;
-        var meralcoSelect = document.getElementById('meralco_id');
-        meralcoSelect.innerHTML = '<option value="">Loading...</option>';
-
-        if (tenantId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/get-meralco?tenant_id=' + tenantId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var meralcoData = JSON.parse(xhr.responseText);
-                    meralcoSelect.innerHTML = '<option value=""></option>';
-                    meralcoData.forEach(function(meralco) {
-                        var option = document.createElement('option');
-                        option.value = meralco.meralco_id;
-                        option.text = meralco.date_of_reading;
-                        meralcoSelect.appendChild(option);
-                    });
-                }
-            };
-            xhr.send();
-
-            // Fetch additional tenant information
-            var tenantInfoXhr = new XMLHttpRequest();
-            tenantInfoXhr.open('GET', '/get-tenant-info?tenant_id=' + tenantId, true);
-            tenantInfoXhr.onreadystatechange = function() {
-                if (tenantInfoXhr.readyState === 4 && tenantInfoXhr.status === 200) {
-                    var tenantInfo = JSON.parse(tenantInfoXhr.responseText);
-                    document.getElementById('print_business_name').value = tenantInfo.business_name;
-                    document.getElementById('print_unit').value = tenantInfo.unit;
-                    // You can populate other fields here similarly
-                }
-            };
-            tenantInfoXhr.send();
-        } else {
-            meralcoSelect.innerHTML = '<option value=""></option>';
-        }
-    });
-    document.getElementById('meralco_id').addEventListener('change', function() {
-        var tenantId = document.getElementById('tenant_id').value;
-        var meralcoId = this.value;
-
-        if (tenantId && meralcoId) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', '/get-billing-info?tenant_id=' + tenantId + '&meralco_id=' + meralcoId, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === 4 && xhr.status === 200) {
-                    var billingInfo = JSON.parse(xhr.responseText);
-                    document.getElementById('print_due_date').value = billingInfo.due_date;
-                    document.getElementById('print_per_kwh').value = billingInfo.per_kwh;
-                    document.getElementById('print_date_of_reading').value = billingInfo.date_of_reading;
-                    document.getElementById('print_previous_reading').value = billingInfo.previous_reading;
-                    document.getElementById('print_current_reading').value = billingInfo.current_reading;
-                    document.getElementById('print_consume').value = billingInfo.consume;
-                    document.getElementById('print_total_amount').value = billingInfo.total_amount;
-                }
-            };
-            xhr.send();
-        }
-    });
+    }
 });
 
-</script>
-  
+          
+            });
+          
+          </script>
+        </div>
+    </div>
+</body>
+</html>

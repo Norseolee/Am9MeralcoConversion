@@ -1,0 +1,89 @@
+<style>
+    .print {
+        display: none;
+        background-color: white;
+    }
+
+    @media print {
+        .main, .navs {
+            display: none;
+        }
+        .table, .table * {
+            display: none;
+        }
+        .print_header {
+            margin-block: 30px; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center; 
+            padding-inline: 5px;
+        }
+        .print {
+            margin: 0;
+            padding: 0;
+            width: 180px;
+            font-size: 10px;
+            display: block;
+        }
+
+        @page {
+            margin: 0px;
+        }
+
+        body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
+        color-adjust: exact; /* Firefox */
+        background-color: white !important;
+        margin: none;
+        }
+    }
+</style>
+<div style="display: flex; flex-direction: column;">
+    <div class="print" id="printReceipt-<%= receipt.payment_id %>">
+        <div class="print_header">
+            <img src="/Images/am9commercial.jpg" alt="" width="70px" height="50px" style="object-fit: cover; mix-blend-mode: multiply; margin-bottom: 0;" />
+            <P>AM9 COMMERCIAL SPACE</P>
+            <p class="text-center" style="margin-bottom: 0;">Nia Road Carsadang Bagu 2, Near Alpha Mart, Infront of palazzo bello 1</p>
+        </div>
+        <hr>
+        <div class="d-flex flex-column" style="margin: 0;">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Date : <span id="date"><%= receipt.created_at %></span>
+            </p>
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Transaction Number: <span id="transaction_number"><%= receipt.transaction_number %></span>
+            </p>
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Tenant Name: <span id="tenant_business_name"><%= receipt.tenant.business_name %></span>
+            </p>
+        </div>
+        <hr>
+        <div class="d-flex flex-column" style="margin: 0;">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Transaction Type: <span id="payment_type"><%= receipt.payment_type %></span>
+            </p>
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Total Amount: PHP<span id="total_amount"><%= receipt.total_amount %></span>
+            </p>
+        </div>
+        <hr>
+        <div class="d-flex flex-column" style="margin: 0;">
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Mode of Payment: <span id="total_amount"><%= receipt.modepayment.type %></span>
+            </p>
+            <p style="margin: 0; display: flex; justify-content: space-between;">
+                Payment Amount: PHP<span id="payment_amount"><%= receipt.payment_amount %></span>
+            </p>
+        </div>   
+        <hr>
+        <div class="text-center" style="font-size: 8px;">
+            <p>For Assistance, Send us a Message On the Following Channel</p>
+            <p>Facebook: https://www.facebook.com/Am9MiniMall</p>
+        </div>
+        <hr>
+        <div>
+            <h1 class="text-center text-danger"><% if(receipt.meralco.is_paid == 1) { %>FULL PAID<% } %></h1>
+        </div>
+    </div>
+</div>
