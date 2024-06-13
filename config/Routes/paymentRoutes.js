@@ -1,7 +1,7 @@
 // paymentRoutes.js
 const express = require("express");
 const router = express.Router();
-const Payment = require("../Models/PaymentModel");
+const Payment = require("../Models/paymentModel");
 const User = require('../Models/userModel');
 const { randomBytes } = require('crypto');
 const Meralco = require('../Models/meralcoModel');
