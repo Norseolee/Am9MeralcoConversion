@@ -5,8 +5,8 @@ const Payment = require("../Models/PaymentModel");
 const User = require('../Models/userModel');
 const { randomBytes } = require('crypto');
 const Meralco = require('../Models/meralcoModel');
-const ModeOfPayment = require('../Models/modePaymentModel');
-const Tenant = require('../Models/tenantModel'); // Assuming you have a Tenant model
+const ModeOfPayment = require('../Models/paymentModel');
+const Tenant = require('../Models/tenantModel');
 const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
 
 function generateTransactionNumber() {
