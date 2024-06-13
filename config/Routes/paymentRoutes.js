@@ -2,11 +2,11 @@
 const express = require("express");
 const router = express.Router();
 const Payment = require("../Models/paymentModel");
-const User = require('../Models/userModel');
 const { randomBytes } = require('crypto');
 const Meralco = require('../Models/meralcoModel');
 const ModeOfPayment = require('../Models/modePaymentModel');
 const Tenant = require('../Models/tenantModel');
+const permission = require('../Middleware/checkPermission');
 const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
 
 function generateTransactionNumber() {
@@ -63,7 +63,7 @@ router.get('/dashboard/payment/add-payment', checkAdminStaff, async (req, res) =
     }
 });
 
-router.post('/payment_process/add-payment', checkAdminStaff, async (req, res) => {
+router.post('/payment_process/add-payment', permission('add_payment') , async (req, res) => {
     const { tenant_id, payment_amount, mode_payment_id, payment_type, latestUtilityBill, utility_id, total_amount } = req.body;
 
     if (!tenant_id || !payment_amount || !mode_payment_id || !payment_type) {
@@ -124,7 +124,6 @@ router.post('/payment_process/add-payment', checkAdminStaff, async (req, res) =>
         res.redirect('/dashboard?view=payment');
     }
 });
-
 
 router.get('/payment_process/total_amount', async (req, res) => {
     try {

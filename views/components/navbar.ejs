@@ -18,26 +18,21 @@
         <ul id="utilitySubMenu"></ul> -->
         <a class="a" href="/logout" id="logout"><li>Logout</li></a>
     </ul>
-    <% } else if(mainUser.role_id === 2) { %> <!-- Staff navbar -->
+    <% } else { %> <!-- Staff navbar -->
     <ul>
-        <a class="a" href="/dashboard?view=rent"><li>Rental</li></a>
+        <% if(mainUser.view_user === 1) { %>
+        <a class="a" href="/dashboard?view=user"><li>User</li></a>
+        <%} else if (mainUser.view_tenant === 1){ %>
+        <a class="a" href="/dashboard?view=tenant"><li>Tenant</li></a>
+        <%} else if (mainUser.view_utility === 1){ %>
         <a class="a" href="/dashboard?view=meralco"><li>Meralco</li></a>
         <a class="a" href="/dashboard?view=maynilad"><li>Maynilad</li></a>
+        <%} else if (mainUser.view_payment === 1){ %>
         <a class="a" href="/dashboard?view=payment"><li>Payment</li></a>
+        <%} %>
         <a class="a" href="/logout" id="logout"><li>Logout</li></a>
     </ul>
-    <% } else if(mainUser.role_id === 3) { %> <!-- User navbar -->
-    <ul>
-        <a class="a" href="/dashboard?view=rent"><li>Rental</li></a>
-        <a class="a" href="/dashboard?view=meralco"><li>Meralco</li></a>
-        <a class="a" href="/dashboard?view=maynilad"><li>Maynilad</li></a>
-        <a class="a" id="utilityToggle">Utility</a>
-        <!-- <ul id="utilitySubMenu">
-        </ul> -->
-        <a class="a" href="/dashboard?view=payment"><li>Payment</li></a>
-        <a class="a" href="/logout" id="logout"><li>Logout</li></a>
-    </ul>
-    <% } %>
+    <% }  %>
 </div>
 
 

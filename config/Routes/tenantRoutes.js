@@ -8,6 +8,7 @@ const { verifyToken } = require('../verifyToken');
 
 const Tenant = require('../Models/tenantModel');
 const User = require('../Models/userModel');
+const permission = require('../Middleware/checkPermission');
 
 const upload_preview = multer();
 
@@ -74,8 +75,49 @@ async function processImage(file) {
     return filename;
 }
 
+// Route handler for viewing tenant details
+router.get("/dashboard/tenant", async (req, res) => {
+    try {
+        let mainUserData;
+
+        if (req.session.user) {
+            mainUserData = await User.query().findById(req.session.user.id);
+        } else if (req.cookies.remember_token) {
+            const user = await verifyToken(req.cookies.remember_token);
+            if (user) {
+                req.session.user = user;
+                mainUserData = await User.query().findById(user.id);
+            } else {
+                return res.redirect('/');
+            }
+        } else {
+            return res.redirect('/');
+        }
+
+        const { edit, view, id: tenant_id } = req.query;
+
+        if (!tenant_id) {
+            req.flash('message', { text: 'Tenant ID is required', type: 'danger' });
+            return res.redirect('/dashboard?view=tenant');
+        }
+
+        const tenantData = await Tenant.query().where('tenant_id', tenant_id).first();
+
+        if (!tenantData) {
+            req.flash('message', { text: 'Tenant not found', type: 'danger' });
+            return res.redirect('/dashboard?view=tenant');
+        }
+
+        res.render('pages/tenant_view', { tenantData, view, mainUser: mainUserData, edit });
+    } catch (error) {
+        console.error('Error fetching tenant data:', error);
+        req.flash('message', { text: 'Error fetching tenant data: ' + error.message, type: 'danger' });
+        res.redirect('/dashboard?view=tenant');
+    }
+});
+
 // Route handler for add tenant
-router.post("/tenant_process/add-tenant", upload.fields([
+router.post("/tenant_process/add-tenant", permission('add_tenant') , upload.fields([
     { name: 'signature', maxCount: 1 },
     { name: 'image_id_front', maxCount: 1 },
     { name: 'image_id_back', maxCount: 1 }
@@ -124,49 +166,8 @@ router.post("/tenant_process/add-tenant", upload.fields([
     }
 });
 
-// Route handler for viewing tenant details
-router.get("/dashboard/tenant", async (req, res) => {
-    try {
-        let mainUserData;
-
-        if (req.session.user) {
-            mainUserData = await User.query().findById(req.session.user.id);
-        } else if (req.cookies.remember_token) {
-            const user = await verifyToken(req.cookies.remember_token);
-            if (user) {
-                req.session.user = user;
-                mainUserData = await User.query().findById(user.id);
-            } else {
-                return res.redirect('/');
-            }
-        } else {
-            return res.redirect('/');
-        }
-
-        const { edit, view, id: tenant_id } = req.query;
-
-        if (!tenant_id) {
-            req.flash('message', { text: 'Tenant ID is required', type: 'danger' });
-            return res.redirect('/dashboard?view=tenant');
-        }
-
-        const tenantData = await Tenant.query().where('tenant_id', tenant_id).first();
-
-        if (!tenantData) {
-            req.flash('message', { text: 'Tenant not found', type: 'danger' });
-            return res.redirect('/dashboard?view=tenant');
-        }
-
-        res.render('pages/tenant_view', { tenantData, view, mainUser: mainUserData, edit });
-    } catch (error) {
-        console.error('Error fetching tenant data:', error);
-        req.flash('message', { text: 'Error fetching tenant data: ' + error.message, type: 'danger' });
-        res.redirect('/dashboard?view=tenant');
-    }
-});
-
 // Route handler for editing tenant
-router.post("/tenant_process/edit-tenant", upload.fields([
+router.post("/tenant_process/edit-tenant", permission('edit_tenant') , upload.fields([
     { name: 'signature', maxCount: 1 },
     { name: 'image_id_front', maxCount: 1 },
     { name: 'image_id_back', maxCount: 1 }
@@ -234,7 +235,7 @@ router.post("/tenant_process/edit-tenant", upload.fields([
     }
 });
 
-router.get('/tenant_process/delete-tenant', async (req, res) => {
+router.get('/tenant_process/delete-tenant', permission('delete_tenant') , async (req, res) => {
     try {
         // Check if 'do' parameter is provided and equals 'delete'
         if (req.query.do === 'delete') {
@@ -246,19 +247,19 @@ router.get('/tenant_process/delete-tenant', async (req, res) => {
 
             const tenantID = req.query.id;
 
-            // Delete the tenant with the provided ID
-            await Tenant.query().findById(tenantID).delete();
+            // Update the tenant to set is_deleted to 1
+            await Tenant.query().findById(tenantID).patch({ is_deleted: 1 });
 
             // Redirect back to the dashboard or any other appropriate page
-            req.flash('message', { text: 'Tenant deleted successfully', type: 'success' });
+            req.flash('message', { text: 'Tenant marked as deleted successfully', type: 'success' });
             res.redirect('/dashboard?view=tenant');
         } else {
             req.flash('message', { text: 'Invalid action', type: 'danger' });
             res.redirect('/dashboard?view=tenant');
         }
     } catch (error) {
-        console.error('Error deleting tenant:', error);
-        req.flash('message', { text: 'Error deleting tenant: ' + error.message, type: 'danger' });
+        console.error('Error marking tenant as deleted:', error);
+        req.flash('message', { text: 'Error marking tenant as deleted: ' + error.message, type: 'danger' });
         res.redirect('/dashboard?view=tenant');
     }
 });
