@@ -1,5 +1,5 @@
 const checkAdminStaff = (req, res, next) => {
-    if ((req.session && req.session.user || req.user) && (req.session.user.role_id == 1 || req.session.user.role_id == 3)) {
+    if ((req.session && req.session.user || req.user) && (req.session.user.role_id == 1)) {
         next();
     } else {
         const previousUrl = req.headers.referer || '/'; // Return forbidden status if user is not admin or staff

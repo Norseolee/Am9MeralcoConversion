@@ -122,6 +122,10 @@
                                 <label class="form-check-label" for="add_utility">Add Utility</label>
                             </div>
                             <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_tenant" name="add_tenant" <%= userData.add_tenant ? 'checked' : '' %>>
+                                <label class="form-check-label" for="add_tenant">Add Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
                                 <input class="form-check-input" type="checkbox" id="add_payment" name="add_payment" <%= userData.add_payment ? 'checked' : '' %>>
                                 <label class="form-check-label" for="add_payment">Add Payment</label>
                             </div>
