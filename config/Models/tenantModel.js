@@ -36,7 +36,7 @@ class Tenant extends Model {
                 image_id_front: { type: ['string', 'null'], maxLength: 255 },
                 image_id_back: { type: ['string', 'null'], maxLength: 255 },
                 created_at: { type: 'string', format: 'date' },
-                is_deleted: { type: 'boolean', default: false },
+                is_deleted: { type: 'integer', default: 0 },
                 modified: { type: 'string', format: 'date' }
             }
         };

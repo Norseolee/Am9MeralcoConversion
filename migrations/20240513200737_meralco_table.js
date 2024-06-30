@@ -17,7 +17,7 @@ exports.up = function(knex) {
         table.float('total_amount', 10, 2).notNullable();
         table.float('current_total_amount', 10, 2).notNullable();
         table.date('created_at').nullable();
-        table.boolean('is_deleted').defaultTo(false); 
+        table.integer('is_deleted').defaultTo(0);
     });
 };
 

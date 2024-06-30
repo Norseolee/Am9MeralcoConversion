@@ -60,20 +60,25 @@ router.get('/dashboard/meralco/add-meralco', permission('view_utility') ,  async
   
 router.post('/dashboard/meralco_process/add-meralco', permission('add_utility') , async (req, res) => {
 
-      const formatDate = (date) => new Date(date).toISOString().split('T')[0];
+  const formatDate = (date) => new Date(date).toISOString().split('T')[0];
+  let dateOfReading = new Date(req.body.date_of_reading);
+  let options = { year: 'numeric', month: 'long', day: 'numeric' };
+  let formattedDateOfReading = dateOfReading.toLocaleDateString('en-US', options);
+  let dueDate = new Date(req.body.due_date);
+  let formattedDueDate = dueDate.toLocaleDateString('en-US', options);
 
         const parsedMeralcoData = {
             tenant_id: parseInt(req.body.tenant_id),
             per_kwh: parseFloat(req.body.per_kwh),
-            due_date: req.body.due_date,
-            date_of_reading: req.body.date_of_reading,
+            due_date: formattedDueDate,
+            date_of_reading: formattedDateOfReading,
             previous_reading: parseFloat(req.body.previous_reading) || 0,
             current_reading: parseFloat(req.body.current_reading),
             consume: parseFloat(req.body.consume),
             total_amount: parseFloat(req.body.total_amount),
             current_total_amount:  parseFloat(req.body.total_amount),
             created_at: formatDate( new Date()),
-            is_deleted: false
+            is_deleted: 0
         };
   
         console.log("Parsed Meralco Data:", parsedMeralcoData);
@@ -188,7 +193,7 @@ router.get('/dashboard/meralco/previous-reading', async (req, res) => {
   }
 });
 
-router.get('/get-meralco', permission, async (req, res) => {
+router.get('/get-meralco', async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const meralcoData = await Meralco.query().where('tenant_id', tenantId);
@@ -200,7 +205,7 @@ router.get('/get-meralco', permission, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-tenant-info', permission, async (req, res) => {
+router.get('/get-tenant-info', async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const tenantInfo = await Tenant.query().findById(tenantId);
@@ -209,7 +214,7 @@ router.get('/get-tenant-info', permission, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-billing-info', permission, async (req, res) => {
+router.get('/get-billing-info', async (req, res) => {
   try {
       const { tenant_id, meralco_id } = req.query;
       // Fetch billing information based on the selected tenantId and meralcoId

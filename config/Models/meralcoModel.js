@@ -27,7 +27,7 @@ class Meralco extends Model {
                 total_amount: { type: 'number' },
                 current_total_amount: { type: 'number' },
                 created_at: { type: ['string', 'null'], format: 'date' },
-                is_deleted: { type: 'boolean' }
+                is_deleted: { type: 'integer', default: 0 },
             }
         };
     }

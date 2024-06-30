@@ -251,7 +251,7 @@ router.get('/tenant_process/delete-tenant', permission('delete_tenant') , async 
             await Tenant.query().findById(tenantID).patch({ is_deleted: 1 });
 
             // Redirect back to the dashboard or any other appropriate page
-            req.flash('message', { text: 'Tenant marked as deleted successfully', type: 'success' });
+            req.flash('message', { text: 'Tenant deleted successfully', type: 'success' });
             res.redirect('/dashboard?view=tenant');
         } else {
             req.flash('message', { text: 'Invalid action', type: 'danger' });

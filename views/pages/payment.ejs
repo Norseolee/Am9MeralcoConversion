@@ -308,10 +308,10 @@
             utilityList.forEach(item => {
                 const option = document.createElement('option');
                 // Determine which ID to use based on the payment type
-                option.value = paymentType === 'meralco' ? item.meralco_id :
-                               paymentType === 'maynilad' ? item.maynilad_id :
-                               item.rent_id;
-                option.textContent = `ID: ${option.value} - Amount: ${item.total_amount}`;
+                option.value = paymentType === 'meralco' ? item.date_of_reading :
+                               paymentType === 'maynilad' ? item.date_of_reading :
+                               item.date_of_reading;
+                option.textContent = `Date: ${option.value} - Amount: ${item.current_total_amount}`;
                 selectUtility.appendChild(option);
             });
 
