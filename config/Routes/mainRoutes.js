@@ -5,7 +5,8 @@ const sharp = require('sharp');
 const path = require('path');
 const fs = require('fs');
 
-const checkAuth = require('../Middleware/audthMiddleware'); // Fixed typo
+const checkAuth = require('../Middleware/audthMiddleware');
+const permission = require('../Middleware/checkPermission');
 const { generateToken } = require('../generateToken');
 const { verifyToken } = require('../verifyToken');
 const bcrypt = require('bcryptjs');
@@ -19,9 +20,45 @@ const ModeofPayment = require('../Models/modePaymentModel');
 
 
 // THIS IS COMMON ROUTES
+const checkViewPermission = async (req, res, next) => {
+    const view = req.query.view || 'user';
+    const permissions = {
+        user: 'view_user',
+        tenant: 'view_tenant',
+        meralco: 'view_utility',
+        maynilad: 'view_utility',
+        payment: 'view_payment'
+    };
+
+    const permission = permissions[view];
+
+    if (!permission) {
+        return res.status(400).json({ message: 'Invalid view type' });
+    }
+
+    try {
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ message: 'Unauthorized' });
+        }
+
+        const userId = req.session.user.id;
+        const user = await User.query().findById(userId);
+
+        if (user && user[permission] === 1) {
+            next();
+        } else {
+            req.flash('message', { text: 'You do not have permission to view this page', type: 'danger' });
+            const previousUrl = req.headers.referer || '/';
+            res.redirect(previousUrl);
+        }
+    } catch (error) {
+        console.error('Error in view permission middleware:', error);
+        return res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
 
 // Route handler for all dashboards
-router.get('/dashboard', checkAuth,  async (req, res) => {
+router.get('/dashboard', checkAuth, checkViewPermission,  async (req, res) => {
     try {
         let mainUserData, tenantData, meralcoData, roleData, paymentData;
 
@@ -58,10 +95,10 @@ router.get('/dashboard', checkAuth,  async (req, res) => {
                         Payment.query()
                             .withGraphFetched('[meralco, tenant, modepayment]')
                             .modifyGraph('tenant', builder => {
-                                builder.select('*'); // Select all columns from the tenant table
+                                builder.select('*'); 
                             })
                             .modifyGraph('meralco', builder => {
-                                builder.select('*'); // Select all columns from the meralco table
+                                builder.select('*'); 
                             })
                             .limit(limit)
                             .offset(offset)

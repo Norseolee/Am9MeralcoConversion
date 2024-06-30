@@ -17,7 +17,20 @@ exports.up = function(knex) {
                 table.string('username', 255).notNullable().unique();
                 table.string('password', 255).notNullable();
                 table.date('created_at').nullable();
-                table.boolean('is_deleted').defaultTo(false); 
+                table.integer('view_user').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('add_user').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('edit_user').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('delete_user').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('view_tenant').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('add_tenant').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('edit_tenant').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('delete_tenant').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('view_utility').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('add_utility').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('edit_utility').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('view_payment').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('add_payment').defaultTo(0); // tinyint(1) equivalent with default 0
+                table.integer('is_deleted').defaultTo(0); 
             }).then(function() {
                 // Insert a user with the hashed password
                 return knex('users').insert([

@@ -6,10 +6,9 @@ const User = require("../Models/userModel");
 const Tenant = require("../Models/tenantModel");
 const Payment = require("../Models/paymentModel");
 const { verifyToken } = require('../verifyToken');
-const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
+const permission = require('../Middleware/checkPermission');
 
-
-router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) => {
+router.get('/dashboard/meralco/add-meralco', permission('view_utility') ,  async (req, res) => {
     try {
       let mainUserData;
   
@@ -59,7 +58,7 @@ router.get('/dashboard/meralco/add-meralco', checkAdminStaff,  async (req, res) 
     }
   });
   
-router.post('/dashboard/meralco_process/add-meralco', async (req, res) => {
+router.post('/dashboard/meralco_process/add-meralco', permission('add_utility') , async (req, res) => {
 
       const formatDate = (date) => new Date(date).toISOString().split('T')[0];
 
@@ -90,31 +89,7 @@ router.post('/dashboard/meralco_process/add-meralco', async (req, res) => {
         }
   })
   
-router.get('/dashboard/meralco/previous-reading', async (req, res) => {
-    try {
-      const tenantId = req.query.tenant_id;
-      // Get the current Meralco record for the tenant
-      const currentMeralcoRecord = await Meralco.query()
-        .where('tenant_id', tenantId)
-        .andWhere('is_deleted', false)
-        .orderBy('meralco_id', 'desc')
-        .first();
-      // Get the previous Meralco record for the tenant that is not the current record
-      const previousMeralcoRecord = await Meralco.query()
-        .where('meralco_id', currentMeralcoRecord.meralco_id) // Exclude the current record
-        .andWhere('is_deleted', false)
-        .orderBy('meralco_id', 'desc')
-        .first();
-
-      const previousReading = previousMeralcoRecord ? previousMeralcoRecord.current_reading : null;
-      res.json({ previousReading });
-    } catch (error) {
-      console.error('Error fetching previous reading:', error);
-      res.status(500).json({ error: 'Error fetching previous reading' });
-    }
-  });
-  
-router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res) => {
+router.get('/dashboard/meralco/print-meralco', permission('view_utility') , async (req, res) => {
     try {
         let mainUserData;
 
@@ -153,7 +128,7 @@ router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res)
         res.redirect('/dashboard?view=meralco');
     }
 })
-router.post('/meralco_process/meralco_edit', checkAdminStaff, async (req, res) => {
+router.post('/meralco_process/meralco_edit', permission('edit_utility'), permission , async (req, res) => {
   try {
       let meralcoID = req.query.id;
       let { per_kwh, due_date, date_of_reading, previous_reading, current_reading, consume, total_amount } = req.body;
@@ -189,7 +164,31 @@ router.post('/meralco_process/meralco_edit', checkAdminStaff, async (req, res) =
 
 
 
-router.get('/get-meralco', checkAdminStaff, async (req, res) => {
+router.get('/dashboard/meralco/previous-reading', async (req, res) => {
+  try {
+    const tenantId = req.query.tenant_id;
+    // Get the current Meralco record for the tenant
+    const currentMeralcoRecord = await Meralco.query()
+      .where('tenant_id', tenantId)
+      .andWhere('is_deleted', false)
+      .orderBy('meralco_id', 'desc')
+      .first();
+    // Get the previous Meralco record for the tenant that is not the current record
+    const previousMeralcoRecord = await Meralco.query()
+      .where('meralco_id', currentMeralcoRecord.meralco_id) // Exclude the current record
+      .andWhere('is_deleted', false)
+      .orderBy('meralco_id', 'desc')
+      .first();
+
+    const previousReading = previousMeralcoRecord ? previousMeralcoRecord.current_reading : null;
+    res.json({ previousReading });
+  } catch (error) {
+    console.error('Error fetching previous reading:', error);
+    res.status(500).json({ error: 'Error fetching previous reading' });
+  }
+});
+
+router.get('/get-meralco', permission, async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const meralcoData = await Meralco.query().where('tenant_id', tenantId);
@@ -201,7 +200,7 @@ router.get('/get-meralco', checkAdminStaff, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-tenant-info', checkAdminStaff, async (req, res) => {
+router.get('/get-tenant-info', permission, async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const tenantInfo = await Tenant.query().findById(tenantId);
@@ -210,7 +209,7 @@ router.get('/get-tenant-info', checkAdminStaff, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-billing-info', checkAdminStaff, async (req, res) => {
+router.get('/get-billing-info', permission, async (req, res) => {
   try {
       const { tenant_id, meralco_id } = req.query;
       // Fetch billing information based on the selected tenantId and meralcoId

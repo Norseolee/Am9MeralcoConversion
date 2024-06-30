@@ -2,12 +2,11 @@
 const express = require("express");
 const router = express.Router();
 const Payment = require("../Models/paymentModel");
-const User = require('../Models/userModel');
 const { randomBytes } = require('crypto');
 const Meralco = require('../Models/meralcoModel');
 const ModeOfPayment = require('../Models/modePaymentModel');
 const Tenant = require('../Models/tenantModel');
-const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
+const permission = require('../Middleware/checkPermission');
 
 function generateTransactionNumber() {
     return randomBytes(4).toString('hex').toUpperCase();
@@ -21,12 +20,13 @@ function formatDate(date) {
     return `${day}/${month}/${year}`;
 }
 
-router.get('/dashboard/payment/add-payment', checkAdminStaff, async (req, res) => {
+router.get('/dashboard/payment/add-payment', permission('view_payment'), async (req, res) => {
     try {
 
         mainUserData = req.session.user; 
         const payment = await Payment.query();
         const tenantData = await Tenant.query().where('is_deleted', 0);
+        const meralcoData = await Tenant.query().where('is_deleted', 0);
         const modePayments = await ModeOfPayment.query();
         const latestMeralco = await Meralco.query().orderBy('created_at', 'desc').first();
 
@@ -54,6 +54,7 @@ router.get('/dashboard/payment/add-payment', checkAdminStaff, async (req, res) =
             latestMeralco,
             payment,
             paymentreceipt: resolvedPayments,
+            meralcoData
         });
         
     } catch (error) {
@@ -63,7 +64,7 @@ router.get('/dashboard/payment/add-payment', checkAdminStaff, async (req, res) =
     }
 });
 
-router.post('/payment_process/add-payment', checkAdminStaff, async (req, res) => {
+router.post('/payment_process/add-payment', permission('add_payment') , async (req, res) => {
     const { tenant_id, payment_amount, mode_payment_id, payment_type, latestUtilityBill, utility_id, total_amount } = req.body;
 
     if (!tenant_id || !payment_amount || !mode_payment_id || !payment_type) {
@@ -125,12 +126,12 @@ router.post('/payment_process/add-payment', checkAdminStaff, async (req, res) =>
     }
 });
 
-
 router.get('/payment_process/total_amount', async (req, res) => {
     try {
         const tenantId = req.query.tenant_id;
         const payment_type = req.query.payment_type;
-        let Utility = '';
+        let Utility = null;
+        let UtilityList = [];
 
         if (payment_type == 'meralco') {
             // Get the current Meralco record for the tenant
@@ -139,20 +140,46 @@ router.get('/payment_process/total_amount', async (req, res) => {
                 .andWhere('is_deleted', false)
                 .orderBy('meralco_id', 'desc')
                 .first();
+
+            // Get all Meralco records for the tenant
+            UtilityList = await Meralco.query()
+                .where('tenant_id', tenantId)
+                .andWhere('is_deleted', false)
+                .orderBy('meralco_id', 'asc');
         } else if (payment_type == 'maynilad') {
-            // later
+            // // Get the current Maynilad record for the tenant
+            // Utility = await Maynilad.query()
+            //     .where('tenant_id', tenantId)
+            //     .andWhere('is_deleted', false)
+            //     .orderBy('maynilad_id', 'desc')
+            //     .first();
+
+            // // Get all Maynilad records for the tenant
+            // UtilityList = await Maynilad.query()
+            //     .where('tenant_id', tenantId)
+            //     .andWhere('is_deleted', false)
+            //     .orderBy('maynilad_id', 'desc');
         } else if (payment_type == 'rent') {
-            // later
+            // // Get the current Rent record for the tenant
+            // Utility = await Rent.query()
+            //     .where('tenant_id', tenantId)
+            //     .andWhere('is_deleted', false)
+            //     .orderBy('rent_id', 'desc')
+            //     .first();
+
+            // // Get all Rent records for the tenant
+            // UtilityList = await Rent.query()
+            //     .where('tenant_id', tenantId)
+            //     .andWhere('is_deleted', false)
+            //     .orderBy('rent_id', 'desc');
         }
 
-        const totalAmountBilling = Utility ? Utility : null;
-        res.json({ totalAmountBilling });
+        res.json({ currentRecord: Utility, allRecords: UtilityList });
     } catch (error) {
         console.error('Error fetching previous reading:', error);
         res.status(500).json({ error: 'Error fetching previous reading' });
     }
 });
 
-  
 
 module.exports = router;

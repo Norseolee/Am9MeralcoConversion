@@ -1,5 +1,5 @@
 <!-- Add User Modal -->
-<% if(view === 'user' && mainUser.role_id === 1) {%>
+
     <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-brand text-white">
@@ -22,6 +22,57 @@
                                 <option value="<%= role.role_id %>"><%= role.roles_name %></option>
                             <% }) %>
                         </select>
+                        
+                        <div class="d-flex flex-wrap justify-content-between mt-3">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_user" name="view_user">
+                                <label class="form-check-label" for="view_user">View User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_tenant" name="view_tenant">
+                                <label class="form-check-label" for="view_tenant">View Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_payment" name="view_payment">
+                                <label class="form-check-label" for="view_payment">View Payment</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_utility" name="view_utility">
+                                <label class="form-check-label" for="view_utility">View Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_user" name="add_user">
+                                <label class="form-check-label" for="add_user">Add User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_utility" name="add_utility">
+                                <label class="form-check-label" for="add_utility">Add Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_payment" name="add_payment">
+                                <label class="form-check-label" for="add_payment">Add Payment</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_user" name="edit_user">
+                                <label class="form-check-label" for="edit_user">Edit User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_tenant" name="edit_tenant">
+                                <label class="form-check-label" for="edit_tenant">Edit Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_utility" name="edit_utility">
+                                <label class="form-check-label" for="edit_utility">Edit Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="delete_user" name="delete_user">
+                                <label class="form-check-label" for="delete_user">Delete User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="delete_tenant" name="delete_tenant">
+                                <label class="form-check-label" for="delete_tenant">Delete Tenant</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -31,7 +82,6 @@
             </div>
         </div>
     </div>
-    <% } else if(view === 'tenant' && mainUser.role_id === 1) { %>
     <!-- Add Tenant Modal -->
     <div class="modal fade" id="addtenantModal" tabindex="-1" aria-labelledby="addtenantModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -101,4 +151,3 @@
             </div>
         </div>
     </div>
-    <% } %>

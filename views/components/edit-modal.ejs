@@ -95,6 +95,61 @@
                                 <option value="<%= role.role_id %>" <%= role.role_id === userData.role_id ? 'selected' : '' %>><%= role.roles_name %></option>
                             <% }) %>
                         </select>
+
+                        <div class="d-flex flex-wrap justify-content-between mt-3">
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_user" name="view_user" <%= userData.view_user ? 'checked' : '' %>>
+                                <label class="form-check-label" for="view_user">View User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_tenant" name="view_tenant" <%= userData.view_tenant ? 'checked' : '' %>>
+                                <label class="form-check-label" for="view_tenant">View Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_payment" name="view_payment" <%= userData.view_payment ? 'checked' : '' %>>
+                                <label class="form-check-label" for="view_payment">View Payment</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="view_utility" name="view_utility" <%= userData.view_utility ? 'checked' : '' %>>
+                                <label class="form-check-label" for="view_utility">View Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_user" name="add_user" <%= userData.add_user ? 'checked' : '' %>>
+                                <label class="form-check-label" for="add_user">Add User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_utility" name="add_utility" <%= userData.add_utility ? 'checked' : '' %>>
+                                <label class="form-check-label" for="add_utility">Add Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_tenant" name="add_tenant" <%= userData.add_tenant ? 'checked' : '' %>>
+                                <label class="form-check-label" for="add_tenant">Add Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="add_payment" name="add_payment" <%= userData.add_payment ? 'checked' : '' %>>
+                                <label class="form-check-label" for="add_payment">Add Payment</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_user" name="edit_user" <%= userData.edit_user ? 'checked' : '' %>>
+                                <label class="form-check-label" for="edit_user">Edit User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_tenant" name="edit_tenant" <%= userData.edit_tenant ? 'checked' : '' %>>
+                                <label class="form-check-label" for="edit_tenant">Edit Tenant</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="edit_utility" name="edit_utility" <%= userData.edit_utility ? 'checked' : '' %>>
+                                <label class="form-check-label" for="edit_utility">Edit Utility</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="delete_user" name="delete_user" <%= userData.delete_user ? 'checked' : '' %>>
+                                <label class="form-check-label" for="delete_user">Delete User</label>
+                            </div>
+                            <div class="form-check me-3">
+                                <input class="form-check-input" type="checkbox" id="delete_tenant" name="delete_tenant" <%= userData.delete_tenant ? 'checked' : '' %>>
+                                <label class="form-check-label" for="delete_tenant">Delete Tenant</label>
+                            </div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
