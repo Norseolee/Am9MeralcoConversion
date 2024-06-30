@@ -41,7 +41,7 @@ router.post("/user_process/add-user", permission('add_user') , async (req, res) 
 });
 
 // Route handler for edit user
-router.post('/user_process/edit-user', permission('edit_user'), async (req, res) => {
+router.post('/user_process/edit-user', permission('add_user') , async (req, res) => {
     try {
         if (req.session.user && req.session.user.id === 1) {
             let userId = req.query.id;

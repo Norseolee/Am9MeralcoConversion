@@ -1,30 +1,45 @@
-<% if (view === 'user' && mainUser.role_id === 1) { %>
+<% if (view === 'user') { %>
   <h1>USER</h1>
-  <!-- <button id="addUserBtn" class="btn btn-info">ADD USER</button> -->
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">
-    ADD USER
-</button>
+  
+  <% if(mainUser.add_user === 1){ %> 
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal">ADD USER</button>
+  <% } %>
+ 
   <%- include('add-modal') %>
-<% } else if (view === 'tenant' && (mainUser.role_id === 1 || mainUser.role_id === 2)) { %>
+
+<% } else if (view === 'tenant') { %>
   <h1>TENANTS</h1>
-  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addtenantModal">
-    ADD USER
-</button>
+
+  <% if(mainUser.add_tenant === 1){ %>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addtenantModal">ADD TENANT</button>
+  <% } %>
+
   <%- include('add-modal') %>
-<% } else if (view === 'rent' && (mainUser.role_id === 1 || mainUser.role_id === 3)) { %>
+
+<% } else if (view === 'rent') { %>
   <h1>RENTS</h1>
+
 <% } else if (view === 'meralco') { %>
-<h1>MERALCO</h1>
-<% if(mainUser.role_id == 1 || mainUser.role_id == 2){ %>
-<div>
-  <a href="/dashboard/meralco/add-meralco" class="btn btn-primary">ADD MERALCO</a>
-  <a href="/dashboard/meralco/print-meralco" class="btn btn-primary">PRINT</a>
-</div>
-<% } %>
+  <h1>MERALCO</h1>
+
+  <% if(mainUser.view_utility === 1){ %>
+    <div>
+      <% if(mainUser.add_utility === 1){ %>
+      <a href="/dashboard/meralco/add-meralco" class="btn btn-primary">ADD MERALCO</a>
+      <% } %>
+      <a href="/dashboard/meralco/print-meralco" class="btn btn-primary">PRINT</a>
+    </div>
+  <% } %>
+
 <% } else if (view === 'maynilad') { %>
 <h1>MAYNILAD</h1>
-<% } else if (view === 'payment' && mainUser.role_id === 1) { %>   
-<h1>PAYMENTS</h1>
-<a href="/dashboard/payment/add-payment" class="btn btn-primary">Payments</a>
+
+<% } else if (view === 'payment') { %>   
+  <h1>PAYMENTS</h1>
+
+  <% if(mainUser.view_payment === 1){ %>
+    <a href="/dashboard/payment/add-payment" class="btn btn-primary">Payments</a>
+  <% } %>
+
 <% } %>
 

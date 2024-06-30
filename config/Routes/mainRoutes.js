@@ -8,6 +8,7 @@ const fs = require('fs');
 const checkAuth = require('../Middleware/audthMiddleware');
 const permission = require('../Middleware/checkPermission');
 const { generateToken } = require('../generateToken');
+const { verifyToken } = require('../verifyToken');
 const bcrypt = require('bcryptjs');
 
 const User = require('../Models/userModel');
@@ -15,6 +16,8 @@ const Meralco = require('../Models/meralcoModel');
 const Tenant = require('../Models/tenantModel');
 const Role = require('../Models/roleModel');
 const Payment = require('../Models/paymentModel');
+const ModeofPayment = require('../Models/modePaymentModel');
+
 
 // THIS IS COMMON ROUTES
 const checkViewPermission = async (req, res, next) => {
@@ -139,7 +142,7 @@ router.get('/dashboard', checkAuth, checkViewPermission,  async (req, res) => {
 
 // THIS IS LOGIN AND LOGOUT ROUTES
 // Route handler for user login
-router.post('/login', checkAuth , async (req, res) => {
+router.post('/login', async (req, res) => {
     const { username, password, remember_me } = req.body;
 
     if (!username || !password) {

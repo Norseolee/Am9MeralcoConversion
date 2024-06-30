@@ -13,7 +13,7 @@
         .print {
             margin: 0;
             padding: 0;
-            width: 180px;
+            width: 250px;
             font-size: 10px;
             display: block !important; /* Ensure display is set explicitly */
         }
@@ -37,10 +37,13 @@
         }
     }
 </style>
-<body class="d-flex justify-content-between align-items-start" style="background-color: #64748B;">
-    <div class="main">
-        <%- include('../components/navbar') %>
+<body class="d-flex justify-content-stretch align-items-stretch" style="background-color: #64748B;">
+    <%- include('../components/navbar') %>
+    
+    <div class="main w-50" style="min-width: 500px;">
+       
         <div class="sub-section overflow-auto text-white">
+            <% if (mainUser.add_payment === 1 ) { %>
             <form id="addUserForm" method="POST" class="d-flex flex-column bg-brand rounded p-1" action="/payment_process/add-payment">
                 <div class="modal-body">
                     <h2>Payments</h2>
@@ -62,6 +65,15 @@
                                 <% tenantData.forEach((tenant) => { %>
                                     <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>                            
                                 <% }); %>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="d-flex gap-5">
+                        <div class="flex-grow-1 flex-shrink-1">
+                            <label class="form-label" for="select_utility">Select Utility: </label>
+                            <select class="form-control text-white" name="select_utility" id="select_utility" disabled>
+                                <option value=""></option>
                             </select>
                         </div>
                     </div>
@@ -118,10 +130,13 @@
                 </div>
                 <button class="btn btn-success mx-3 mb-2" type="submit">Submit</button>
             </form> 
+            <% } %>
         </div>
+  
     </div>
-    <div class="m-2">
-        <table class="table table-sm align-middle text-white text-nowrap" style="font-size: 14px;">
+
+    <div class="m-2 w-50">
+        <table class="table-auto table table-sm align-middle text-white text-nowrap" style="font-size: 14px;">
         
             <thead class="table-dark text-nowrap text-start">
                 <tr>
@@ -170,7 +185,7 @@
                                 Transaction Type: <span id="payment_type"><%= receipt.payment_type %></span>
                             </p>
                             <p style="margin: 0; display: flex; justify-content: space-between;">
-                                Total Amount: PHP<span id="total_amount"><%= receipt.total_amount %></span>
+                                Total Amount: <span id="total_amount">PHP  <%= receipt.total_amount %></span>
                             </p>
                         </div>
                         <hr>
@@ -179,7 +194,7 @@
                                 Mode of Payment: <span id="total_amount"><%= receipt.modepayment.type %></span>
                             </p>
                             <p style="margin: 0; display: flex; justify-content: space-between;">
-                                Payment Amount: PHP<span id="payment_amount"><%= receipt.payment_amount %></span>
+                                Payment Amount: <span id="payment_amount">PHP  <%= receipt.payment_amount %></span>
                             </p>
                         </div>   
                         <hr>
@@ -242,31 +257,118 @@
                 document.getElementById("latestUtilityBill").value = "";
             }
         });
-        document.getElementById("tenant_id").addEventListener("change", async function() {
-            const tenantId = this.value;
-            const paymentType = document.getElementById("payment_type").value;
+        // document.getElementById("tenant_id").addEventListener("change", async function() {
+        //     const tenantId = this.value;
+        //     const paymentType = document.getElementById("payment_type").value;
 
-            try {
-                const response = await fetch(`/payment_process/total_amount?tenant_id=${tenantId}&payment_type=${paymentType}`);
-                const data = await response.json();
-                const utility = data.totalAmountBilling;
-                if(paymentType == 'meralco'){
-                    document.getElementById("utility_id").value = utility.meralco_id || "";
-                } else if(paymentType == 'maynilad'){
-                    document.getElementById("utility_id").value = utility.maynilad_id || "";
-                } else if(paymentType == 'rent'){
-                    document.getElementById("utility_id").value = utility.rend_id || "";
-                }
+        //     try {
+        //         const response = await fetch(`/payment_process/total_amount?tenant_id=${tenantId}&payment_type=${paymentType}`);
+        //         const data = await response.json();
+        //         const utility = data.totalAmountBilling;
+                
+        //         if(paymentType == 'meralco'){
+        //             document.getElementById("utility_id").value = utility.meralco_id || "";
+        //         } else if(paymentType == 'maynilad'){
+        //             document.getElementById("utility_id").value = utility.maynilad_id || "";
+        //         } else if(paymentType == 'rent'){
+        //             document.getElementById("utility_id").value = utility.rend_id || "";
+        //         }
+
+        //         document.getElementById("current_total_amount").value = utility.current_total_amount || "";
+        //         document.getElementById("latestUtilityBill").value = utility.total_amount || "";
+        //         document.getElementById("perKwh").value = utility ? utility.per_kwh : "";
+        //         document.getElementById("currentReading").value = utility ? utility.current_reading : "";
+        //         document.getElementById("previousReading").value = utility ? utility.previous_reading : "";
+        //     } catch (error) {
+        //         console.error("Error fetching previous reading:", error);
+        //     }
+        // });
+    
+        document.getElementById("tenant_id").addEventListener("change", async function() {
+        const tenantId = this.value;
+        const paymentType = document.getElementById("payment_type").value;
+        const selectUtility = document.getElementById("select_utility");
+
+        if (!tenantId || !paymentType) {
+            console.error("Tenant ID or Payment Type is missing.");
+            return;
+        }
+
+        try {
+            // Fetch utility list for the selected tenant and payment type
+            const response = await fetch(`/payment_process/total_amount?tenant_id=${tenantId}&payment_type=${paymentType}`);
+            const data = await response.json();
+            const utility = data.currentRecord;
+            const utilityList = data.allRecords;
+
+            // Clear existing options
+            selectUtility.innerHTML = '<option value="">Select Utility</option>';
+
+            // Populate dropdown with options
+            utilityList.forEach(item => {
+                const option = document.createElement('option');
+                // Determine which ID to use based on the payment type
+                option.value = paymentType === 'meralco' ? item.meralco_id :
+                               paymentType === 'maynilad' ? item.maynilad_id :
+                               item.rent_id;
+                option.textContent = `ID: ${option.value} - Amount: ${item.total_amount}`;
+                selectUtility.appendChild(option);
+            });
+
+            // Enable select_utility if there are options
+            selectUtility.disabled = utilityList.length === 0;
+
+            // Clear previous fields
+            document.getElementById("utility_id").value = "";
+            document.getElementById("current_total_amount").value = "";
+            document.getElementById("latestUtilityBill").value = "";
+            document.getElementById("perKwh").value = "";
+            document.getElementById("currentReading").value = "";
+            document.getElementById("previousReading").value = "";
+
+            // Update form fields based on the selected tenant and payment type
+            if (utility) {
+                document.getElementById("utility_id").value = paymentType === 'meralco' ? utility.meralco_id :
+                                                             paymentType === 'maynilad' ? utility.maynilad_id :
+                                                             utility.rent_id || "";
 
                 document.getElementById("current_total_amount").value = utility.current_total_amount || "";
                 document.getElementById("latestUtilityBill").value = utility.total_amount || "";
-                document.getElementById("perKwh").value = utility ? utility.per_kwh : "";
-                document.getElementById("currentReading").value = utility ? utility.current_reading : "";
-                document.getElementById("previousReading").value = utility ? utility.previous_reading : "";
-            } catch (error) {
-                console.error("Error fetching previous reading:", error);
+                document.getElementById("perKwh").value = utility.per_kwh || "";
+                document.getElementById("currentReading").value = utility.current_reading || "";
+                document.getElementById("previousReading").value = utility.previous_reading || "";
             }
-        });
+        } catch (error) {
+            console.error("Error fetching utility data:", error);
+        }
+    });
+
+    document.getElementById("select_utility").addEventListener("change", function() {
+        const selectedOption = this.options[this.selectedIndex];
+        const paymentType = document.getElementById("payment_type").value;
+
+        if (selectedOption.value) {
+            const utilityId = selectedOption.value;
+
+            // Fetch utility data based on selected utility ID
+            fetch(`/payment_process/utility_details?utility_id=${utilityId}&payment_type=${paymentType}`)
+                .then(response => response.json())
+                .then(data => {
+                    const utility = data.utility;
+
+                    document.getElementById("utility_id").value = paymentType === 'meralco' ? utility.meralco_id :
+                                                                 paymentType === 'maynilad' ? utility.maynilad_id :
+                                                                 utility.rent_id || "";
+
+                    document.getElementById("current_total_amount").value = utility.current_total_amount || "";
+                    document.getElementById("latestUtilityBill").value = utility.total_amount || "";
+                    document.getElementById("perKwh").value = utility.per_kwh || "";
+                    document.getElementById("currentReading").value = utility.current_reading || "";
+                    document.getElementById("previousReading").value = utility.previous_reading || "";
+                })
+                .catch(error => console.error("Error fetching utility details:", error));
+        }
+    });
     </script>
 </body>
 </html>

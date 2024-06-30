@@ -1,5 +1,5 @@
 <!-- Add User Modal -->
-<% if(view === 'user' && mainUser.role_id === 1) {%>
+
     <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content bg-brand text-white">
@@ -82,7 +82,6 @@
             </div>
         </div>
     </div>
-    <% } else if(view === 'tenant' && mainUser.role_id === 1) { %>
     <!-- Add Tenant Modal -->
     <div class="modal fade" id="addtenantModal" tabindex="-1" aria-labelledby="addtenantModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -152,4 +151,3 @@
             </div>
         </div>
     </div>
-    <% } %>

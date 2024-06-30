@@ -6,10 +6,9 @@ const User = require("../Models/userModel");
 const Tenant = require("../Models/tenantModel");
 const Payment = require("../Models/paymentModel");
 const { verifyToken } = require('../verifyToken');
-const checkAdminStaff = require('../Middleware/audthStaffAdminMiddleware');
 const permission = require('../Middleware/checkPermission');
 
-router.get('/dashboard/meralco/add-meralco', permission('view_utility') , checkAdminStaff,  async (req, res) => {
+router.get('/dashboard/meralco/add-meralco', permission('view_utility') ,  async (req, res) => {
     try {
       let mainUserData;
   
@@ -90,7 +89,7 @@ router.post('/dashboard/meralco_process/add-meralco', permission('add_utility') 
         }
   })
   
-router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res) => {
+router.get('/dashboard/meralco/print-meralco', permission('view_utility') , async (req, res) => {
     try {
         let mainUserData;
 
@@ -129,7 +128,7 @@ router.get('/dashboard/meralco/print-meralco', checkAdminStaff, async (req, res)
         res.redirect('/dashboard?view=meralco');
     }
 })
-router.post('/meralco_process/meralco_edit', permission('edit_utility'), checkAdminStaff , async (req, res) => {
+router.post('/meralco_process/meralco_edit', permission('edit_utility'), permission , async (req, res) => {
   try {
       let meralcoID = req.query.id;
       let { per_kwh, due_date, date_of_reading, previous_reading, current_reading, consume, total_amount } = req.body;
@@ -189,7 +188,7 @@ router.get('/dashboard/meralco/previous-reading', async (req, res) => {
   }
 });
 
-router.get('/get-meralco', checkAdminStaff, async (req, res) => {
+router.get('/get-meralco', permission, async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const meralcoData = await Meralco.query().where('tenant_id', tenantId);
@@ -201,7 +200,7 @@ router.get('/get-meralco', checkAdminStaff, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-tenant-info', checkAdminStaff, async (req, res) => {
+router.get('/get-tenant-info', permission, async (req, res) => {
   try {
       const tenantId = req.query.tenant_id;
       const tenantInfo = await Tenant.query().findById(tenantId);
@@ -210,7 +209,7 @@ router.get('/get-tenant-info', checkAdminStaff, async (req, res) => {
       res.status(500).json({ error: error.message });
   }
 });
-router.get('/get-billing-info', checkAdminStaff, async (req, res) => {
+router.get('/get-billing-info', permission, async (req, res) => {
   try {
       const { tenant_id, meralco_id } = req.query;
       // Fetch billing information based on the selected tenantId and meralcoId
