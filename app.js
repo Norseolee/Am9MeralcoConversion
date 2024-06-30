@@ -14,7 +14,7 @@ const tenantRoutes = require("./config/Routes/tenantRoutes");
 const paymentRoutes = require("./config/Routes/paymentRoutes");
 const migrationRoutes = require("./config/Routes/migrationRoutes");
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3306;
 const app = express();
 
 app.use(express.static("public"));
