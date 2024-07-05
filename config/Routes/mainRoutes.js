@@ -7,8 +7,7 @@ const fs = require('fs');
 
 const checkAuth = require('../Middleware/audthMiddleware');
 const permission = require('../Middleware/checkPermission');
-const { generateToken } = require('../generateToken');
-const { verifyToken } = require('../verifyToken');
+const { verifyToken , generateToken } = require('../tokenUtils');
 const bcrypt = require('bcryptjs');
 
 const User = require('../Models/userModel');
@@ -87,6 +86,7 @@ router.get('/dashboard', checkAuth, checkViewPermission,  async (req, res) => {
                     Meralco.query().where(builder => {
                         builder.where('is_deleted', 0);
                     }).orderBy('meralco_id', 'desc').limit(17).offset(offset)
+                    .withGraphFetched('tenant') 
                 ]);
                 break;
                 case 'payment':

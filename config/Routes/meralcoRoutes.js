@@ -5,7 +5,7 @@ const Meralco = require("../Models/meralcoModel");
 const User = require("../Models/userModel");
 const Tenant = require("../Models/tenantModel");
 const Payment = require("../Models/paymentModel");
-const { verifyToken } = require('../verifyToken');
+const { verifyToken } = require('../tokenUtils');
 const permission = require('../Middleware/checkPermission');
 
 router.get('/dashboard/meralco/add-meralco', permission('view_utility') ,  async (req, res) => {
@@ -133,7 +133,7 @@ router.get('/dashboard/meralco/print-meralco', permission('view_utility') , asyn
         res.redirect('/dashboard?view=meralco');
     }
 })
-router.post('/meralco_process/meralco_edit', permission('edit_utility'), permission , async (req, res) => {
+router.post('/meralco_process/meralco_edit', permission('edit_utility') , async (req, res) => {
   try {
       let meralcoID = req.query.id;
       let { per_kwh, due_date, date_of_reading, previous_reading, current_reading, consume, total_amount } = req.body;

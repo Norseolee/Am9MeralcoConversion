@@ -1,5 +1,5 @@
 // authMiddleware.js
-const { verifyToken } = require('../verifyToken');
+const { verifyToken } = require('../tokenUtils');
 const User = require('../Models/userModel');
 
 const checkAuth = async (req, res, next) => {

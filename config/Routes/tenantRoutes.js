@@ -4,7 +4,7 @@ const sharp = require('sharp');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { verifyToken } = require('../verifyToken');
+const { verifyToken } = require('../tokenUtils');
 
 const Tenant = require('../Models/tenantModel');
 const User = require('../Models/userModel');

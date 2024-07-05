@@ -2,10 +2,13 @@
 <html lang="en">
 <%- include('../components/header') %>
 <title>Meralco Print</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+
 <style>
   .PDF {
         width: 100%; 
-        height: 50%; 
+        height: 100%; 
         font-size: 1.5vw;
     }
   .Header {
@@ -170,9 +173,77 @@
       
       
       <script>
-          function printPDF() {
-                  window.print();
-              }
+function printPDF() {
+    // Get input values
+    const businessName = document.getElementById('print_business_name').value.trim().replace(/\s+/g, '_') || 'NoName';
+    const dueDate = document.getElementById('print_due_date').value.trim().replace(/\s+/g, '_') || 'NoDueDate';
+
+    // Sanitize values
+    const sanitizedBusinessName = businessName.replace(/[\/\\?%*:|"<>]/g, '_'); // Remove invalid characters for filenames
+    const sanitizedDueDate = dueDate.replace(/[\/\\?%*:|"<>]/g, '_'); // Remove invalid characters for filenames
+
+    // Generate filename
+    const filename = `Meralco_Bill_${sanitizedBusinessName}_${sanitizedDueDate}.pdf`;
+
+    // Select the HTML content to be printed
+    const printContent = document.querySelector('.PDF');
+
+    // Use html2canvas to capture the content
+    html2canvas(printContent, { 
+        scale: 2,
+        backgroundColor: null, // Transparent background
+        useCORS: true // Enable cross-origin resource sharing
+    }).then(canvas => {
+        const imgData = canvas.toDataURL('image/png');
+
+        // Create a new jsPDF instance for A4
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({
+            orientation: 'portrait',
+            unit: 'mm', // Use millimeters for A4 dimensions
+            format: [210, 297] // A4 dimensions in mm
+        });
+
+        // PDF dimensions
+        const pdfWidth = 210; // Width of A4 in mm
+        const pdfHeight = 297; // Height of A4 in mm
+
+        // Margin size in mm
+        const margin = 10; // 20 mm margin around the content
+
+        // Effective dimensions for the image area
+        const contentWidth = pdfWidth - 2 * margin;
+        const contentHeight = pdfHeight - 2 * margin;
+
+        // Get the image dimensions
+        const imgWidth = canvas.width;
+        const imgHeight = canvas.height;
+
+        // Calculate aspect ratio
+        const imgRatio = imgWidth / imgHeight;
+
+        let newImgWidth, newImgHeight;
+
+        // Fit image to PDF dimensions while maintaining aspect ratio
+        if (contentWidth / contentHeight > imgRatio) {
+            newImgHeight = contentHeight;
+            newImgWidth = contentHeight * imgRatio;
+        } else {
+            newImgWidth = contentWidth;
+            newImgHeight = contentWidth / imgRatio;
+        }
+
+        // Position the image in the PDF
+        const xOffset = margin;
+        const yOffset = margin;
+
+        // Add the captured image to the PDF
+        doc.addImage(imgData, 'PNG', xOffset, yOffset, newImgWidth, newImgHeight, undefined, 'FAST');
+
+        // Save the PDF with the filename
+        doc.save(filename);
+    });
+}
       document.addEventListener('DOMContentLoaded', function() {
           document.getElementById('tenant_id').addEventListener('change', function() {
               var tenantId = this.value;

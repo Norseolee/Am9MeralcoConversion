@@ -31,6 +31,21 @@ class Meralco extends Model {
             }
         };
     }
+
+    static get relationMappings() {
+        const Tenant = require('./tenantModel');
+
+        return {
+            tenant: {
+                relation: Model.BelongsToOneRelation,
+                modelClass: Tenant,
+                join: {
+                    from: 'meralco.tenant_id',
+                    to: 'tenants.tenant_id'
+                }
+            }
+        };
+    }
 }
 
 module.exports = Meralco;

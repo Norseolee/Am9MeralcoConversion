@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../Models/userModel');
 const bcrypt = require('bcryptjs');
-const { verifyToken } = require('../verifyToken');
+const { verifyToken } = require('../tokenUtils');
 const permission = require('../Middleware/checkPermission');
 
 // Route handler for add new user

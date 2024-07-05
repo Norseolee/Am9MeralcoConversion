@@ -5,7 +5,7 @@
                 <thead class="table-dark text-nowrap text-start">
                     <tr>
                         <th scope="col">id</th>
-                        <th scope="col">tenant ID</th>
+                        <th scope="col">Tenant Name</th>
                         <th scope="col">Per kWh</th>
                         <th scope="col">Due Date</th>
                         <th scope="col">Date of Reading</th>
@@ -22,7 +22,13 @@
                 <% meralcoData.forEach((meralco) => { %>
                     <tr>
                         <td scope="row"><%= meralco.meralco_id %></td>
-                        <td><%= meralco.tenant_id %></td>
+                        <td>
+                            <% if (meralco.tenant) { %>
+                                <%= meralco.tenant.business_name %>
+                            <% } else { %>
+                                No Tenant
+                            <% } %>
+                        </td>
                         <td><%= meralco.per_kwh %></td>
                         <td><%= meralco.due_date %></td>
                         <td><%= meralco.date_of_reading %></td>
