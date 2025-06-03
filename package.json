@@ -4,8 +4,8 @@
   "description": "This is the Am9 Commercial Electricity Billing System",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node app.js",
+    "dev": "nodemon app.js"
   },
   "author": "Norhajar Gabuya",
   "license": "ISC",

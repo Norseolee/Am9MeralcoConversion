@@ -1,326 +1,560 @@
 <!DOCTYPE html>
 <html lang="en">
-<%- include('../components/header') %>
-<title>Meralco Print</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+  <%- include('../components/header') %>
+  <title>Meralco Print</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.5.0-beta4/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+    rel="stylesheet"
+  />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
-<style>
-  .PDF {
-        width: 100%; 
-        height: 100%; 
-        font-size: 1.5vw;
+  <style>
+    .PDF {
+      width: 100%;
+      height: 100%;
+      font-size: 1.5vw;
     }
-  .Header {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1.2em; 
-  }
-  input {
-        border: none;
-        background-color: transparent; 
-        font-size: inherit; 
-  } 
-  body {
-    background-color: transparent;
-  }
-  .body {
-    background-color: rgb(89, 136, 223);
-    border-radius: 25px;
-    padding: 20px 30px;
-
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-  }
-  .subject , .billing {
-    display: flex;
-    justify-content: space-evenly;
-    gap: 50px;
-  }
-  .subject > div , .billing > div , .sign {
-    background-color: whitesmoke;
-    border-radius: 25px;
-    padding-inline: 20px;
-    flex: 1;
-  }
-  input {
-    border: 1px solid transparent;
-    background-color: transparent;
-
-    font-size: 1.5vw;
-  }
-  @media print {
-    .selection , .selection > * , .navs {
-      display: none;
+    .Header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1.2em;
     }
-    @page {
-        size: A4;
-        margin: 20px;
+    input {
+      border: none;
+      background-color: transparent;
+      font-size: inherit;
     }
     body {
-      -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
-      color-adjust: exact; /* Firefox */
-      background-color: white;
+      background-color: transparent;
     }
     .body {
-        background-color: rgb(89, 136, 223) !important;
-    }
-    .subject > div, .billing > div, .sign {
-        background-color: whitesmoke !important;
-    }
-    .sub-section {
-      margin: 0px;
-      background-color: white;
-    }
+      background-color: rgb(89, 136, 223);
+      border-radius: 25px;
+      padding: 20px 30px;
 
-  }
-</style>
-<body>
-  <div class="main">
-    <%- include('../components/navbar') %>
-    <div class="sub-section">
-      <div class="d-flex justify-content-between align-center text-white selection">
-        <div class="d-flex text-nowrap gap-2 selection">
-          <label class="form-label" for="tenant_id">Select Tenant: </label>
-          <select class="form-control bg-brand text-white" name="tenant_id" id="tenant_id" >
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+    .subject,
+    .billing {
+      display: flex;
+      justify-content: space-evenly;
+      gap: 50px;
+    }
+    .subject > div,
+    .billing > div,
+    .sign {
+      background-color: whitesmoke;
+      border-radius: 25px;
+      padding-inline: 20px;
+      flex: 1;
+    }
+    input {
+      border: 1px solid transparent;
+      background-color: transparent;
+
+      font-size: 1.5vw;
+    }
+    @media print {
+      .selection,
+      .selection > *,
+      .navs {
+        display: none;
+      }
+      @page {
+        size: A4;
+        margin: 20px;
+      }
+      body {
+        -webkit-print-color-adjust: exact; /* Chrome, Safari, Edge */
+        color-adjust: exact; /* Firefox */
+        background-color: white;
+      }
+      .body {
+        background-color: rgb(89, 136, 223) !important;
+      }
+      .subject > div,
+      .billing > div,
+      .sign {
+        background-color: whitesmoke !important;
+      }
+      .sub-section {
+        margin: 0px;
+        background-color: white;
+      }
+    }
+  </style>
+  <body>
+    <div class="main">
+      <%- include('../components/navbar') %>
+      <div class="sub-section">
+        <!-- selection section -->
+        <div
+          class="d-flex justify-content-between align-center text-white selection"
+        >
+          <div class="d-flex text-nowrap gap-2 selection">
+            <label class="form-label" for="tenant_id">Select Tenant: </label>
+            <select
+              class="form-control bg-brand text-white"
+              name="tenant_id"
+              id="tenant_id"
+            >
               <option value=""></option>
               <% tenantData.forEach(function(tenant) { %>
-                  <option value="<%= tenant.tenant_id %>"><%= tenant.business_name %></option>
+              <option value="<%= tenant.tenant_id %>">
+                <%= tenant.business_name %>
+              </option>
               <% }); %>
-          </select>
-        </div>
-        <div class="d-flex text-nowrap gap-2 selection">
-          <label class="form-label" for="meralco_id">Select Meralco: </label>
-          <select class="form-control bg-brand text-white" name="meralco_id" id="meralco_id" style="width: 150px">
+            </select>
+          </div>
+          <div class="d-flex text-nowrap gap-2 selection">
+            <label class="form-label" for="meralco_id">Select Meralco: </label>
+            <select
+              class="form-control bg-brand text-white"
+              name="meralco_id"
+              id="meralco_id"
+              style="width: 150px"
+            >
               <option value=""></option>
-          </select>      
-        </div>
-        <button onclick="printPDF()" class="btn btn-primary">Print</button>
-      </div>
-      <div class="PDF py-3">
-        <div class="Header py-3">
-          <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
-          <h1>Am9 Electricity Billing</h1>
-          <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover; mix-blend-mode: multiply;"/>
-        </div>
-      <div class="body">
-        <div class="subject">
-          <div class="information">
-            <p>Name: <input type="text" readonly id="print_business_name"></p>
-            <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
+            </select>
           </div>
-          <div class="due_kwh">
-            <p>Due Date: <input type="text" readonly id="print_due_date"></p>
-            <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
-          </div>
+          <button onclick="printPDF()" class="btn btn-primary">Print</button>
         </div>
-        <div class="billing">
-          <div class="reading">
-            <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
-            <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
-            <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
-            <p>Consume: <input type="text" readonly id="print_consume"></p>
-          </div>
-          <div class="amount">
-            <p>Billing Amount: PHP <input type="text" readonly id="print_total_amount"></p>
-            <p>Paid Amount: PHP <input type="text" readonly id="print_paid_amount"></p>
-            <p>Total Amount: PHP <input type="text" readonly id="print_current_total_amount"></p>
-          </div>
-        </div>
-        <div class="sign">
-          <p>Date Paid:</p>
-          <p>Staff Signature and name:</p>
-        </div>
-      </div>
-      
-      <div class="PDF" style="display: none">
-        <div class="Header">
-          <img src="/Images/meralcobill.png" alt="" width="50px" height="50px" style="object-fit: cover;"/>
-          <h1>Am9 Electricity Billing</h1>
-          <img src="/Images/am9commercial.jpg" alt=""  width="70px" height="50px"  style="object-fit: cover;"/>
-        </div>
-        <div class="body">
-          <div class="subject">
-            <div class="information">
-              <p>Name: <input type="text" readonly id="print_business_name"></p>
-              <p>Building and Stall No.: <input type="text" readonly id="print_unit"></p>
+
+        <!-- print pdf looks -->
+        <div class="PDF py-3">
+          <!-- this is head pdf -->
+          <div class="Header py-3">
+            <div class="flex justify-start items-center gap-5">
+              <img
+                src="/Images/am9commercial.jpg"
+                alt=""
+                width="70px"
+                height="50px"
+                style="object-fit: cover; mix-blend-mode: multiply"
+              />
+              <h1>Am9 Commercial <br />Electricity Bill</h1>
             </div>
-            <div class="due_kwh">
-              <p>Due Date: <input type="text" readonly id="print_due_date"></p>
-              <p>Per Kwh: <input type="text" readonly id="print_per_kwh"></p>
+            <div class="flex flex-col">
+              <input type="text" readonly id="print_business_name" />
+              <input type="text" readonly id="print_unit" />
             </div>
           </div>
-          <div class="billing">
-            <div class="reading">
-              <p>Date of Reading: <input type="text" readonly id="print_date_of_reading"></p>
-              <p>Previous Reading: <input type="text" readonly id="print_previous_reading"></p>
-              <p>Current Reading: <input type="text" readonly id="print_current_reading"></p>
-              <p>Consume: <input type="text" readonly id="print_consume"></p>
+
+          <hr class="border-t-8 border-black" />
+
+          <div class="flex justify-between items-start gap-10">
+            <div class="flex-1">
+              <p>
+                For Billing Questions <br />
+                Message 09973551321 or Chat Am9 Commercial Page
+              </p>
+              <p>
+                Date of Reading :
+                <input type="text" readonly id="print_date_of_reading" />
+              </p>
             </div>
-            <div class="amount">
-              <p>Total Amount: PHP <input type="text" readonly id="print_total_amount"></p>
+            <div class="flex-1">
+              <h2>
+                Please Note: Temporary payment will be made via GCash/Pay Maya
+              </h2>
+              <p>Account Number: 0997 355 1321</p>
+              <p>Account Name: Norhajar G. Gabuya</p>
+              <p class="text-red-700 font-bold">
+                Payments made through other channels will be considered
+                <u>not paid</u>.
+              </p>
             </div>
           </div>
-          <div class="sign">
-            <p>Date Paid:</p>
-            <p>Staff Signature and name:</p>
+          <hr class="border-t-8 border-black" />
+          <div class="flex gap-5">
+            <div class="flex">
+              <div>
+                <h1>Your Electriciy Usage Over Time</h1>
+                <div>
+                  <div class="flex justify-between w-full">
+                    <p>Current Meter Read for on</p>
+                    <input
+                      type="text"
+                      class="text-end"
+                      readonly
+                      id="print_current_reading"
+                    />
+                  </div>
+                  <div class="flex justify-between w-full">
+                    <p>Prior meter read for on</p>
+                    <input
+                      type="text"
+                      class="text-end"
+                      readonly
+                      id="print_previous_reading"
+                    />
+                  </div>
+                  <hr class="border-t-4 border-black" />
+                  <div class="flex justify-between w-full">
+                    <p>Total Electricity (in kWh) use this month</p>
+                    <input
+                      type="text"
+                      class="text-end"
+                      readonly
+                      id="print_consume"
+                    />
+                  </div>
+
+                  <div
+                    class="flex justify-between items-center w-full border-4 border-black p-1"
+                  >
+                    <p class="font-bold flex gap-2 flex-1">
+                      Total Amount Due by
+                      <input
+                        type="text"
+                        class="font-bold"
+                        style="width: 320px"
+                        readonly
+                        id="print_due_date"
+                      />
+                    </p>
+                    <input
+                      type="text"
+                      class="text-end font-bold"
+                      style="width: 180px"
+                      readonly
+                      id="print_total_amount"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="flex-1">
+              <div class="flex justify-between w-full">
+                <p class="ms-4">per kWh Usage:</p>
+                <input
+                  type="text"
+                  class="text-end"
+                  readonly
+                  id="print_per_kwh"
+                />
+              </div>
+              <div>
+                <canvas id="usageChart" width="400" height="200"></canvas>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
-      </div>
-      
-      
-      
-      <script>
-function printPDF() {
-    // Get input values
-    const businessName = document.getElementById('print_business_name').value.trim().replace(/\s+/g, '_') || 'NoName';
-    const dueDate = document.getElementById('print_due_date').value.trim().replace(/\s+/g, '_') || 'NoDueDate';
 
-    // Sanitize values
-    const sanitizedBusinessName = businessName.replace(/[\/\\?%*:|"<>]/g, '_'); // Remove invalid characters for filenames
-    const sanitizedDueDate = dueDate.replace(/[\/\\?%*:|"<>]/g, '_'); // Remove invalid characters for filenames
+        <!-- bar graph functions -->
 
-    // Generate filename
-    const filename = `Meralco_Bill_${sanitizedBusinessName}_${sanitizedDueDate}.pdf`;
+        <script>
+          function printPDF() {
+            // Get input values
+            const businessName =
+              document
+                .getElementById("print_business_name")
+                .value.trim()
+                .replace(/\s+/g, "_") || "NoName";
+            const dueDate =
+              document
+                .getElementById("print_due_date")
+                .value.trim()
+                .replace(/\s+/g, "_") || "NoDueDate";
 
-    // Select the HTML content to be printed
-    const printContent = document.querySelector('.PDF');
+            // Sanitize values
+            const sanitizedBusinessName = businessName.replace(
+              /[\/\\?%*:|"<>]/g,
+              "_"
+            ); // Remove invalid characters for filenames
+            const sanitizedDueDate = dueDate.replace(/[\/\\?%*:|"<>]/g, "_"); // Remove invalid characters for filenames
 
-    // Use html2canvas to capture the content
-    html2canvas(printContent, { 
-        scale: 2,
-        backgroundColor: null, // Transparent background
-        useCORS: true // Enable cross-origin resource sharing
-    }).then(canvas => {
-        const imgData = canvas.toDataURL('image/png');
+            // Generate filename
+            const filename = `Meralco_Bill_${sanitizedBusinessName}_${sanitizedDueDate}.pdf`;
 
-        // Create a new jsPDF instance for A4
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF({
-            orientation: 'portrait',
-            unit: 'mm', // Use millimeters for A4 dimensions
-            format: [210, 297] // A4 dimensions in mm
-        });
+            // Select the HTML content to be printed
+            const printContent = document.querySelector(".PDF");
 
-        // PDF dimensions
-        const pdfWidth = 210; // Width of A4 in mm
-        const pdfHeight = 297; // Height of A4 in mm
+            // Use html2canvas to capture the content
+            html2canvas(printContent, {
+              scale: 2,
+              backgroundColor: null, // Transparent background
+              useCORS: true, // Enable cross-origin resource sharing
+            }).then((canvas) => {
+              const imgData = canvas.toDataURL("image/png");
+              const { jsPDF } = window.jspdf;
 
-        // Margin size in mm
-        const margin = 10; // 20 mm margin around the content
+              // PDF dimensions
+              const pdfWidth = 210; // Width of A4 in mm
+              const pdfHeight = 297; // Height of A4 in mm
 
-        // Effective dimensions for the image area
-        const contentWidth = pdfWidth - 2 * margin;
-        const contentHeight = pdfHeight - 2 * margin;
+              const doc = new jsPDF({
+                orientation: "portrait",
+                unit: "mm",
+                format: [pdfWidth, pdfHeight],
+              });
 
-        // Get the image dimensions
-        const imgWidth = canvas.width;
-        const imgHeight = canvas.height;
+              // Margin size in mm
+              const margin = 10;
 
-        // Calculate aspect ratio
-        const imgRatio = imgWidth / imgHeight;
+              const contentWidth = pdfWidth - 2 * margin;
+              const contentHeight = pdfHeight - 2 * margin;
+              const imgWidth = canvas.width;
+              const imgHeight = canvas.height;
+              // Calculate aspect ratio
+              const imgRatio = imgWidth / imgHeight;
 
-        let newImgWidth, newImgHeight;
-
-        // Fit image to PDF dimensions while maintaining aspect ratio
-        if (contentWidth / contentHeight > imgRatio) {
-            newImgHeight = contentHeight;
-            newImgWidth = contentHeight * imgRatio;
-        } else {
-            newImgWidth = contentWidth;
-            newImgHeight = contentWidth / imgRatio;
-        }
-
-        // Position the image in the PDF
-        const xOffset = margin;
-        const yOffset = margin;
-
-        // Add the captured image to the PDF
-        doc.addImage(imgData, 'PNG', xOffset, yOffset, newImgWidth, newImgHeight, undefined, 'FAST');
-
-        // Save the PDF with the filename
-        doc.save(filename);
-    });
-}
-      document.addEventListener('DOMContentLoaded', function() {
-          document.getElementById('tenant_id').addEventListener('change', function() {
-              var tenantId = this.value;
-              var meralcoSelect = document.getElementById('meralco_id');
-              meralcoSelect.innerHTML = '<option value="">Loading...</option>';
-      
-              if (tenantId) {
-                  var xhr = new XMLHttpRequest();
-                  xhr.open('GET', '/get-meralco?tenant_id=' + tenantId, true);
-                  xhr.onreadystatechange = function() {
-                      if (xhr.readyState === 4 && xhr.status === 200) {
-                          var meralcoData = JSON.parse(xhr.responseText);
-                          meralcoSelect.innerHTML = '<option value=""></option>';
-                          meralcoData.forEach(function(meralco) {
-                              var option = document.createElement('option');
-                              option.value = meralco.meralco_id;
-                              option.text = meralco.date_of_reading;
-                              meralcoSelect.appendChild(option);
-                          });
-                      }
-                  };
-                  xhr.send();
-      
-                  // Fetch additional tenant information
-                  var tenantInfoXhr = new XMLHttpRequest();
-                  tenantInfoXhr.open('GET', '/get-tenant-info?tenant_id=' + tenantId, true);
-                  tenantInfoXhr.onreadystatechange = function() {
-                      if (tenantInfoXhr.readyState === 4 && tenantInfoXhr.status === 200) {
-                          var tenantInfo = JSON.parse(tenantInfoXhr.responseText);
-                          document.getElementById('print_business_name').value = tenantInfo.business_name;
-                          document.getElementById('print_unit').value = tenantInfo.unit;
-                          // You can populate other fields here similarly
-                      }
-                  };
-                  tenantInfoXhr.send();
+              let newImgWidth, newImgHeight;
+              // Fit image to PDF dimensions while maintaining aspect ratio
+              if (contentWidth / contentHeight > imgRatio) {
+                newImgHeight = contentHeight;
+                newImgWidth = contentHeight * imgRatio;
               } else {
-                  meralcoSelect.innerHTML = '<option value=""></option>';
+                newImgWidth = contentWidth;
+                newImgHeight = contentWidth / imgRatio;
               }
+              // Position the image in the PDF
+              const xOffset = margin;
+              const yOffset = margin;
+              // Add the captured image to the PDF
+              doc.addImage(
+                imgData,
+                "PNG",
+                xOffset,
+                yOffset,
+                newImgWidth,
+                newImgHeight,
+                undefined,
+                "FAST"
+              );
+
+              doc.save(filename);
+            });
+          }
+          document.addEventListener("DOMContentLoaded", function () {
+            document
+              .getElementById("tenant_id")
+              .addEventListener("change", async function () {
+                const tenantId = this.value;
+                const meralcoSelect = document.getElementById("meralco_id");
+
+                meralcoSelect.innerHTML =
+                  '<option value="">Loading...</option>';
+
+                if (tenantId) {
+                  try {
+                    // Fetch Meralco options
+                    const meralcoResponse = await fetch(
+                      `/get-meralco?tenant_id=${tenantId}`
+                    );
+                    if (!meralcoResponse.ok) {
+                      throw new Error(
+                        `HTTP error! Status: ${meralcoResponse.status}`
+                      );
+                    }
+                    const meralcoData = await meralcoResponse.json();
+                    console.log(
+                      "All year data:",
+                      meralcoData.all_year_data_result
+                    );
+                    console.log("Meralco data:", meralcoData.meralcoData);
+
+                    const allYearData = meralcoData.all_year_data_result;
+
+                    const monthNames = [
+                      "Jan",
+                      "Feb",
+                      "Mar",
+                      "Apr",
+                      "May",
+                      "Jun",
+                      "Jul",
+                      "Aug",
+                      "Sep",
+                      "Oct",
+                      "Nov",
+                      "Dec",
+                    ];
+
+                    const consumeMap = new Map();
+                    allYearData.forEach((entry) => {
+                      consumeMap.set(entry.by_month, entry.consume);
+                    });
+
+                    const labels = monthNames;
+
+                    const data = [];
+                    for (let m = 1; m <= 12; m++) {
+                      data.push(consumeMap.get(m) || 0);
+                    }
+
+                    // const sortedData = allYearData
+                    //  .slice()
+                    //  .sort((a, b) => a.by_month - b.by_month);
+
+                    // const consumes = sortedData.map((entry) => entry.consume);
+
+                    const usageCanvas = document.getElementById("usageChart");
+                    if (usageCanvas) {
+                      const ctx = usageCanvas.getContext("2d");
+
+                      if (
+                        window.usageChart &&
+                        typeof window.usageChart.destroy === "function"
+                      ) {
+                        window.usageChart.destroy();
+                      }
+
+                      const backgroundColorPlugin = {
+                        id: "customCanvasBackgroundColor",
+                        beforeDraw(chart) {
+                          const ctx = chart.ctx;
+                          ctx.save();
+                          ctx.fillStyle = "#f0f0f0"; // background color here
+                          ctx.fillRect(0, 0, chart.width, chart.height);
+                          ctx.restore();
+                        },
+                      };
+
+                      window.usageChart = new Chart(ctx, {
+                        type: "bar",
+                        data: {
+                          labels: monthNames, // Always show Jan to Dec
+                          datasets: [
+                            {
+                              label: "Electricity Usage (kWh)",
+                              data: data, // data in original JSON order
+                              backgroundColor: "rgba(54, 162, 235, 1)",
+                              borderColor: "rgba(54, 162, 235, 1)",
+                              borderWidth: 1,
+                            },
+                          ],
+                        },
+                        options: {
+                          scales: {
+                            y: {
+                              beginAtZero: true,
+                              title: {
+                                display: true,
+                                text: "kWh",
+                              },
+                            },
+                          },
+                          plugins: {
+                            tooltip: {
+                              enabled: true,
+                            },
+                            datalabels: {
+                              anchor: "end",
+                              align: "start",
+                              color: "black",
+                              font: {
+                                weight: "bold",
+                              },
+                              formatter: function (value) {
+                                return value.toFixed(1);
+                              },
+                            },
+                          },
+                        },
+                        plugins: [ChartDataLabels], // Make sure plugin loaded
+                      });
+                    } else {
+                      console.error(
+                        "Canvas element with ID 'usageChart' not found."
+                      );
+                    }
+
+                    // If you need to use "myCanvas" elsewhere, handle it here too
+                    const canvas = document.getElementById("myCanvas");
+                    if (canvas) {
+                      const otherCtx = canvas.getContext("2d");
+                      // Drawing logic here
+                    }
+
+                    meralcoSelect.innerHTML = '<option value=""></option>';
+                    meralcoData.meralcoData.forEach((meralco) => {
+                      const option = document.createElement("option");
+                      option.value = meralco.meralco_id;
+                      option.text = meralco.date_of_reading;
+                      meralcoSelect.appendChild(option);
+                    });
+                    // Fetch tenant info
+                    const tenantInfoResponse = await fetch(
+                      `/get-tenant-info?tenant_id=${tenantId}`
+                    );
+                    if (!tenantInfoResponse.ok) {
+                      throw new Error(
+                        `HTTP error! Status: ${tenantInfoResponse.status}`
+                      );
+                    }
+                    const tenantInfo = await tenantInfoResponse.json();
+
+                    document.getElementById("print_business_name").value =
+                      tenantInfo.business_name;
+                    document.getElementById("print_unit").value =
+                      tenantInfo.unit;
+                    // Populate other fields here if needed
+                  } catch (error) {
+                    console.error(
+                      "Error fetching tenant or Meralco info:",
+                      error
+                    );
+                    meralcoSelect.innerHTML = '<option value=""></option>';
+                  }
+                } else {
+                  meralcoSelect.innerHTML = '<option value=""></option>';
+                }
+              });
+
+            document
+              .getElementById("meralco_id")
+              .addEventListener("change", async function () {
+                var tenantId = document.getElementById("tenant_id").value;
+                var meralcoId = this.value;
+
+                if (tenantId && meralcoId) {
+                  try {
+                    var response = await fetch(
+                      `/get-billing-info?tenant_id=${tenantId}&meralco_id=${meralcoId}`
+                    );
+                    if (!response.ok) {
+                      throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    var data = await response.json();
+
+                    var billingInfo = data.billingInfo;
+                    var paymentData = data.totalPaidAmount;
+
+                    // Now you can use billingInfo and paymentData as needed
+                    document.getElementById("print_due_date").value =
+                      billingInfo.due_date;
+                    document.getElementById("print_per_kwh").value =
+                      billingInfo.per_kwh;
+                    document.getElementById("print_date_of_reading").value =
+                      billingInfo.date_of_reading;
+                    document.getElementById("print_previous_reading").value =
+                      billingInfo.previous_reading;
+                    document.getElementById("print_current_reading").value =
+                      billingInfo.current_reading;
+                    document.getElementById("print_consume").value =
+                      billingInfo.consume;
+                    document.getElementById("print_total_amount").value =
+                      billingInfo.total_amount || 0;
+                    // document.getElementById(
+                    // "print_current_total_amount"
+                    // ).value = billingInfo.current_total_amount || 0;
+                    // document.getElementById("print_paid_amount").value =
+                    // paymentData || 0;
+                  } catch (error) {
+                    console.error("Error fetching billing info:", error);
+                    // Handle error cases here
+                  }
+                }
+              });
           });
-          document.getElementById('meralco_id').addEventListener('change', async function() {
-var tenantId = document.getElementById('tenant_id').value;
-var meralcoId = this.value;
-
-if (tenantId && meralcoId) {
-    try {
-        var response = await fetch(`/get-billing-info?tenant_id=${tenantId}&meralco_id=${meralcoId}`);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        var data = await response.json();
-
-        var billingInfo = data.billingInfo;
-        var paymentData = data.totalPaidAmount ;
-
-        // Now you can use billingInfo and paymentData as needed
-        document.getElementById('print_due_date').value = billingInfo.due_date;
-        document.getElementById('print_per_kwh').value = billingInfo.per_kwh;
-        document.getElementById('print_date_of_reading').value = billingInfo.date_of_reading;
-        document.getElementById('print_previous_reading').value = billingInfo.previous_reading;
-        document.getElementById('print_current_reading').value = billingInfo.current_reading;
-        document.getElementById('print_consume').value = billingInfo.consume;
-        document.getElementById('print_total_amount').value = billingInfo.total_amount || 0;
-        document.getElementById('print_current_total_amount').value = billingInfo.current_total_amount || 0;
-        document.getElementById('print_paid_amount').value = paymentData || 0;
-
-    } catch (error) {
-        console.error('Error fetching billing info:', error);
-        // Handle error cases here
-    }
-}
-});
-
-      
-        });
-      
-      </script>
+        </script>
+      </div>
     </div>
-  </div>
-</body>
+  </body>
 </html>

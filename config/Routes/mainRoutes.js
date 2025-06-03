@@ -18,7 +18,7 @@ const Payment = require('../Models/paymentModel');
 const ModeofPayment = require('../Models/modePaymentModel');
 
 
-// THIS IS COMMON ROUTES
+// THIS IS COMMON ROUTES (Check user permission)
 const checkViewPermission = async (req, res, next) => {
     const view = req.query.view || 'user';
     const permissions = {
